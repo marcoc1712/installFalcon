@@ -28,8 +28,11 @@ use utf8;
 
 sub new{
     my $class 	= shift;
-
+    my $isDebug = shift || 0;
+    
     my $self = bless {
+        _utils      => Utils->new($isDebug),
+        _isDebug    => $isDebug,
         _error      => undef,
         
     }, $class;
@@ -41,6 +44,16 @@ sub getError{
     
     return $self->{_error};
 }
+sub isDebug{
+    my $self = shift;
+    
+    return $self->{_isDebug};
+}
+sub getUtils{
+    my $self = shift;
+    
+    return $self->{_utils};
+}
 ################################################################################
 # protected
 # 
@@ -49,5 +62,21 @@ sub install {
     
     $self->{_error} ="WARNING: not yet implemented";
     return 0;
+}
+################################################################################
+# protected
+#
+sub _accumulateErrors{
+    my $self=shift;
+    my $err = shift || undef;
+    
+    if (!$err) {return undef;}
+    if (!$self->getError()){
+        
+        $self->{_error}= $err;
+        return $err;
+    }
+    $self->{_error}=$self->{_error}."\n".$err;
+    return $err;
 }
 1;

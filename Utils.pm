@@ -51,13 +51,13 @@ sub trim{
 
     if (defined $val) {
 
-    $val =~ s/^\s+//; # strip white space from the beginning
-    $val =~ s/\s+$//; # strip white space from the end
+        $val =~ s/^\s+//; # strip white space from the beginning
+        $val =~ s/\s+$//; # strip white space from the end
 
         if (! utf8::is_utf8($val)) {
 
             utf8::upgrade($val);
-    	}	
+    	}
     }
     return $val;         
 }
@@ -74,9 +74,10 @@ sub executeCommand{
             print ($self->{inDebug} ? 'in debug' : 'production');
 	
 	} 
-	
-        my @args =($command);
-        exec @args or print("couldn't exec command: $!");	
+        my @ret= `$command`;
+	my $err=$?;
+        
+        return ($err, @ret);
 
 }
 sub _finalizeCommand{
@@ -97,5 +98,6 @@ sub _finalizeCommand{
     }
     return $command;
 }
+
 1;
 

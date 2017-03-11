@@ -33,21 +33,22 @@ use Installer::Windows::Installer;
 use constant ISWINDOWS    => ( $^O =~ /^m?s?win/i ) ? 1 : 0;
 use constant ISMAC        => ( $^O =~ /darwin/i ) ? 1 : 0;
 use constant ISLINUX      => ( $^O =~ /linux/i ) ? 1 : 0;
-use constant ISDEBUG      => ( grep { /--deebug/ } @ARGV ) ? 1 : 0;
+#use constant ISDEBUG      => ( grep { /--deebug/ } @ARGV ) ? 1 : 0;
+use constant ISDEBUG      => 1;
 
 my $installer;
 
 if (ISWINDOWS){
         
-    $installer= Installer::Windows::Installer->new();
+    $installer= Installer::Windows::Installer->new(ISDEBUG);
 
 } elsif (ISMAC){
 
-    $installer= Installer::Mac::Installer->new();
+    $installer= Installer::Mac::Installer->new(ISDEBUG);
 
 } elsif (ISLINUX){
 
-    $installer= Installer::Linux::Installer->new();
+    $installer= Installer::Linux::Installer->new(ISDEBUG);
 
 }else {
 
