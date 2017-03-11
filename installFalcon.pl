@@ -26,6 +26,7 @@ use warnings;
 use utf8;
 
 use Utils;
+use Status;
 use Installer::Linux::Installer;
 use Installer::Mac::Installer;
 use Installer::Windows::Installer;
@@ -60,6 +61,6 @@ $installer->install();
 
 if ($installer->getError()){
 
-    print $installer->getError();
+    print $installer->getStatus()->printout();
 }
 1;

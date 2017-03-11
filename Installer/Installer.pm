@@ -31,19 +31,68 @@ sub new{
     my $isDebug = shift || 0;
     
     my $self = bless {
-        _utils      => Utils->new($isDebug),
-        _isDebug    => $isDebug,
-        _error      => undef,
+        _utils                      => Utils->new($isDebug),
+        _isDebug                    => $isDebug,
+        _isGitInstalled             => undef,
+        _isFalconInstalled          => undef,
+        _isSqueezeliteInstalled     => undef,
+        _isSqueezeliteR2Installed   => undef,
+        _isWebServerInstalled       => undef,
+        _status                     => Status->new($isDebug),
         
     }, $class;
 
     return $self;
 }
+sub install {
+    my $self = shift;
+    
+    if (!$self->isWebServerInstalled()){
+        
+        $self->installWebServer();
+        
+    }
+    if (!$self->isSqueezeliteInstalled()){
+
+        $self->installSqueezeliteR2();
+    
+    } elsif (!$self->isSqueezeliteR2Installed()){
+        
+        $self->removeSqueezelite();
+        $self->installSqueezeliteR2();
+    }
+    
+    if (!$self->isGitInstalled()){
+        
+        $self->installGit();
+        $self->gitClone();
+        $self->configureFalcon('DEFAULT');
+    
+    } elsif (!$self->isFalconInstalled()){
+        
+        $self->gitClone();
+        $self->configureFalcon('DEFAULT');
+    
+    } else {
+        
+        $self->gitPull();
+        $self->configureFalcon('KEEP');
+    }
+    return 0;
+}
+
 sub getError{
     my $self = shift;
     
-    return $self->{_error};
+    return $self->{_status}->getGravity();
 }
+sub getStatus{
+    my $self = shift;
+    
+    return $self->{_status};
+}
+
+
 sub isDebug{
     my $self = shift;
     
@@ -54,17 +103,90 @@ sub getUtils{
     
     return $self->{_utils};
 }
-################################################################################
-# protected
-# 
-sub install {
+
+sub isGitInstalled{
     my $self = shift;
     
-    $self->{_error} ="WARNING: not yet implemented";
-    return 0;
+    return $self->{_isGitInstalled};
+}
+
+sub isSqueezeliteInstalled{
+    my $self = shift;
+    
+    return $self->{_isSqueezeliteInstalled};
+}
+
+sub isSqueezeliteR2Installed{
+    my $self = shift;
+    
+    return $self->{_isSqueezeliteR2Installed};
+}
+sub isWebServerInstalled{
+    my $self = shift;
+    
+    return $self->{_isWebServerInstalled};
 }
 ################################################################################
-# protected
+#
+#
+sub installWebServer{
+    my $self = shift;
+
+    $self->{_status}->record('',5, "not implemented yet",'');
+    return 0;
+}
+sub installSqueezeliteR2{
+    my $self = shift;
+    
+
+    $self->{_status}->record('',5, "not implemented yet",'');
+    return 0;
+}
+
+sub removeSqueezelite{
+    my $self = shift;
+    
+    
+     $self->{_status}->record('',5, "not implemented yet",'');
+    return 0;
+}
+
+sub installGit{
+    my $self = shift;
+    
+     $self->{_status}->record('',5, "not implemented yet",'');
+    return 0;
+}
+
+sub gitClone{
+    my $self = shift;
+    
+    $self->{_status}->record('',5, "not implemented yet",'');
+    return 0;
+}
+sub gitPull{
+    my $self = shift;
+    
+    $self->{_status}->record('',5, "not implemented yet",'');
+    return 0;
+}
+sub configureFalcon{
+    my $self    = shift;
+    my $default = shift || 'KEEP';
+    
+    $self->{_status}->record('',5, "not implemented yet",'');
+    return 0;
+}
+
+sub finalize{
+    my $self = shift;
+    
+    $self->{_status}->record('',5, "not implemented yet",'');
+    return 0;
+    
+}
+################################################################################
+# private 
 #
 sub _accumulateErrors{
     my $self=shift;

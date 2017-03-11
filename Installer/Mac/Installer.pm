@@ -37,9 +37,11 @@ sub new{
     
     return $self;
 }
-
-################################################################################
-# protected
-# 
-
+#override
+sub install {
+    my $self = shift;
+    
+    $self->{_error} ="WARNING: not yet implemented";
+    return 0;
+}
 1;
