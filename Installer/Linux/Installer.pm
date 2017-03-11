@@ -27,6 +27,8 @@ use warnings;
 use utf8;
 
 use File::Basename;
+use Cwd;
+
 use base qw(Installer::Installer);
 
 sub new{
@@ -55,6 +57,74 @@ sub isApache2Installed {
     
     return $self->{_isApache2Installed};
 }
+#override
+sub gitClone{
+    my $self = shift;
+    
+    if (! -d '/var/www'){
+        
+        mkdir '/var/www', 0755;
+    
+        if (! -d '/var/www'){
+
+            $self->{_status}->record(' mkdir /var/www, 0755',7, "can't create directory",'');
+            return undef;
+        }
+    }
+    chdir '/var/www';
+    if (! cwd eq '/var/www'){
+        
+        $self->{_status}->record(' chdir /var/www',7, "can't move into directory",'');
+        return undef;
+    }
+    
+    #my $command = 'git clone https://github.com/marcoc1712/falcon.git';
+    my $command = 'git clone https://github.com/marcoc1712/falcon.git -b feature_DSD --single-branch';
+    
+    my ($err, @answ)= $self->getUtils()->executeCommand($command);
+    
+    if ($err){
+        $self->{_status}->record('git clone',7, $err,(join '\n', @answ));
+        return undef;
+    }
+    $self->{_status}->record('git clone',3, $err ? $err : 'done',(join '\n', @answ));
+    
+    return 1;
+}
+#override
+sub gitPull{
+    my $self = shift;
+    
+    chdir '/var/www/falcon';
+    if (! cwd eq '/var/www/falcon'){
+        
+        $self->{_status}->record(' chdir /var/www/falcon',7, "can't move into directory",'');
+        return undef;
+    }
+    my $command = 'git stash';
+    
+    my ($err, @answ)= $self->getUtils()->executeCommand($command);
+    
+    if ($err){
+        $self->{_status}->record('git stash',7, $err,(join '\n', @answ));
+        return undef;
+    }
+    $self->{_status}->record('git stash',3, $err ? $err : 'done',(join '\n', @answ));
+    
+    $command = 'git pull';
+    
+    ($err, @answ)= $self->getUtils()->executeCommand($command);
+    
+    if ($err){
+        $self->{_status}->record('git pull',7, $err,(join '\n', @answ));
+        return undef;
+    }
+    $self->{_status}->record('git pull',3, $err ? $err : 'done',(join '\n', @answ));
+
+    return 1;
+}
+
+
 ################################################################################
 # 
 # privates.

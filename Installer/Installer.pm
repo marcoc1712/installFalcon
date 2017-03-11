@@ -87,12 +87,12 @@ sub getError{
     
     return $self->{_status}->getGravity();
 }
+
 sub getStatus{
     my $self = shift;
     
     return $self->{_status};
 }
-
 
 sub isDebug{
     my $self = shift;
@@ -194,17 +194,4 @@ sub finalize{
 ################################################################################
 # private 
 #
-sub _accumulateErrors{
-    my $self=shift;
-    my $err = shift || undef;
-    
-    if (!$err) {return undef;}
-    if (!$self->getError()){
-        
-        $self->{_error}= $err;
-        return $err;
-    }
-    $self->{_error}=$self->{_error}."\n".$err;
-    return $err;
-}
 1;
