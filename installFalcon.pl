@@ -57,7 +57,7 @@ if (ISWINDOWS){
 
 }
 
-$installer->install();
+$installer->install(ISDEBUG);
 
 if ($installer->getError()){
 

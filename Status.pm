@@ -27,6 +27,7 @@ use strict;
 use warnings;
 use utf8;
 
+
 my %gravityMap = (
    
    0 => 'OK',
@@ -46,14 +47,15 @@ my %revGravityMap = reverse %gravityMap;
 sub new{   
     my $class = shift;
     my $isDebug = shift || 0;
-        
+    
     my %lines = ();
-     
+    
     my $self = bless {
        _gravity     => 0,
        _message     => '',
        _lines       => \ %lines,
        _isDebug     => $isDebug,
+       _utils       => Utils->new($isDebug),
         
     }, $class;
 
@@ -64,6 +66,12 @@ sub isDebug{
     
     return $self->{_isDebug};
 }
+sub getUtils{
+    my $self = shift;
+    
+    return $self->{_utils};
+}
+
 sub getGravity{
     my $self = shift;
 
@@ -107,13 +115,13 @@ sub record {
     my $command = shift;
     my $gravity = shift;
     my $message = shift;
-    my $details = shift;
-    
-    print 
-    
+    my ($details) = shift;
+
     my ($package, $filename, $line, $subroutine) = caller(1);
         
-    my $id = $filename." line: ".$line;
+    #my $id = $filename." line: ".$line.;
+    
+    my $id = $self->getUtils()->getTimestamp();
 
     $gravity=$self->_gravityDescToCode($gravity);
 
@@ -144,7 +152,7 @@ sub printout{
     
     my $in = $self->getLines($filter); 
     
-    for my $id (keys %$in){
+    for my $id (sort keys %$in){
     
         print " - Package    : ".$self->{_lines}->{$id}->{'package'}."\n";
         print " - Filename   : ".$self->{_lines}->{$id}->{'filename'}."\n";

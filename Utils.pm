@@ -26,6 +26,7 @@ package Utils;
 use strict;
 use warnings;
 use utf8;
+use Time::HiRes qw(time usleep nanosleep);
 
 use constant ISWINDOWS    => ( $^O =~ /^m?s?win/i ) ? 1 : 0;
 use constant ISMAC        => ( $^O =~ /darwin/i ) ? 1 : 0;
@@ -98,6 +99,9 @@ sub _finalizeCommand{
     }
     return $command;
 }
-
+sub getTimestamp{
+    usleep(1000);
+    return time;
+}
 1;
 

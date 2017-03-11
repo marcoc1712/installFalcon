@@ -44,6 +44,7 @@ sub new{
 
     return $self;
 }
+
 sub install {
     my $self = shift;
     
@@ -125,6 +126,11 @@ sub isWebServerInstalled{
     my $self = shift;
     
     return $self->{_isWebServerInstalled};
+}
+sub isFalconInstalled{
+    my $self = shift;
+    
+    return $self->{_isFalconInstalled};
 }
 ################################################################################
 #
