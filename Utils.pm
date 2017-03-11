@@ -21,19 +21,32 @@
 #
 ################################################################################
 
-package WebInterface::Utils;
+package Utils;
 
 use strict;
 use warnings;
 use utf8;
 
+use constant ISWINDOWS    => ( $^O =~ /^m?s?win/i ) ? 1 : 0;
+use constant ISMAC        => ( $^O =~ /darwin/i ) ? 1 : 0;
+use constant ISLINUX      => ( $^O =~ /linux/i ) ? 1 : 0;
+
+
 sub new{
-	my $class = shift;
-	return $class;
+    
+    my $class = shift;
+    my $inDebug = shift || 0;
+    
+     my $self = bless {
+        _inDebug      => $inDebug,
+        
+    }, $class;
+
+    return $self;
 }
 
 sub trim{
-    my $class = shift;
+    my $self = shift;
     my ($val) = shift;
 
     if (defined $val) {
@@ -49,15 +62,16 @@ sub trim{
     return $val;         
 }
 sub executeCommand{
+        my $self= shift;
 	my $command=shift;
 
 	#some hacking on quoting and escaping for differents Os...
-	$command= finalizeCommand($command);
+	$command= _finalizeCommand($command);
 
-	if ($main::ISDEBUG){
+	if ($self->{inDebug}){
 	
             print (qq(execute command  : $command));
-            print ($main::isDebug ? 'in debug' : 'production');
+            print ($self->{inDebug} ? 'in debug' : 'production');
 	
 	} 
 	
@@ -65,12 +79,12 @@ sub executeCommand{
         exec @args or print("couldn't exec command: $!");	
 
 }
-sub finalizeCommand{
+sub _finalizeCommand{
     my $command=shift;
 
     if (!defined $command || $command eq "") {return ""}
 
-    if (main::ISWINDOWS){
+    if (ISWINDOWS){
 
         # command could not start with ", should move it after the volume ID.
         if (substr($command,0,1) eq '"'){

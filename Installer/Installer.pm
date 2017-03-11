@@ -47,7 +47,7 @@ sub getError{
 sub install {
     my $self = shift;
     
-    $self->{_error} = Utils::trim("WARNING: not yet implemented");
+    $self->{_error} ="WARNING: not yet implemented";
     return 0;
 }
 1;

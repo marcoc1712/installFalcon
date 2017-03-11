@@ -44,7 +44,7 @@ sub new{
 sub install {
     my $self = shift;
     
-    $self->{_error} = Utils::trim("WARNING: sono in linux");
+    $self->{_error} = "WARNING: sono in linux";
     return 0;
 }
 1;

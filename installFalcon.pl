@@ -24,9 +24,11 @@
 use strict;
 use warnings;
 use utf8;
-use lib "/media/sf_SVILUPPO/installFalcon";
 
+use Utils;
 use Installer::Linux::Installer;
+use Installer::Mac::Installer;
+use Installer::Windows::Installer;
 
 use constant ISWINDOWS    => ( $^O =~ /^m?s?win/i ) ? 1 : 0;
 use constant ISMAC        => ( $^O =~ /darwin/i ) ? 1 : 0;
