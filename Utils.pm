@@ -26,25 +26,39 @@ package Utils;
 use strict;
 use warnings;
 use utf8;
-use Time::HiRes qw(time usleep nanosleep);
+
+use File::Copy qw(move copy);
+use Time::HiRes qw(time usleep);
+use POSIX qw(strftime);
 
 use constant ISWINDOWS    => ( $^O =~ /^m?s?win/i ) ? 1 : 0;
 use constant ISMAC        => ( $^O =~ /darwin/i ) ? 1 : 0;
 use constant ISLINUX      => ( $^O =~ /linux/i ) ? 1 : 0;
 
-
 sub new{
-    
     my $class = shift;
-    my $inDebug = shift || 0;
+    my $status = shift;
+    
     
      my $self = bless {
-        _inDebug      => $inDebug,
+        _status       => $status,
         
     }, $class;
 
     return $self;
 }
+sub getStatus{
+    my $self = shift;
+    
+    return $self->{_status};
+}
+sub isDebug{
+    my $self = shift;
+    
+    return $self->getStatus()->isDebug();
+}
+################################################################################
+# public
 
 sub trim{
     my $self = shift;
@@ -62,25 +76,147 @@ sub trim{
     }
     return $val;         
 }
+
 sub executeCommand{
-        my $self= shift;
-	my $command=shift;
+    my $self= shift;
+    my $command=shift;
 
-	#some hacking on quoting and escaping for differents Os...
-	$command= _finalizeCommand($command);
+    #some hacking on quoting and escaping for differents Os...
+    $command= _finalizeCommand($command);
 
-	if ($self->{inDebug}){
-	
-            print (qq(execute command  : $command));
-            print ($self->{inDebug} ? 'in debug' : 'production');
-	
-	} 
-        my @ret= `$command`;
-	my $err=$?;
-        
-        return ($err, @ret);
+    my @ret= `$command`;
+    my $err=$?;
+
+    return ($err, @ret);
 
 }
+
+sub mkDir{
+    my $self= shift;
+    my $dir = shift; 
+    
+    if (! $dir){
+        $self->getStatus()->record( " mkdir "."".", 0755",7, "undefined or empty dirname",'');
+        return undef;
+    }
+    
+    if (! -d $dir){
+        
+        mkdir $dir, 0755;
+    
+        if (! -d $dir){
+
+            $self->getStatus()->record( " mkdir ".$dir.", 0755",7, "can't create directory",'');
+            return undef;
+        }
+        if ($self->isDebug()){
+            $self->getStatus()->record(" mkdir ".$dir.", 0755",1, 'created','');
+        }
+    }
+    if ($self->isDebug()){
+            $self->getStatus()->record(" mkdir ".$dir.", 0755",1, 'already exists','');
+    }
+    return 1;
+}
+sub saveBUAndRemove{
+    my $self    = shift;
+    my $oldPath = shift;
+    my $newPath = shift;
+    
+    if (! -e $oldPath){
+            
+        $self->getStatus()->record( "",5, "file: ".$oldPath." does not exists.",'');        
+        return 1;
+    
+    }
+    
+    if (-e $newPath){
+        
+        $self->getStatus()->record( "",5, "file: ".$newPath." already exist, keeped",'');        
+        return  $self->removeFile($oldPath);
+    }
+    
+    return  $self->moveFile($oldPath, $newPath);
+}
+sub moveFile{
+    my $self    = shift;
+    my $oldPath = shift;
+    my $newPath = shift;
+    my $replace = shift || 0;
+    
+    if (! $oldPath || ! $newPath){
+        $self->getStatus()->record( "",7, "undefined or empty filepath",'');
+        return undef;
+    }
+    if (! $oldPath || ! $newPath){
+        $self->getStatus()->record( "",7, "undefined or empty filepath",'');
+        return undef;
+    }
+    if (! -e $oldPath) {
+        $self->getStatus()->record( "",7, "file: ".$oldPath." does not exists",'');
+        return undef;
+    }
+    if (-e $newPath && !$replace){
+        
+        $self->getStatus()->record( "",7, "file: ".$newPath." already exists, not replaced",'');
+        return undef;
+    }    
+    if (-e $newPath && !_remove($newPath)){
+        
+        $self->getStatus()->record( "",7, "file: ".$newPath." already exists, could not remove",'');
+         return undef;
+         
+    } elsif ($self->isDebug()){
+        
+        $self->getStatus()->record( "",1, "file: ".$newPath." removed",'');
+    }
+   
+    move $oldPath, $newPath;
+    
+    if (-e $oldPath || ! -e $newPath){
+        
+        $self->getStatus()->record( "",7, "cant move ".$oldPath." to ".$newPath,'');
+        return undef;  
+    }
+    $self->getStatus()->record( "",1, "file: ".$oldPath." moved to ".$newPath,'');
+    return 1;
+}
+sub removeFile{
+    my $self = shift;
+    my $path = shift;
+    
+    if (!$path){
+        $self->getStatus()->record( "",7, "undefined or empty filepath",'');
+        return undef;
+    }
+    if (! -e $path && $self->isDebug()){
+        
+        $self->getStatus()->record( "",1, "file: ".$path." does not exists",'');
+        return 1;
+    }
+    
+    unlink $path;
+    
+    if (! -e $path){
+        
+        $self->getStatus()->record( "",7, "can't remove ".$path,'');
+        return undef;
+    }
+     if ($self->isDebug()){
+        
+        $self->getStatus()->record( "",1, "file: ".$path." removed",'');
+    }
+    return 1;
+}
+sub getNow{
+    my $self = shift;
+    
+    return POSIX::strftime('%Y%m%d%H%M%S', localtime);
+    
+}
+#################################################################################
+# privates
+
 sub _finalizeCommand{
     my $command=shift;
 
@@ -99,9 +235,6 @@ sub _finalizeCommand{
     }
     return $command;
 }
-sub getTimestamp{
-    usleep(1000);
-    return time;
-}
+
 1;
 

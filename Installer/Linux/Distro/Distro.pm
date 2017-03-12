@@ -20,106 +20,66 @@
 # GNU General Public License for more details.
 #
 ################################################################################
-package Installer::Linux::Installer;
+package Installer::Linux::Distro::Distro;
 
 use strict;
 use warnings;
 use utf8;
 
-use base qw(Installer::Installer);
-
 sub new{
-    my $class 	= shift;
-    my $isDebug = shift || 0;
-
-    my $self=$class->SUPER::new($isDebug);
+    my $class = shift;
+    my $status = shift;
     
-    $self->{_archName} = undef;
-    $self->{_distroName} = undef;
-    
-    bless $self, $class;  
-    
-    $self-> _initArchName();
-    $self-> _initDistroName();
-    
-    if ($isDebug){
+    my $self = bless {
+        _status       => $status,
         
-        print ($self->getError() ? $self->getError()."\n" : "\n" );
-        print ($self->getArchName() ? $self->getArchName()."\n" : "\n" );
-        print ($self->getDistroName() ? $self->getDistroName()."\n" : "\n");
-    
-    }
+    }, $class;
+
     return $self;
 }
-sub getArchName{
+sub getStatus{
     my $self = shift;
     
-    return $self->{_archName};
+    return $self->{_status};
 }
-sub getDistroName{
+
+sub isDebug{
     my $self = shift;
     
-    return $self->{_distroName};
-} 
+    return $self->getStatus()->isDebug();
+}
+
 
 ################################################################################
-# protected
-# 
-sub install {
-    my $self = shift;
+#
 
+sub installSqueezeliteR2{
+    my $self = shift;
+    
+    my $buDir = "/var/www/backupFalcon/".$self->getUtils()->getNow();
+
+    $self->getStatus()->record('',5, "not implemented yet",'');
     return 0;
 }
-################################################################################
-# privates
-# 
 
-sub _initArchName {
+sub removeSqueezelite{
     my $self = shift;
-    
-    my ($err, $arch) = $self->getUtils()->executeCommand('uname -m');
-    
-    $self->{_archName} = $self->getUtils()->trim($arch);
-    
-    return !$self->_accumulateErrors($err)
-    
-}
-sub _initDistroName {
-    my $self = shift;
-    
-    if (( ! -e '/etc/os-release') || ( ! -r '/etc/os-release')){
-        
-        return $self->_accumulateErrors("ERROR: can't read os release")
-        
-    }
-    
-    my $err; 
-    my @answer;
-    
-    ($err, @answer) = $self->getUtils()->executeCommand('cat /etc/os-release');
-    
-    for my $row (@answer){
-    
-        $row = $self->getUtils()->trim($row);
-        
-         if (uc($row) =~ /^ID=/){
 
-            $self->{_distroName} =substr($row, 3);
-            last;
-        }
-        
-    }
+    my $buDir = "/var/www/backupFalcon/before";
     
-    if (!$err && !$self->{_distroName}) {
-        
-        return !$self->_accumulateErrors("ERROR: can't find distro name")
+    if (!$self->getUtils()->mkDir($buDir.'/usr/bin'){return undef;}
+    if (!$self->getUtils()->mkDir($buDir.'/etc/init.d'){return undef;}
+    if (!$self->getUtils()->mkDir($buDir.'/etc/default'){return undef;}
     
-    } elsif ($err){
+    my $file = '/usr/bin/squeeezelite';
+    if (!$self->getUtils()->saveBUAndRemove($file, $buDir.$file)){return undef;}
     
-        return !$self->_accumulateErrors($err)
-    }
-    
+    my $file = '/etc/default/squeezelite';
+    if (!$self->getUtils()->saveBUAndRemove($file, $buDir.$file)){return undef;}
+     
+    my $file = '/etc/init.d/squeezelite';
+    if (!$self->getUtils()->saveBUAndRemove($file, $buDir.$file)){return undef;}
+
     return 1;
 }
-
 1;

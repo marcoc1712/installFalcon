@@ -26,9 +26,6 @@ use strict;
 use warnings;
 use utf8;
 
-use File::Basename;
-use Cwd;
-
 use base qw(Installer::Installer);
 
 sub new{
@@ -39,6 +36,8 @@ sub new{
     
     $self->{_isLighttpdInstalled}  = undef;
     $self->{_isApache2Installed}   = undef;
+    $self->{_archName}             = undef;
+    $self->{_distroName}           = undef;
     
     bless $self, $class;  
 
@@ -57,73 +56,28 @@ sub isApache2Installed {
     
     return $self->{_isApache2Installed};
 }
-#override
-sub gitClone{
+sub getArchName{
     my $self = shift;
     
-    if (! -d '/var/www'){
-        
-        mkdir '/var/www', 0755;
+    return $self->{_archName};
+}
+sub getDistroName{
+    my $self = shift;
     
-        if (! -d '/var/www'){
-
-            $self->{_status}->record(' mkdir /var/www, 0755',7, "can't create directory",'');
-            return undef;
-        }
-    }
-    chdir '/var/www';
-    if (! cwd eq '/var/www'){
-        
-        $self->{_status}->record(' chdir /var/www',7, "can't move into directory",'');
-        return undef;
-    }
+    return $self->{_distroName};
+} 
+################################################################################
+#override
+sub prepareForFalcon{
+    my $self = shift;
     
-    #my $command = 'git clone https://github.com/marcoc1712/falcon.git';
-    my $command = 'git clone https://github.com/marcoc1712/falcon.git -b feature_DSD --single-branch';
+    if (!$self->getUtils()->mkDir('/var/www')){return undef;}
+    if (!$self->getUtils()->mkDir('/var/www/backupFalcon')){return undef;}
+    if (!$self->getUtils()->mkDir('/var/www/backupFalcon/before')){return undef;}
     
-    my ($err, @answ)= $self->getUtils()->executeCommand($command);
-    
-    if ($err){
-        $self->{_status}->record('git clone',7, $err,(join '\n', @answ));
-        return undef;
-    }
-    $self->{_status}->record('git clone',3, $err ? $err : 'done',(join '\n', @answ));
     
     return 1;
 }
-#override
-sub gitPull{
-    my $self = shift;
-    
-    chdir '/var/www/falcon';
-    if (! cwd eq '/var/www/falcon'){
-        
-        $self->{_status}->record(' chdir /var/www/falcon',7, "can't move into directory",'');
-        return undef;
-    }
-    my $command = 'git stash';
-    
-    my ($err, @answ)= $self->getUtils()->executeCommand($command);
-    
-    if ($err){
-        $self->{_status}->record('git stash',7, $err,(join '\n', @answ));
-        return undef;
-    }
-    $self->{_status}->record('git stash',3, $err ? $err : 'done',(join '\n', @answ));
-    
-    $command = 'git pull';
-    
-    ($err, @answ)= $self->getUtils()->executeCommand($command);
-    
-    if ($err){
-        $self->{_status}->record('git pull',7, $err,(join '\n', @answ));
-        return undef;
-    }
-    $self->{_status}->record('git pull',3, $err ? $err : 'done',(join '\n', @answ));
-
-    return 1;
-}
-
 
 ################################################################################
 # 
@@ -151,9 +105,84 @@ sub _init{
     }
     if ($self->isDebug()){
             
-            $self->{_status}->record('-d /var/www/falcon',1, ((-d '/var/www/falcon') ? 'found' : 'not found'),'');
+            $self->getStatus()->record('-d /var/www/falcon',1, ((-d '/var/www/falcon') ? 'found' : 'not found'),'');
     }
+    $self-> _initArchName();
+    $self-> _initDistroName();
 }
+
+sub _initArchName {
+    my $self = shift;
+    
+    my $command = 'uname -m';
+    my ($err, @answ) = $self->getUtils()->executeCommand($command);
+    
+    if ($err){
+        $self->getStatus()->record($command,7, $err,(join "/n", @answ));
+        return undef;
+    }
+    
+    if (scalar @answ != 1) {
+        $self->getStatus()->record($command,7, 'invalid answer',(join "/n", @answ));
+        return undef;
+    }
+    
+    $self->{_archName} = $self->getUtils()->trim($answ[0]);
+   
+    if (!$self->{_archName}) {
+        $self->getStatus()->record($command,7, 'invalid answer',(join "/n", @answ));
+        return undef;
+    }
+    
+    if ($self->isDebug()){
+            
+            $self->getStatus()->record($command,1, "Arch: ".$self->{_archName} ,'');
+    }
+    return 1;
+    
+}
+
+sub _initDistroName {
+    my $self = shift;
+    
+    if (( ! -e '/etc/os-release') || ( ! -r '/etc/os-release')){
+        
+        $self->getStatus()->record('-e /etc/os-release',7,'not found','');
+        return undef;
+    }
+    my $command = 'cat /etc/os-release';
+    my ($err, @answ) = $self->getUtils()->executeCommand($command);
+    
+    if ($err){
+        
+        $self->getStatus()->record($command,7,$err,(join "/n", @answ));
+        return undef;
+        
+    }
+    for my $row (@answ){
+    
+        $row = $self->getUtils()->trim($row);
+        
+         if (uc($row) =~ /^ID=/){
+
+            $self->{_distroName} =substr($row, 3);
+            last;
+        }
+        
+    }
+    if (!$self->{_distroName}) {
+
+        $self->getStatus()->record($command,7,"ERROR: can't find distro name in: ",(join "/n", @answ));
+        return undef;
+    
+    }
+       if ($self->isDebug()){
+            
+            $self->getStatus()->record($command,1, "Distro: ".$self->{_distroName} ,'');
+    }
+    return 1;
+}
+
 sub _whereIs{
     my $self= shift;
     my $executable = shift;
@@ -165,11 +194,11 @@ sub _whereIs{
     my ($err, @answ)= $self->getUtils()->executeCommand($command);
     
     if ($err){
-        $self->{_status}->record($command,7, $err,@answ);
+        $self->getStatus()->record($command,7, $err,@answ);
         return undef;
     }
     if (scalar @answ != 1) {
-        $self->{_status}->record($command,7, 'invalid answer',(join "/n", @answ));
+        $self->getStatus()->record($command,7, 'invalid answer',(join "/n", @answ));
         return undef;
     }
     
@@ -177,14 +206,14 @@ sub _whereIs{
     
     if (scalar @elements < 1){
         
-        $self->{_status}->record($command,7, 'invalid answer',(join "/n", @answ));
+        $self->getStatus()->record($command,7, 'invalid answer',(join "/n", @answ));
         return undef;   
     }
     if (scalar @elements == 1){
         
         if ($self->isDebug()){
             
-            $self->{_status}->record($command,1, 'not found',(join "/n", @answ));
+            $self->getStatus()->record($command,1, 'not found',(join "/n", @answ));
         }
         return undef;   
     }
@@ -192,7 +221,7 @@ sub _whereIs{
     shift @elements;
     
     if ($self->isDebug()){
-        $self->{_status}->record($command,1, 'elements dopo shift',(join " ", @elements));
+        $self->getStatus()->record($command,1, 'elements dopo shift',(join " ", @elements));
     }
     
     for my $el (@elements){
@@ -205,7 +234,7 @@ sub _whereIs{
             
             if ($self->isDebug()){
             
-                $self->{_status}->record($command,1,'found',$el);
+                $self->getStatus()->record($command,1,'found',$el);
             }
             
             return $el; 
@@ -215,7 +244,7 @@ sub _whereIs{
         
     }
     if ($self->isDebug()){
-        $self->{_status}->record($command,1, 'not found in',(join " ", @elements));
+        $self->getStatus()->record($command,1, 'not found in',(join " ", @elements));
     }
     return undef;
 }
