@@ -33,115 +33,106 @@ sub new{
     my $isDebug = shift || 0;
     
     my $self=$class->SUPER::new($isDebug);
-    
-    $self->{_isLighttpdInstalled}  = undef;
-    $self->{_isApache2Installed}   = undef;
-    $self->{_archName}             = undef;
+
     $self->{_distroName}           = undef;
+    $self->{_distro}               = undef;
     
     bless $self, $class;  
 
-    $self->_init();
+    $self-> _initDistroName();
+    
+    if ($self->{_distroName} eq 'gentoo'){
+        
+        $self->{_distro}  = Installer::Linux::Distro::Gentoo->new($self->getStatus());
+        
+    } else {
+        
+        $self->{_distro} = Installer::Linux::Distro::Debian->new($self->getStatus());
+    }
     
     return $self;
 }
-sub isLighttpdInstalled {
-    my $self = shift;
-    
-    return $self->{_isLighttpdInstalled};
-}
 
-sub isApache2Installed {
-    my $self = shift;
-    
-    return $self->{_isApache2Installed};
-}
-sub getArchName{
-    my $self = shift;
-    
-    return $self->{_archName};
-}
 sub getDistroName{
     my $self = shift;
     
     return $self->{_distroName};
 } 
+sub getDistro{
+    my $self = shift;
+    
+    return $self->{_distro};
+}
 ################################################################################
 #override
+sub isGitInstalled{
+    my $self = shift;
+    
+    return  $self->getDistro()->isGitInstalled();
+}
+
+sub isSqueezeliteInstalled{
+    my $self = shift;
+    
+    return  $self->getDistro()->isSqueezeliteInstalled();
+}
+
+sub isSqueezeliteR2Installed{
+    my $self = shift;
+    
+    return  $self->getDistro()->isSqueezeliteR2Installed();
+}
+sub isWebServerInstalled{
+    my $self = shift;
+    
+    return  $self->getDistro()->isWebServerInstalled();
+}
+sub isFalconInstalled{
+    my $self = shift;
+    
+    return  $self->getDistro()->isFalconInstalled();
+}
 sub prepareForFalcon{
     my $self = shift;
     
-    if (!$self->getUtils()->mkDir('/var/www')){return undef;}
-    if (!$self->getUtils()->mkDir('/var/www/backupFalcon')){return undef;}
-    if (!$self->getUtils()->mkDir('/var/www/backupFalcon/before')){return undef;}
-    
-    
-    return 1;
+    return  $self->getDistro()->prepareForFalcon();
 }
 
+sub removeSqueezelite{
+    my $self = shift;
+    
+    
+    return  $self->getDistro()->removeSqueezelite();
+}
+
+sub installSqueezeliteR2{
+    my $self = shift;
+    
+
+    return  $self->getDistro()->installSqueezeliteR2();
+}
+
+sub installGit{
+    my $self = shift;
+    
+    return  $self->getDistro()->installGit();
+}
+
+sub configureFalcon{
+    my $self    = shift;
+    my $default = shift || 'KEEP';
+    
+   return  $self->getDistro()->configureFalcon();
+}
+
+sub installWebServer{
+    my $self = shift;
+
+    return  $self->getDistro()->installWebServer();
+}
 ################################################################################
 # 
 # privates.
-
-sub _init{
-    my $self= shift;
-    
-    $self->{_isGitInstalled}= $self->_whereIs('git');
-    $self->{_isSqueezeliteInstalled}= $self->_whereIs('squeezelite');
-    $self->{_isSqueezeliteR2Installed}= $self->_whereIs('squeezelite-R2');
-    $self->{_isLighttpdInstalled} =  $self->_whereIs('lighttpd');
-    $self->{_isApache2Installed} = $self->_whereIs('apache2');
-    
-    if ($self->{_isLighttpdInstalled} || $self->{_isApache2Installed}) {
-        
-         $self->{_isWebServerInstalled} = 1;
-    }
-    
-    #$self->{_isFalconInstalled}= $self->_whereIs('loadAudioCards');
-    
-    if (-d '/var/www/falcon'){
-            
-            $self->{_isFalconInstalled}=1;
-    }
-    if ($self->isDebug()){
-            
-            $self->getStatus()->record('-d /var/www/falcon',1, ((-d '/var/www/falcon') ? 'found' : 'not found'),'');
-    }
-    $self-> _initArchName();
-    $self-> _initDistroName();
-}
-
-sub _initArchName {
-    my $self = shift;
-    
-    my $command = 'uname -m';
-    my ($err, @answ) = $self->getUtils()->executeCommand($command);
-    
-    if ($err){
-        $self->getStatus()->record($command,7, $err,(join "/n", @answ));
-        return undef;
-    }
-    
-    if (scalar @answ != 1) {
-        $self->getStatus()->record($command,7, 'invalid answer',(join "/n", @answ));
-        return undef;
-    }
-    
-    $self->{_archName} = $self->getUtils()->trim($answ[0]);
-   
-    if (!$self->{_archName}) {
-        $self->getStatus()->record($command,7, 'invalid answer',(join "/n", @answ));
-        return undef;
-    }
-    
-    if ($self->isDebug()){
-            
-            $self->getStatus()->record($command,1, "Arch: ".$self->{_archName} ,'');
-    }
-    return 1;
-    
-}
-
 sub _initDistroName {
     my $self = shift;
     
@@ -181,72 +172,6 @@ sub _initDistroName {
             $self->getStatus()->record($command,1, "Distro: ".$self->{_distroName} ,'');
     }
     return 1;
-}
-
-sub _whereIs{
-    my $self= shift;
-    my $executable = shift;
-    
-    if (!$executable) {return undef;}
-    
-    my $command = 'whereis '.$executable;
-    
-    my ($err, @answ)= $self->getUtils()->executeCommand($command);
-    
-    if ($err){
-        $self->getStatus()->record($command,7, $err,@answ);
-        return undef;
-    }
-    if (scalar @answ != 1) {
-        $self->getStatus()->record($command,7, 'invalid answer',(join "/n", @answ));
-        return undef;
-    }
-    
-    my @elements = split ' ', $answ[0];
-    
-    if (scalar @elements < 1){
-        
-        $self->getStatus()->record($command,7, 'invalid answer',(join "/n", @answ));
-        return undef;   
-    }
-    if (scalar @elements == 1){
-        
-        if ($self->isDebug()){
-            
-            $self->getStatus()->record($command,1, 'not found',(join "/n", @answ));
-        }
-        return undef;   
-    }
-    
-    shift @elements;
-    
-    if ($self->isDebug()){
-        $self->getStatus()->record($command,1, 'elements dopo shift',(join " ", @elements));
-    }
-    
-    for my $el (@elements){
-        
-        my $name = File::Basename::basename($el);
-        
-        if (!$name) {next;}
-        
-        if ($name eq $executable){
-            
-            if ($self->isDebug()){
-            
-                $self->getStatus()->record($command,1,'found',$el);
-            }
-            
-            return $el; 
-            last;
-            
-        }
-        
-    }
-    if ($self->isDebug()){
-        $self->getStatus()->record($command,1, 'not found in',(join " ", @elements));
-    }
-    return undef;
 }
 
 1;

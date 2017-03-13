@@ -115,7 +115,7 @@ sub record {
     my $command = shift;
     my $gravity = shift;
     my $message = shift;
-    my ($details) = shift;
+    my ($details) = shift || '';
 
     my ($package, $filename, $line, $subroutine) = caller(1);
         

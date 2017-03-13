@@ -37,14 +37,7 @@ sub new{
     my $self = bless {        
         _status                     => undef,
         _utils                      => undef,
-        
-        _isGitInstalled             => undef,
-        _isFalconInstalled          => undef,
-        _isSqueezeliteInstalled     => undef,
-        _isSqueezeliteR2Installed   => undef,
-        _isWebServerInstalled       => undef,
 
-        
     }, $class;
     
     $self->{_status} = Status->new($isDebug);
@@ -112,16 +105,6 @@ sub isFalconInstalled{
 sub install {
     my $self = shift;
    
-    if (!$self->isSqueezeliteInstalled()){
-
-        $self->installSqueezeliteR2();
-    
-    } elsif (!$self->isSqueezeliteR2Installed()){
-        
-        $self->removeSqueezelite();
-        $self->installSqueezeliteR2();
-    }
-    
     $self->prepareForFalcon();
     
     if (!$self->isGitInstalled()){
@@ -140,6 +123,16 @@ sub install {
         $self->configureFalcon('KEEP');
     }
     
+    if (!$self->isSqueezeliteInstalled()){
+
+        $self->installSqueezeliteR2();
+    
+    } elsif (!$self->isSqueezeliteR2Installed()){
+        
+        $self->removeSqueezelite();
+        $self->installSqueezeliteR2();
+    }
+    
     if (!$self->isWebServerInstalled()){
         
         $self->installWebServer();
@@ -155,7 +148,7 @@ sub gitClone{
     my $self = shift;
 
     chdir '/var/www';
-    if (! cwd eq '/var/www'){
+    if (! getcwd eq '/var/www'){
         
         $self->getStatus()->record(' chdir /var/www',7, "can't move into directory",'');
         return undef;
@@ -236,7 +229,7 @@ sub installSqueezeliteR2{
 sub installGit{
     my $self = shift;
     
-     $self->getStatus()->record('',5, "not implemented yet",'');
+    $self->getStatus()->record('',5, "not implemented yet",'');
     return 0;
 }
 

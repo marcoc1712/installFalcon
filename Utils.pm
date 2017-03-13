@@ -138,18 +138,65 @@ sub saveBUAndRemove{
     
     return  $self->moveFile($oldPath, $newPath);
 }
+sub copyFile{
+    my $self    = shift;
+    my $oldPath = shift;
+    my $newPath = shift;
+    my $replace = shift || 0;
+    
+    if (! $oldPath ){
+        $self->getStatus()->record( "",7, "undefined or empty old filepath",'');
+        return undef;
+    }
+    if (! $newPath){
+        $self->getStatus()->record( "",7, "undefined or empty new filepath",'');
+        return undef;
+    }
+    if (! -e $oldPath) {
+        $self->getStatus()->record( "",7, "file: ".$oldPath." does not exists",'');
+        return undef;
+    }
+    if (-e $newPath && !$replace){
+        
+        $self->getStatus()->record( "",7, "file: ".$newPath." already exists, not replaced",'');
+        return undef;
+    }    
+    if (-e $newPath && !_remove($newPath)){
+        
+        $self->getStatus()->record( "",7, "file: ".$newPath." already exists, could not remove",'');
+         return undef;
+         
+    } elsif ($self->isDebug()){
+        
+        $self->getStatus()->record( "",1, "file: ".$newPath." removed",'');
+    }
+   
+    copy $oldPath, $newPath;
+    
+    if (! -e $newPath){
+        
+        $self->getStatus()->record( "",7, "can't copy ".$oldPath." to ".$newPath,'');
+        return undef;  
+    }
+    if ($self->isDebug()){
+        $self->getStatus()->record( "",1, "file: ".$oldPath." copied to ".$newPath,'');
+    }
+    
+    return 1;
+}
 sub moveFile{
     my $self    = shift;
     my $oldPath = shift;
     my $newPath = shift;
     my $replace = shift || 0;
     
-    if (! $oldPath || ! $newPath){
-        $self->getStatus()->record( "",7, "undefined or empty filepath",'');
+    
+    if (! $oldPath ){
+        $self->getStatus()->record( "",7, "undefined or empty old filepath",'');
         return undef;
     }
-    if (! $oldPath || ! $newPath){
-        $self->getStatus()->record( "",7, "undefined or empty filepath",'');
+    if (! $newPath){
+        $self->getStatus()->record( "",7, "undefined or empty new filepath",'');
         return undef;
     }
     if (! -e $oldPath) {
@@ -175,10 +222,13 @@ sub moveFile{
     
     if (-e $oldPath || ! -e $newPath){
         
-        $self->getStatus()->record( "",7, "cant move ".$oldPath." to ".$newPath,'');
+        $self->getStatus()->record( "",7, "can't move ".$oldPath." to ".$newPath,'');
         return undef;  
     }
-    $self->getStatus()->record( "",1, "file: ".$oldPath." moved to ".$newPath,'');
+    if ($self->isDebug()){
+        $self->getStatus()->record( "",1, "file: ".$oldPath." moved to ".$newPath,'');
+    }
+    
     return 1;
 }
 sub removeFile{
@@ -208,10 +258,11 @@ sub removeFile{
     }
     return 1;
 }
-sub getNow{
+sub getTimeString {
     my $self = shift;
+    my $time = shift || time;
     
-    return POSIX::strftime('%Y%m%d%H%M%S', localtime);
+    return POSIX::strftime('%Y%m%d%H%M%S', localtime($time));
     
 }
 #################################################################################
