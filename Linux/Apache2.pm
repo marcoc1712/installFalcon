@@ -26,7 +26,7 @@ use strict;
 use warnings;
 use utf8;
 
-use base qw(Webserver);
+use base qw(WebServer);
 
 use constant APACHE2 => 'apache2';
 
@@ -63,20 +63,58 @@ sub isInstalled{
     return $self->{_path} ? 1 : 0;
 }
 
-$self->getConf()
+################################################################################
+# settinggs
 
-sub config{
+sub getWWWDirectory{
+    my $self = shift;
+    
+    return $self->getSettings()->{WWW_DIRECTORY};
+}
+
+sub getFalconHome{
+    my $self = shift;
+    
+    return $self->getSettings()->{FALCON_HOME};
+}
+sub getBackUpDirectory{
+    my $self = shift;
+    
+    return $self->getSettings()->{BACKUP_DIRECTORY};
+}
+sub getBeforeBackUpDirectory{
+    my $self = shift;
+    
+    return $self->getSettings()->{BEFORE_DIRECTORY};
+}
+sub getCurrentBackUpDirectory{
+    my $self = shift;
+    
+    my $timestamp = $self->getUtils()->getTimeString($self->getStatus()->wasStartetAt());
+    return $self->getBackUpDirectory()."/".$timestamp;
    
+}
+################################################################################
+#protected
+sub _start{
+    
+}
+sub _stop { 
+    
+}
+sub _config{
+    my $self = shift;
+    
     my $before  =  $self->getBeforeBackUpDirectory().$self->getConf();
     my $current =  $self->getCurrentBackUpDirectory().$self->getConf();
    
     if (-e $self->getConf() && 
         ! -e $before && 
-        !$self->getUtils()->saveBUAndRemove(,$before)){return undef;}
+        !$self->getUtils()->saveBUAndRemove($self->getConf(),$before)){return undef;}
    
-    if (-e $self->getConf() && 
-        !$self->getUtils()->saveBUAndRemove(,$current)){return undef;}
-   
+    else (-e $self->getConf() && 
+        !$self->getUtils()->saveBUAndRemove($self->getConf(),$current)){return undef;}
+    
     if (!$self->getUtils()->copyFile($self->getConfSource, $self->getConf())){
         
         $self->getStatus()->record("copy ".$self->getConfSource()." , ". $self->getConf(),7, 

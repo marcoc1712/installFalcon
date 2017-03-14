@@ -74,12 +74,6 @@ sub getSettings{
     
     return $self->{_settings};
 }
-sub isFalconInstalled{
-    my $self = shift;
-    
-    return $self->{_isFalconInstalled};
-}
-
 
 ################################################################################
 # To be overidden
@@ -102,16 +96,14 @@ sub getWebServer{
     $self->getStatus()->record('',5, "not implemented yet",'');
     return 0;
 }
-sub prepareForFalcon{
+sub getFalcon{
     my $self = shift;
     
     $self->getStatus()->record('',5, "not implemented yet",'');
     return 0;
 }
-
-sub configureFalcon{
-    my $self    = shift;
-    my $default = shift || 'KEEP';
+sub prepare{
+    my $self = shift;
     
     $self->getStatus()->record('',5, "not implemented yet",'');
     return 0;
@@ -122,9 +114,15 @@ sub configureFalcon{
 #
 sub install {
     my $self = shift;
-   
-    if !($self->prepareForFalcon()){return undef;}
     
+    if (!$self->prepare()){return undef;}
+    
+    if (!$self->getFalcon()){
+        
+        $self->getStatus()->record('',9, "cant load falcon installer",'');
+        return undef;
+    }
+
     if (!$self->getGit()){
         
         $self->getStatus()->record('',9, "cant load git installer",'');
@@ -136,15 +134,15 @@ sub install {
         if (!$self->getGit()->install()){return undef;}
         
     } 
-    if (!$self->isFalconInstalled()){
+    if (!$self->getFalcon()->isInstalled()){
 
         $self->getGit()->gitClone();
-        $self->configureFalcon('DEFAULT');
+        $self->getFalcon()->Install();
     
     } else {
         
         $self->getGit()->gitPull();
-        $self->configureFalcon('KEEP');
+        $self->getFalcon()->upgrade();
     }
 
     if (!$self->getSqueezelite()){
@@ -160,10 +158,10 @@ sub install {
         $self->getStatus()->record('',9, "cant load webserver installer",'');
         return undef;
     }
-    if (!$self->getWebServer()->isInstalled()){
+    #if (!$self->getWebServer()->isInstalled()){
         
         if (!$self->getWebServer()->install()){return undef;}; 
-    } 
+    #} 
     
     return 1;
 }

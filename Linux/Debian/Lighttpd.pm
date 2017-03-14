@@ -51,8 +51,12 @@ sub new{
 sub install{
     my $self = shift;
 
-    if (!$self->getUtils()->aptGetInstall(LIGHTTPD)){return undef};
-    return $self->config();
+    $self->getUtils()->serviceStop('lighttpd');
+     
+    if (!$self->getUtils()->aptGetInstall('lighttpd')){return undef};
+    if (!$self->_config()){return undef;}
+    
+    $self->getUtils()->serviceStart('lighttpd');
 }
 
 ################################################################################

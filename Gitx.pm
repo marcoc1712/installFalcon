@@ -21,7 +21,7 @@
 #
 ################################################################################
 
-package Gitx;
+package Gitx; #can't Git->new()...
 
 use strict;
 use warnings;

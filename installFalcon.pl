@@ -25,21 +25,10 @@ use strict;
 use warnings;
 use utf8;
 
-use Utils;
 use Status;
-use Settings;
-use Git;
-use Webserver;
-
-
 use Mac::Installer;
 use Windows::Installer;
 use Linux::Installer;
-use Linux::Settings;
-use Linux::Debian::Distro;
-use Linux::Debian::Settings;
-use Linux::Gentoo::Distro;
-use Linux::Gentoo::Settings;
 
 use constant ISWINDOWS    => ( $^O =~ /^m?s?win/i ) ? 1 : 0;
 use constant ISMAC        => ( $^O =~ /darwin/i ) ? 1 : 0;

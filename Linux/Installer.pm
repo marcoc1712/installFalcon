@@ -26,6 +26,10 @@ use strict;
 use warnings;
 use utf8;
 
+use Linux::Settings;
+use Linux::Gentoo::Distro;
+use Linux::Debian::Distro;
+
 use base qw(Installer);
 
 sub new{
@@ -79,34 +83,24 @@ sub getGit{
     return  $self->getDistro()->getGit();
 }
 
-sub isWebServerInstalled{
+sub getWebServer{
     my $self = shift;
     
-    return  $self->getDistro()->isWebServerInstalled();
-}
-sub isFalconInstalled{
-    my $self = shift;
-    
-    return  $self->getDistro()->isFalconInstalled();
-}
-sub prepareForFalcon{
-    my $self = shift;
-    
-    return  $self->getDistro()->prepareForFalcon();
+    return  $self->getDistro()->getWebServer();
 }
 
-sub configureFalcon{
-    my $self    = shift;
-    my $default = shift || 'KEEP';
-    
-   return  $self->getDistro()->configureFalcon();
-}
-
-sub installWebServer{
+sub getFalcon{
     my $self = shift;
-
-    return  $self->getDistro()->installWebServer();
+    
+    return  $self->getDistro()->getFalcon();
 }
+
+sub prepare{
+    my $self = shift;
+    
+    return  $self->getDistro()->prepare();
+}
+
 ################################################################################
 # privates.
 #

@@ -26,7 +26,7 @@ use strict;
 use warnings;
 use utf8;
 
-use base qw(Webserver);
+use base qw(WebServer);
 
 use constant LIGHTTPD => 'lighttpd';
 
@@ -64,16 +64,17 @@ sub isInstalled{
 }
 
 sub config{
+    my $self = shift;
    
     my $before  =  $self->getBeforeBackUpDirectory().$self->getConf();
     my $current =  $self->getCurrentBackUpDirectory().$self->getConf();
    
     if (-e $self->getConf() && 
         ! -e $before && 
-        !$self->getUtils()->saveBUAndRemove(,$before)){return undef;}
+        !$self->getUtils()->saveBUAndRemove($self->getConf(),$before)){return undef;}
    
     if (-e $self->getConf() && 
-        !$self->getUtils()->saveBUAndRemove(,$current)){return undef;}
+        !$self->getUtils()->saveBUAndRemove($self->getConf(),$current)){return undef;}
    
     if (!$self->getUtils()->copyFile($self->getConfSource, $self->getConf())){
         

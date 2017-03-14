@@ -32,6 +32,9 @@ sub new{
     my $class = shift;
 
     my $self=$class->SUPER::new();
+    
+    $self->{DEFCON_DIRECTORY}   = '/etc/conf.d',
+    
     bless $self, $class; 
 
     return $self;

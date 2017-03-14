@@ -26,7 +26,6 @@ use strict;
 use warnings;
 use utf8;
 
-use Linux::Distro;
 use Linux::Debian::Squeezelite;
 use Linux::Debian::Git;
 

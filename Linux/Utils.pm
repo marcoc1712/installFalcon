@@ -67,7 +67,7 @@ sub getArchName {
     
     if ($self->isDebug()){
             
-            $self->getStatus()->record($command,1, "Arch: ".$archname ,'');
+            $self->getStatus()->record($command,3, "Arch: ".$archname ,'');
     }
     return $archname;  
 }
@@ -225,7 +225,7 @@ sub whereIs{
         
         if ($self->isDebug()){
             
-            $self->getStatus()->record($command,1, 'not found',(join "/n", @answ));
+            $self->getStatus()->record($command,3, 'not found',(join "/n", @answ));
         }
         return undef;   
     }
@@ -246,7 +246,7 @@ sub whereIs{
             
             if ($self->isDebug()){
             
-                $self->getStatus()->record($command,1,'found',$el);
+                $self->getStatus()->record($command,3,'found',$el);
             }
             
             return $el; 
@@ -256,7 +256,7 @@ sub whereIs{
         
     }
     if ($self->isDebug()){
-        $self->getStatus()->record($command,1, 'not found in',(join " ", @elements));
+        $self->getStatus()->record($command,3, 'not found in',(join " ", @elements));
     }
     return undef;
 }

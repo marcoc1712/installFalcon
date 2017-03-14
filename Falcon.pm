@@ -20,46 +20,80 @@
 # GNU General Public License for more details.
 #
 ################################################################################
-package Linux::Debian::Apache2;
+
+package Falcon;
 
 use strict;
 use warnings;
 use utf8;
 
-use Linux::Debian::Utils;
-use Linux::Debian::Settings;
-
-use base qw(Linux::Apache2);
+use Utils;
+use Settings;
 
 sub new{
-    my $class  = shift;
+    my $class = shift;
     my $status = shift;
-    
-    my $self=$class->SUPER::new($status);
-    
-    $self->{_utils}          = Linux::Debian::Utils->new($status);
-    $self->{_settings}       = Linux::Debian::Settings->new($status);
-    
-    bless $self, $class;
 
+    my $self = bless {
+        
+        _status      => $status, 
+        _utils       => Utils->new($status),
+        _settings    => Settings->new(),
+        
+    }, $class;
+    
     return $self;
 }
-
-################################################################################
-#override
-
-sub install{
+sub getStatus{
     my $self = shift;
     
-    $self->getUtils()->serviceStop('apache2');
-     
-    if (!$self->getUtils()->aptGetInstall('apache2')){return undef};
-    if (!$self->_config()){return undef;}
-    
-    $self->getUtils()->serviceStart('apache2');
+    return $self->{_status};
 }
+sub isDebug{
+    my $self = shift;
+    
+    return $self->getStatus()->isDebug();
+}
+sub getUtils{
+    my $self = shift;
 
+    return $self->{_utils};
+}
+sub getSettings{
+    my $self = shift;
+    
+    return $self->{_settings};
+}
 ################################################################################
-# privates
+# tobe overidden
 #
+
+sub isInstalled{
+    my $self = shift;
+
+    $self->getStatus()->record('',5, "not implemented yet",'');
+    return 0;
+}
+sub install{
+    my $self    = shift;
+    
+    $self->getStatus()->record('',5, "not implemented yet",'');
+    return 0;
+}
+sub upgrade{
+    my $self    = shift;
+    
+    $self->getStatus()->record('',5, "not implemented yet",'');
+    return 0;
+}
+sub remove{
+    my $self    = shift;
+    
+    $self->getStatus()->record('',5, "not implemented yet",'');
+    return 0;
+}
+################################################################################
+#privates
+#
+
 1;

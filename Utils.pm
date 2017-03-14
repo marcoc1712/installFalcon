@@ -29,6 +29,7 @@ use utf8;
 
 use File::Copy qw(move copy);
 use File::Path;
+use File::Basename;
 use Time::HiRes qw(time usleep);
 use POSIX qw(strftime);
 
@@ -120,6 +121,7 @@ sub mkDir{
     return 1;
 }
 
+
 sub saveBUAndRemove{
     my $self    = shift;
     my $oldPath = shift;
@@ -137,11 +139,15 @@ sub saveBUAndRemove{
         $self->getStatus()->record( "",5, "file: ".$newPath." already exist, keeped",'');        
         return  $self->removeFile($oldPath);
     }
+
+    if (!$self->mkDir(File::Basename::dirname($newPath))){return undef;}
     
     return  $self->moveFile($oldPath, $newPath);
 }
 
-sub copyFile{
+#commons between copy and move-
+
+sub _ckcopy{
     my $self    = shift;
     my $oldPath = shift;
     my $newPath = shift;
@@ -177,6 +183,16 @@ sub copyFile{
             $self->getStatus()->record( "",1, "file: ".$newPath." removed",'');
         }
     }
+    return 1;
+}
+
+sub copyFile{
+    my $self    = shift;
+    my $oldPath = shift;
+    my $newPath = shift;
+    my $replace = shift || 0;
+    
+    if (!$self->_ckcopy($oldPath,$newPath,$replace)){return undef;}
    
     copy $oldPath, $newPath;
     
@@ -196,38 +212,8 @@ sub moveFile{
     my $oldPath = shift;
     my $newPath = shift;
     my $replace = shift || 0;
-    
-    
-    if (! $oldPath ){
-        $self->getStatus()->record( "",7, "undefined or empty old filepath",'');
-        return undef;
-    }
-    if (! $newPath){
-        $self->getStatus()->record( "",7, "undefined or empty new filepath",'');
-        return undef;
-    }
-    if (! -e $oldPath) {
-        $self->getStatus()->record( "",7, "file: ".$oldPath." does not exists",'');
-        return undef;
-    }
-    if (-e $newPath){
-        
-        if (!$replace){
 
-            $self->getStatus()->record( "",7, "file: ".$newPath." already exists, not replaced",-e $newPath);
-            return undef;
-        }    
-        if (!_remove($newPath)){
-
-            $self->getStatus()->record( "",7, "file: ".$newPath." already exists, could not remove",'');
-            return undef;
-
-        }
-        if ($self->isDebug()){
-
-            $self->getStatus()->record( "",1, "file: ".$newPath." removed",'');
-        }
-    }
+    if (!$self->_ckcopy($oldPath,$newPath,$replace)){return undef;}
 
     move $oldPath, $newPath;
     

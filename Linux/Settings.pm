@@ -44,6 +44,14 @@ sub new{
     $self->{BIN_DIRECTORY}      = '/usr/bin',
     $self->{INIT_DIRECTORY}     = '/etc/init.d',
     $self->{DEFCON_DIRECTORY}   = '/etc/default',
+    
+    $self->{FALCON_CGI}         = '/var/www/falcon/cgi-bin',
+    $self->{FALCON_EXIT}        = '/var/www/falcon/exit',
+
+    $self->{FALCON_DATA}        = '/var/www/falcon/data',
+    $self->{FALCON_LOG}         = '/var/log/falcon',
+
+   
 
     #TOBE REPLACED BEFORE RELEASE.
     #$self->{GIT_CLONE_STRING}  = 'git clone https://github.com/marcoc1712/falcon.git';

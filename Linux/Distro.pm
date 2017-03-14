@@ -27,6 +27,10 @@ use warnings;
 use utf8;
 
 use Linux::Utils;
+use Linux::Settings;
+use Linux::Apache2;
+use Linux::LIghttpd;
+use Linux::Falcon;
 
 sub new{
     my $class = shift;
@@ -37,12 +41,14 @@ sub new{
         _utils                      => Linux::Utils->new($status),
         _settings                   => Linux::Settings->new(),
         
-        _archName                   => $self->getUtils()->getArchName(),
+        _archName                   => undef,
+    
+        _webserver                  => undef, 
+        _falcon                     => Linux::Falcon->new($status), 
         
-        _webserver                  =>undef; #see below
-
-
     }, $class;
+    
+    $self->getUtils()->getArchName();
     
     if ($self->getUtils()->whereIs('apache2')) {
         
@@ -50,10 +56,8 @@ sub new{
         
     } else{
         
-        $self->{_webserver}= Linux::LIghttpd->new($self->getStatus())}
+        $self->{_webserver}= Linux::LIghttpd->new($self->getStatus())
     }
-
-    $self->_init();
 
     return $self;
 }
@@ -83,24 +87,55 @@ sub getArchName{
     
     return $self->{_archName};
 } 
-
 sub getWebServer{
     my $self = shift;
     
     return $self->{_webserver};
 }
+sub getFalcon{
+    my $self = shift;
+    
+    return $self->{_falcon};
+}
+sub prepare{
+    my $self = shift;
+    
+    if (!$self->getUtils()->mkDir($self->getWWWDirectory())){return undef;}
+    if (!$self->getUtils()->mkDir($self->getBackUpDirectory())){return undef;}
+    if (!$self->getUtils()->mkDir($self->getBeforeBackUpDirectory())){return undef;}
+
+    return 1;
+}
+################################################################################
+# Tobe overidden
+#
+sub getSqueezelite{
+    my $self = shift;
+    
+    $self->getStatus()->record('',5, "not implemented yet",'');
+    return 0;
+}
+sub getGit{
+    my $self = shift;
+    
+    $self->getStatus()->record('',5, "not implemented yet",'');
+    return 0;
+}
+
+################################################################################
+# settinggs
 
 sub getWWWDirectory{
     my $self = shift;
     
     return $self->getSettings()->{WWW_DIRECTORY};
 }
+
 sub getFalconHome{
     my $self = shift;
     
     return $self->getSettings()->{FALCON_HOME};
 }
-
 sub getBackUpDirectory{
     my $self = shift;
     
@@ -119,66 +154,7 @@ sub getCurrentBackUpDirectory{
    
 }
 ################################################################################
-# Tobe overidden
-#
-sub getSqueezelite{
-    my $self = shift;
-    
-    $self->getStatus()->record('',5, "not implemented yet",'');
-    return 0;
-}
-sub getGit{
-    my $self = shift;
-    
-    $self->getStatus()->record('',5, "not implemented yet",'');
-    return 0;
-}
-sub configureFalcon{
-    my $self    = shift;
-    my $default = shift || 'KEEP';
-    
-    $self->getStatus()->record('',5, "not implemented yet",'');
-    return 0;
-}
-
-
-sub isFalconInstalled{
-    my $self = shift;
-    
-    $self->getStatus()->record('',5, "not implemented yet",'');
-    return 0;
-}
-
-################################################################################
-#
-sub prepareForFalcon{
-    my $self = shift;
-    
-    if (!$self->getUtils()->mkDir($self->getWWWDirectory())){return undef;}
-    if (!$self->getUtils()->mkDir($self->getBackUpDirectory())){return undef;}
-    if (!$self->getUtils()->mkDir($self->getBeforeBackUpDirectory())){return undef;}
-
-    return 1;
-}
-
-################################################################################
 # private
 #
-sub _init{
-    my $self= shift;
 
-    my $falconHome =$self->getFalconHome();
-    
-    if (-d $falconHome){
-            
-            $self->{_isFalconInstalled}=1;
-    }
-    if ($self->isDebug()){
-            
-            $self->getStatus()->record('-d '.$falconHome,1, ((-d $falconHome) ? 'found' : 'not found'),'');
-    }
-
-    return 1;
-
-}
 1;
