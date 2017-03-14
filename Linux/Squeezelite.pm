@@ -31,7 +31,6 @@ use URI;
 
 use base qw(Squeezelite);
 
-
 use constant SQUEEZELITE => 'squeezelite';
 use constant SQUEEZELITE_R2 => 'squeezelite-R2';
 
@@ -41,19 +40,19 @@ sub new{
     
     my $self=$class->SUPER::new($status);
     
-    $self->{_utils}          = Linux::Utils->new($status);
+    $self->{_utils}   = Linux::Utils->new($status);
     
-    $self->{_settings}       = Linux::Settings->new($status);
+    $self->{_settings}= Linux::Settings->new($status);
    
-    $self->{_archName}       = $self->getUtils()->getArchName();
+    $self->{_archName}= $self->getUtils()->getArchName();
     
-    $self->{_path}           = undef;
-    $self->{_R2path}         = undef;
-    $self->{_version}        = undef;
-        
-    bless $self, $class;
+    $self->{_path}    = $self->getUtils()->whereIs(SQUEEZELITE);
+    $self->{_R2path}  = $self->getUtils()->whereIs(SQUEEZELITE_R2);
+    
+    $self->{_version} = $self->{_R2path} ? $self->_checkVersion($self->{_R2path})
+                                         : undef;
 
-    $self->_init();
+    bless $self, $class;
 
     return $self;
 }
@@ -204,36 +203,10 @@ sub uninstall{
     return 1;
 }
 
-sub _locateSqueezelite{
-    my $self = shift;
-    
-    return $self->getUtils()->whereIs(SQUEEZELITE);
-}
-
-sub _locateSqueezeliteR2{
-    my $self = shift;
-
-    return  $self->getUtils()->whereIs(SQUEEZELITE_R2);
-}
 
 ################################################################################
 # privates
 #
-
-sub _init{
-    my $self= shift;
-    
-    $self->{_path}   = $self->_locateSqueezelite();
-    $self->{_R2path} = $self->_locateSqueezeliteR2();
-
-    if ( $self->{_R2path} ) {
-    
-        $self->{_version} =  $self->_checkVersion($self->{_R2path});
-
-    }
-    
-    return 1;   
-}
 
 #only save a copy if non already there.
 sub _removeSqueezelite{

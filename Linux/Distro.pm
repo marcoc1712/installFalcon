@@ -37,18 +37,22 @@ sub new{
         _utils                      => Linux::Utils->new($status),
         _settings                   => Linux::Settings->new(),
         
-        _squeezelite                =>undef,
+        _archName                   => $self->getUtils()->getArchName(),
         
-        _archName                   =>undef,
-        
-        _isGitInstalled             => undef,
-        _isFalconInstalled          => undef,
-        _isWebServerInstalled       => undef,
-        _isLighttpdInstalled        => undef,
-        _isApache2Installed         => undef,
+        _webserver                  =>undef; #see below
+
 
     }, $class;
     
+    if ($self->getUtils()->whereIs('apache2')) {
+        
+        $self->{_webserver}= Linux::Apache2->new($self->getStatus())
+        
+    } else{
+        
+        $self->{_webserver}= Linux::LIghttpd->new($self->getStatus())}
+    }
+
     $self->_init();
 
     return $self;
@@ -79,26 +83,13 @@ sub getArchName{
     
     return $self->{_archName};
 } 
-sub getSqueezelite{
-    my $self = shift;
-    return $self->{_squeezelite};
-}
-sub isGitInstalled{
+
+sub getWebServer{
     my $self = shift;
     
-    return $self->{_isGitInstalled};
+    return $self->{_webserver};
 }
 
-sub isWebServerInstalled{
-    my $self = shift;
-    
-    return $self->{_isWebServerInstalled};
-}
-sub isFalconInstalled{
-    my $self = shift;
-    
-    return $self->{_isFalconInstalled};
-}
 sub getWWWDirectory{
     my $self = shift;
     
@@ -127,6 +118,36 @@ sub getCurrentBackUpDirectory{
     return $self->getBackUpDirectory()."/".$timestamp;
    
 }
+################################################################################
+# Tobe overidden
+#
+sub getSqueezelite{
+    my $self = shift;
+    
+    $self->getStatus()->record('',5, "not implemented yet",'');
+    return 0;
+}
+sub getGit{
+    my $self = shift;
+    
+    $self->getStatus()->record('',5, "not implemented yet",'');
+    return 0;
+}
+sub configureFalcon{
+    my $self    = shift;
+    my $default = shift || 'KEEP';
+    
+    $self->getStatus()->record('',5, "not implemented yet",'');
+    return 0;
+}
+
+
+sub isFalconInstalled{
+    my $self = shift;
+    
+    $self->getStatus()->record('',5, "not implemented yet",'');
+    return 0;
+}
 
 ################################################################################
 #
@@ -140,42 +161,12 @@ sub prepareForFalcon{
     return 1;
 }
 
-sub installGit{
-    my $self = shift;
-    
-     $self->getStatus()->record('',5, "not implemented yet",'');
-    return 0;
-}
-
-sub configureFalcon{
-    my $self    = shift;
-    my $default = shift || 'KEEP';
-    
-    $self->getStatus()->record('',5, "not implemented yet",'');
-    return 0;
-}
-
-sub installWebServer{
-    my $self = shift;
-
-    $self->getStatus()->record('',5, "not implemented yet",'');
-    return 0;
-}
 ################################################################################
 # private
 #
 sub _init{
     my $self= shift;
-    
-    $self->{_isGitInstalled}=           $self->getUtils()->whereIs('git');
-    $self->{_isLighttpdInstalled} =     $self->getUtils()->whereIs('lighttpd');
-    $self->{_isApache2Installed} =      $self->getUtils()->whereIs('apache2');
-    
-    if ($self->{_isLighttpdInstalled} || $self->{_isApache2Installed}) {
-        
-         $self->{_isWebServerInstalled} = 1;
-    }
-    
+
     my $falconHome =$self->getFalconHome();
     
     if (-d $falconHome){
@@ -186,11 +177,8 @@ sub _init{
             
             $self->getStatus()->record('-d '.$falconHome,1, ((-d $falconHome) ? 'found' : 'not found'),'');
     }
-    
-    $self->{_archName} = $self->getUtils()->getArchName();
 
     return 1;
-    
 
 }
 1;

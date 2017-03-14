@@ -20,38 +20,43 @@
 # GNU General Public License for more details.
 #
 ################################################################################
-package Linux::Debian::Distro;
+package Linux::Debian::Utils;
 
 use strict;
 use warnings;
 use utf8;
+use File::Basename;
 
-use Linux::Distro;
-use Linux::Debian::Squeezelite;
-use Linux::Debian::Git;
-
-use base qw(Linux::Distro);
+use base qw(Linux::Utils);
 
 sub new{
     my $class = shift;
     my $status = shift;
     
     my $self=$class->SUPER::new($status);
-    
-    $self->{_squeezelite}  =  Linux::Debian::Squeezelite->new($status);
-    $self->{_git}          =  Linux::Debian::Git->new($status);
 
     bless $self, $class;  
-    
+
     return $self;
 }
-sub getSqueezelite{
-    my $self = shift;
-    return $self->{_squeezelite};
-}
-sub getGit{
-    my $self = shift;
+
+################################################################################
+#
+sub aptGetInstall{
+    my $self   = shift;
+    my $pack   = shift;
+     
+    my $command = qq(apt-get install $pack);
+
+    my ($err, @answ)= $self->executeCommand($command);
     
-    return $self->{_git};
-}
+    if ($err){
+        $self->getStatus()->record($command,7, $err,(join "/n", @answ));
+        return undef;
+    }
+    if ($self->isDebug()){
+        $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
+    }
+    return 1;
+}    
 1;

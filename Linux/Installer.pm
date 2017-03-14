@@ -73,10 +73,10 @@ sub getSqueezelite{
     return  $self->getDistro()->getSqueezelite();
 }
 
-sub isGitInstalled{
+sub getGit{
     my $self = shift;
     
-    return  $self->getDistro()->isGitInstalled();
+    return  $self->getDistro()->getGit();
 }
 
 sub isWebServerInstalled{
@@ -93,12 +93,6 @@ sub prepareForFalcon{
     my $self = shift;
     
     return  $self->getDistro()->prepareForFalcon();
-}
-
-sub installGit{
-    my $self = shift;
-    
-    return  $self->getDistro()->installGit();
 }
 
 sub configureFalcon{

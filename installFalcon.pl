@@ -28,6 +28,9 @@ use utf8;
 use Utils;
 use Status;
 use Settings;
+use Git;
+use Webserver;
+
 
 use Mac::Installer;
 use Windows::Installer;

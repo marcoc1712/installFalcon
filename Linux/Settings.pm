@@ -52,9 +52,17 @@ sub new{
     #TOBE REPLACED BEFORE RELEASE.
     $self->{SQUEEZELITE_R2_X86_64_WGET_STRING}  = 'https://github.com/marcoc1712/squeezelite-R2/releases/download/v1.8.3-(R2)/squeezelite-R2-min-x86_64';
     $self->{SQUEEZELITE_R2_i86_WGET_STRING}     = 'https://github.com/marcoc1712/squeezelite-R2/releases/download/v1.8.3-(R2)/squeezelite-R2-min-i386';
-    
+
     $self->{SQUEEZELITE_R2_INIT_SOURCE}         = '/var/www/falcon/falcon/resources/install/debian/systemRoot/etc/init.d/squeezelite';
     $self->{SQUEEZELITE_R2_DEFCON_SOURCE}       ='/var/www/falcon/falcon/resources/install/debian/systemRoot/etc/default/squeezelite';
+    
+    $self->{LIGHTTPD_CONF}                      = '/etc/lighttpd/lighttpd.conf',
+    $self->{LIGHTTPD_CONF_SOURCE}               = '/var/www/falcon/falcon/resources/install/webServer/lighttpd/etc/lighttpd/lighttpd.conf';
+    
+    $self->{APACHE2_CONF}                       = '/etc/apache2/sites-available/000-default.conf',
+    $self->{APACHE2_CONF_SOURCE}                = '/var/www/falcon/falcon/resources/install/webServer/apache2/etc/apache2/sites-available/000-default.conf';
+    
+    
     return $self;
 }
 1;

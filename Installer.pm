@@ -26,9 +26,6 @@ use strict;
 use warnings;
 use utf8;
 
-use File::Basename;
-use Cwd;
-
 sub new{
     my $class 	= shift;
     my $isDebug = shift || 0;
@@ -82,17 +79,8 @@ sub isFalconInstalled{
     
     return $self->{_isFalconInstalled};
 }
-sub isGitInstalled{
-    my $self = shift;
-    
-    return $self->{_isGitInstalled};
-}
 
-sub isWebServerInstalled{
-    my $self = shift;
-    
-    return $self->{_isWebServerInstalled};
-}
+
 ################################################################################
 # To be overidden
 #
@@ -102,31 +90,19 @@ sub getSqueezelite{
     $self->getStatus()->record('',5, "not implemented yet",'');
     return 0;
 }
-
+sub getGit{
+    my $self = shift;
+    
+    $self->getStatus()->record('',5, "not implemented yet",'');
+    return 0;
+}
+sub getWebServer{
+    my $self = shift;
+    
+    $self->getStatus()->record('',5, "not implemented yet",'');
+    return 0;
+}
 sub prepareForFalcon{
-    my $self = shift;
-    
-    $self->getStatus()->record('',5, "not implemented yet",'');
-    return 0;
-}
-
-sub removeSqueezelite{
-    my $self = shift;
-    
-    
-     $self->getStatus()->record('',5, "not implemented yet",'');
-    return 0;
-}
-
-sub installSqueezeliteR2{
-    my $self = shift;
-    
-
-    $self->getStatus()->record('',5, "not implemented yet",'');
-    return 0;
-}
-
-sub installGit{
     my $self = shift;
     
     $self->getStatus()->record('',5, "not implemented yet",'');
@@ -141,120 +117,56 @@ sub configureFalcon{
     return 0;
 }
 
-sub installWebServer{
-    my $self = shift;
-
-    $self->getStatus()->record('',5, "not implemented yet",'');
-    return 0;
-}
-
-
-
 ################################################################################
 # main
 #
 sub install {
     my $self = shift;
    
-    $self->prepareForFalcon();
+    if !($self->prepareForFalcon()){return undef;}
     
-    if (!$self->isGitInstalled()){
+    if (!$self->getGit()){
         
-        $self->installGit();
+        $self->getStatus()->record('',9, "cant load git installer",'');
+        return undef;
+    }
+    
+    if (!$self->getGit()->isInstalled()){
+        
+        if (!$self->getGit()->install()){return undef;}
         
     } 
     if (!$self->isFalconInstalled()){
 
-        $self->gitClone();
+        $self->getGit()->gitClone();
         $self->configureFalcon('DEFAULT');
     
     } else {
         
-        $self->gitPull();
+        $self->getGit()->gitPull();
         $self->configureFalcon('KEEP');
     }
-    
-    
+
     if (!$self->getSqueezelite()){
         
         $self->getStatus()->record('',9, "cant load squeezelite installer",'');
         return undef;
     }
     
-    $self->getSqueezelite()->auto();
+    if (!$self->getSqueezelite()->auto()){return undef;}
     
-    
-    if (!$self->isWebServerInstalled()){
+    if (!$self->getWebServer()){
         
-        $self->installWebServer();
-    }
-    
-    return 0;
-}
-
-################################################################################
-# commons
-#
-sub gitClone{
-    my $self = shift;
-    
-    
-    my $www= $self->getSettings()->{WWW_DIRECTORY};
-
-    chdir $www;
-    if (! getcwd eq $www){
-        
-        $self->getStatus()->record(' chdir '.$www,7, "can't move into directory",'');
+        $self->getStatus()->record('',9, "cant load webserver installer",'');
         return undef;
     }
-
-    my $command = $self->getSettings()->{GIT_CLONE_STRING};
-    
-    my ($err, @answ)= $self->getUtils()->executeCommand($command);
-    
-    if ($err){
-        $self->getStatus()->record('git clone',7, $err,(join '\n', @answ));
-        return undef;
-    }
-    $self->getStatus()->record('git clone',3, $err ? $err : 'done',(join '\n', @answ));
+    if (!$self->getWebServer()->isInstalled()){
+        
+        if (!$self->getWebServer()->install()){return undef;}; 
+    } 
     
     return 1;
 }
-
-sub gitPull{
-    my $self = shift;
-    
-    my $falconHome= $self->getSettings()->{FALCON_HOME};
-     
-    chdir $falconHome;
-    if (! cwd eq $falconHome){
-        
-        $self->getStatus()->record(' chdir '.$falconHome,7, "can't move into directory",'');
-        return undef;
-    }
-    my $command = 'git stash';
-    
-    my ($err, @answ)= $self->getUtils()->executeCommand($command);
-    
-    if ($err){
-        $self->getStatus()->record($command,7, $err,(join '\n', @answ));
-        return undef;
-    }
-    $self->getStatus()->record($command,3, $err ? $err : 'done',(join '\n', @answ));
-    
-    $command = 'git pull';
-    
-    ($err, @answ)= $self->getUtils()->executeCommand($command);
-    
-    if ($err){
-        $self->getStatus()->record($command,7, $err,(join '\n', @answ));
-        return undef;
-    }
-    $self->getStatus()->record($command,3, $err ? $err : 'done',(join '\n', @answ));
-
-    return 1;
-}
-
 
 ################################################################################
 # private 

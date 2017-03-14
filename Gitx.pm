@@ -21,24 +21,27 @@
 #
 ################################################################################
 
-package Squeezelite;
+package Gitx;
 
 use strict;
 use warnings;
 use utf8;
 
-use Utils;
+use File::Basename;
+use Cwd;
 
 sub new{
     my $class = shift;
     my $status = shift;
        
     my $self = bless {
+        
         _status      => $status, 
         _utils       => Utils->new($status),
+        _settings    => Settings->new(),
         
     }, $class;
-
+    
     return $self;
 }
 sub getStatus{
@@ -56,6 +59,11 @@ sub getUtils{
 
     return $self->{_utils};
 }
+sub getSettings{
+    my $self = shift;
+    
+    return $self->{_settings};
+}
 ################################################################################
 # tobe overidden
 #
@@ -63,26 +71,6 @@ sub getUtils{
 sub isInstalled{
     my $self = shift;
 
-    $self->getStatus()->record('',5, "not implemented yet",'');
-    return 0;
-}
-sub isR2Installed{
-    my $self = shift;
-    
-    $self->getStatus()->record('',5, "not implemented yet",'');
-    return 0;
-}
-
-sub getVersion{
-    my $self = shift;
-    
-      $self->getStatus()->record('',5, "not implemented yet",'');
-    return 0;
-}
-
-sub auto {
-    my $self = shift;
-    
     $self->getStatus()->record('',5, "not implemented yet",'');
     return 0;
 }
@@ -110,50 +98,63 @@ sub uninstall{
 ################################################################################
 #privates
 #
+sub gitClone{
+    my $self = shift;
+    
+    
+    my $www= $self->getSettings()->{WWW_DIRECTORY};
 
-sub _checkVersion{
-    my $self            = shift;
-    my $squeezelitePath = shift;
+    chdir $www;
+    if (! getcwd eq $www){
+        
+        $self->getStatus()->record(' chdir '.$www,7, "can't move into directory",'');
+        return undef;
+    }
 
-    my $command = "$squeezelitePath -t";
+    my $command = $self->getSettings()->{GIT_CLONE_STRING};
     
     my ($err, @answ)= $self->getUtils()->executeCommand($command);
     
     if ($err){
-        $self->getStatus()->record($command,7, $err,(join "/n", @answ));
-        return;
-    }
-
-    if (scalar(@answ) == 0) {
-
-		# TODO check the eerror with a second call.
-		#To capture a command's STDERR but discard its STDOUT
-		#$output = `cmd 2>&1 1>/dev/null`;  
-	
-        $self->getStatus()->record($command,7,  "unable to run ".$command,(join "/n", @answ));
+        $self->getStatus()->record('git clone',7, $err,(join '\n', @answ));
         return undef;
     }
-    for my $row (@answ){
+    $self->getStatus()->record('git clone',3, $err ? $err : 'done',(join '\n', @answ));
+    
+    return 1;
+}
 
-        $row=$self->getUtils()->trim($row);
+sub gitPull{
+    my $self = shift;
+    
+    my $falconHome= $self->getSettings()->{FALCON_HOME};
+     
+    chdir $falconHome;
+    if (! cwd eq $falconHome){
+        
+        $self->getStatus()->record(' chdir '.$falconHome,7, "can't move into directory",'');
+        return undef;
+    }
+    my $command = 'git stash';
+    
+    my ($err, @answ)= $self->getUtils()->executeCommand($command);
+    
+    if ($err){
+        $self->getStatus()->record($command,7, $err,(join '\n', @answ));
+        return undef;
+    }
+    $self->getStatus()->record($command,3, $err ? $err : 'done',(join '\n', @answ));
+    
+    $command = 'git pull';
+    
+    ($err, @answ)= $self->getUtils()->executeCommand($command);
+    
+    if ($err){
+        $self->getStatus()->record($command,7, $err,(join '\n', @answ));
+        return undef;
+    }
+    $self->getStatus()->record($command,3, $err ? $err : 'done',(join '\n', @answ));
 
-        #look for R2 version tag
-        #if (lc($row) =~ /v1\.8\...\(r2\)/){ #}
-        if (lc($row) =~ /v\s*\d{1,2}\.\d{1,2}\.\d{1,2}\s*\(r2\)/){
-             
-            my $version =substr($row, index(lc($row),$&));
-                        
-            if ($self->isDebug()){
-            
-                $self->getStatus()->record($command,1, $version,(join "/n", @answ));
-            }
-            return substr($row, index(lc($row),$&), length($&));
-        }
-    }
-    if ($self->isDebug()){
-            
-        $self->getStatus()->record($command,1, 'undef' ,(join "/n", @answ));
-    }
-    return undef; 
+    return 1;
 }
 1;

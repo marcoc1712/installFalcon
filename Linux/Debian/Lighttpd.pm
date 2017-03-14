@@ -20,38 +20,41 @@
 # GNU General Public License for more details.
 #
 ################################################################################
-package Linux::Debian::Distro;
+package Linux::Debian::Lighttpd;
 
 use strict;
 use warnings;
 use utf8;
 
-use Linux::Distro;
-use Linux::Debian::Squeezelite;
-use Linux::Debian::Git;
+use Linux::Debian::Utils;
+use Linux::Debian::Settings;
 
-use base qw(Linux::Distro);
+use base qw(Linux::Lighttpd);
 
 sub new{
-    my $class = shift;
+    my $class  = shift;
     my $status = shift;
     
     my $self=$class->SUPER::new($status);
     
-    $self->{_squeezelite}  =  Linux::Debian::Squeezelite->new($status);
-    $self->{_git}          =  Linux::Debian::Git->new($status);
-
-    bless $self, $class;  
+    $self->{_utils}          = Linux::Debian::Utils->new($status);
+    $self->{_settings}       = Linux::Debian::Settings->new($status);
     
+    bless $self, $class;
+
     return $self;
 }
-sub getSqueezelite{
+
+################################################################################
+#override
+
+sub install{
     my $self = shift;
-    return $self->{_squeezelite};
+
+    if (!$self->getUtils()->aptGetInstall(LIGHTTPD)){return undef};
+    return $self->config();
 }
-sub getGit{
-    my $self = shift;
-    
-    return $self->{_git};
-}
-1;
+
+################################################################################
+# privates
+#
