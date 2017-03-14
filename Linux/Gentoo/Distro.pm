@@ -20,28 +20,30 @@
 # GNU General Public License for more details.
 #
 ################################################################################
-package Installer::Mac::Installer;
+package Linux::Gento::Distro;
 
 use strict;
 use warnings;
 use utf8;
 
-use base qw(Installer::Installer);
+use base qw(Linux::Distro);
 
 sub new{
-    my $class 	= shift;
+    my $class = shift;
+    my $status = shift;
+    
+    my $self=$class->SUPER::new($status);
 
-    my $self=$class->SUPER::new();
+    #$self->{_distroName}           = undef;
     
     bless $self, $class;  
+
+    #$self-> _initDistroName();
     
     return $self;
 }
+
+################################################################################
 #override
-sub install {
-    my $self = shift;
-    
-    $self->{_error} ="WARNING: not yet implemented";
-    return 0;
-}
+
 1;

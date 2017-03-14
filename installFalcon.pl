@@ -27,11 +27,16 @@ use utf8;
 
 use Utils;
 use Status;
-use Installer::Linux::Installer;
-use Installer::Mac::Installer;
-use Installer::Windows::Installer;
-use Installer::Linux::Distro::Debian;
-use Installer::Linux::Distro::Gentoo;
+use Settings;
+
+use Mac::Installer;
+use Windows::Installer;
+use Linux::Installer;
+use Linux::Settings;
+use Linux::Debian::Distro;
+use Linux::Debian::Settings;
+use Linux::Gentoo::Distro;
+use Linux::Gentoo::Settings;
 
 use constant ISWINDOWS    => ( $^O =~ /^m?s?win/i ) ? 1 : 0;
 use constant ISMAC        => ( $^O =~ /darwin/i ) ? 1 : 0;
@@ -43,15 +48,15 @@ my $installer;
 
 if (ISWINDOWS){
         
-    $installer= Installer::Windows::Installer->new(ISDEBUG);
+    $installer= Windows::Installer->new(ISDEBUG);
 
 } elsif (ISMAC){
 
-    $installer= Installer::Mac::Installer->new(ISDEBUG);
+    $installer= Mac::Installer->new(ISDEBUG);
 
 } elsif (ISLINUX){
 
-    $installer= Installer::Linux::Installer->new(ISDEBUG);
+    $installer= Linux::Installer->new(ISDEBUG);
 
 }else {
 

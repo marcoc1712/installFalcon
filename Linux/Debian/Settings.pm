@@ -20,30 +20,20 @@
 # GNU General Public License for more details.
 #
 ################################################################################
-package Installer::Linux::Distro::Debian;
+package Linux::Debian::Settings;
 
 use strict;
 use warnings;
 use utf8;
 
-use base qw(Installer::Linux::Distro::Distro);
+use base qw(Linux::Settings);
 
 sub new{
     my $class = shift;
-    my $status = shift;
-    
-    my $self=$class->SUPER::new($status);
 
-    #$self->{_distroName}           = undef;
-    
-    bless $self, $class;  
+    my $self=$class->SUPER::new();
+    bless $self, $class; 
 
-    #$self-> _initDistroName();
-    
     return $self;
 }
-
-################################################################################
-#override
-
 1;

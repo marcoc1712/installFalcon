@@ -20,22 +20,23 @@
 # GNU General Public License for more details.
 #
 ################################################################################
-package Installer::Linux::Installer;
+package Linux::Installer;
 
 use strict;
 use warnings;
 use utf8;
 
-use base qw(Installer::Installer);
+use base qw(Installer);
 
 sub new{
     my $class 	= shift;
     my $isDebug = shift || 0;
     
     my $self=$class->SUPER::new($isDebug);
-
+    
     $self->{_distroName}           = undef;
     $self->{_distro}               = undef;
+    $self->{_settings}             = Linux::Settings->new();
     
     bless $self, $class;  
 
@@ -43,11 +44,11 @@ sub new{
     
     if ($self->{_distroName} eq 'gentoo'){
         
-        $self->{_distro}  = Installer::Linux::Distro::Gentoo->new($self->getStatus());
+        $self->{_distro}  = Linux::Gentoo::Distro->new($self->getStatus());
         
     } else {
         
-        $self->{_distro} = Installer::Linux::Distro::Debian->new($self->getStatus());
+        $self->{_distro} = Linux::Debian::Distro->new($self->getStatus());
     }
     
     return $self;
@@ -65,23 +66,19 @@ sub getDistro{
 }
 ################################################################################
 #override
+
+sub getSqueezelite{
+    my $self = shift;
+    
+    return  $self->getDistro()->getSqueezelite();
+}
+
 sub isGitInstalled{
     my $self = shift;
     
     return  $self->getDistro()->isGitInstalled();
 }
 
-sub isSqueezeliteInstalled{
-    my $self = shift;
-    
-    return  $self->getDistro()->isSqueezeliteInstalled();
-}
-
-sub isSqueezeliteR2Installed{
-    my $self = shift;
-    
-    return  $self->getDistro()->isSqueezeliteR2Installed();
-}
 sub isWebServerInstalled{
     my $self = shift;
     
@@ -96,20 +93,6 @@ sub prepareForFalcon{
     my $self = shift;
     
     return  $self->getDistro()->prepareForFalcon();
-}
-
-sub removeSqueezelite{
-    my $self = shift;
-    
-    
-    return  $self->getDistro()->removeSqueezelite();
-}
-
-sub installSqueezeliteR2{
-    my $self = shift;
-    
-
-    return  $self->getDistro()->installSqueezeliteR2();
 }
 
 sub installGit{
@@ -131,8 +114,8 @@ sub installWebServer{
     return  $self->getDistro()->installWebServer();
 }
 ################################################################################
-# 
 # privates.
+#
 sub _initDistroName {
     my $self = shift;
     

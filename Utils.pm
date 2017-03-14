@@ -28,6 +28,7 @@ use warnings;
 use utf8;
 
 use File::Copy qw(move copy);
+use File::Path;
 use Time::HiRes qw(time usleep);
 use POSIX qw(strftime);
 
@@ -102,7 +103,7 @@ sub mkDir{
     
     if (! -d $dir){
         
-        mkdir $dir, 0755;
+        mkpath  $dir, 0755;
     
         if (! -d $dir){
 
@@ -112,12 +113,13 @@ sub mkDir{
         if ($self->isDebug()){
             $self->getStatus()->record(" mkdir ".$dir.", 0755",1, 'created','');
         }
-    }
-    if ($self->isDebug()){
+        
+    } elsif ($self->isDebug()){
             $self->getStatus()->record(" mkdir ".$dir.", 0755",1, 'already exists','');
     }
     return 1;
 }
+
 sub saveBUAndRemove{
     my $self    = shift;
     my $oldPath = shift;
@@ -138,6 +140,7 @@ sub saveBUAndRemove{
     
     return  $self->moveFile($oldPath, $newPath);
 }
+
 sub copyFile{
     my $self    = shift;
     my $oldPath = shift;
@@ -156,26 +159,30 @@ sub copyFile{
         $self->getStatus()->record( "",7, "file: ".$oldPath." does not exists",'');
         return undef;
     }
-    if (-e $newPath && !$replace){
+    if (-e $newPath){
         
-        $self->getStatus()->record( "",7, "file: ".$newPath." already exists, not replaced",'');
-        return undef;
-    }    
-    if (-e $newPath && !_remove($newPath)){
-        
-        $self->getStatus()->record( "",7, "file: ".$newPath." already exists, could not remove",'');
-         return undef;
-         
-    } elsif ($self->isDebug()){
-        
-        $self->getStatus()->record( "",1, "file: ".$newPath." removed",'');
+        if (!$replace){
+
+            $self->getStatus()->record( "",7, "file: ".$newPath." already exists, not replaced",-e $newPath);
+            return undef;
+        }    
+        if (!_remove($newPath)){
+
+            $self->getStatus()->record( "",7, "file: ".$newPath." already exists, could not remove",'');
+            return undef;
+
+        }
+        if ($self->isDebug()){
+
+            $self->getStatus()->record( "",1, "file: ".$newPath." removed",'');
+        }
     }
    
     copy $oldPath, $newPath;
     
     if (! -e $newPath){
         
-        $self->getStatus()->record( "",7, "can't copy ".$oldPath." to ".$newPath,'');
+        $self->getStatus()->record( "",7, "can't copy ".$oldPath." to ".$newPath,$!);
         return undef;  
     }
     if ($self->isDebug()){
@@ -203,26 +210,30 @@ sub moveFile{
         $self->getStatus()->record( "",7, "file: ".$oldPath." does not exists",'');
         return undef;
     }
-    if (-e $newPath && !$replace){
+    if (-e $newPath){
         
-        $self->getStatus()->record( "",7, "file: ".$newPath." already exists, not replaced",'');
-        return undef;
-    }    
-    if (-e $newPath && !_remove($newPath)){
-        
-        $self->getStatus()->record( "",7, "file: ".$newPath." already exists, could not remove",'');
-         return undef;
-         
-    } elsif ($self->isDebug()){
-        
-        $self->getStatus()->record( "",1, "file: ".$newPath." removed",'');
+        if (!$replace){
+
+            $self->getStatus()->record( "",7, "file: ".$newPath." already exists, not replaced",-e $newPath);
+            return undef;
+        }    
+        if (!_remove($newPath)){
+
+            $self->getStatus()->record( "",7, "file: ".$newPath." already exists, could not remove",'');
+            return undef;
+
+        }
+        if ($self->isDebug()){
+
+            $self->getStatus()->record( "",1, "file: ".$newPath." removed",'');
+        }
     }
-   
+
     move $oldPath, $newPath;
     
-    if (-e $oldPath || ! -e $newPath){
+    if (-e $oldPath && !-e $newPath){
         
-        $self->getStatus()->record( "",7, "can't move ".$oldPath." to ".$newPath,'');
+        $self->getStatus()->record( "",7, "can't move ".$oldPath." to ".$newPath,$!);
         return undef;  
     }
     if ($self->isDebug()){
@@ -247,12 +258,12 @@ sub removeFile{
     
     unlink $path;
     
-    if (! -e $path){
+    if (-e $path){
         
         $self->getStatus()->record( "",7, "can't remove ".$path,'');
         return undef;
     }
-     if ($self->isDebug()){
+    if ($self->isDebug()){
         
         $self->getStatus()->record( "",1, "file: ".$path." removed",'');
     }

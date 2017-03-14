@@ -20,13 +20,13 @@
 # GNU General Public License for more details.
 #
 ################################################################################
-package Installer::Windows::Installer;
+package Installer::Mac::Installer;
 
 use strict;
 use warnings;
 use utf8;
 
-use base qw(Installer::Installer);
+use base qw(Installer);
 
 sub new{
     my $class 	= shift;

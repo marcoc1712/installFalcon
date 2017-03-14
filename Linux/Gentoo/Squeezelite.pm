@@ -20,30 +20,22 @@
 # GNU General Public License for more details.
 #
 ################################################################################
-package Installer::Linux::Distro::Gento;
+package Linux::Gentoo::Squeezelite;
 
 use strict;
 use warnings;
 use utf8;
 
-use base qw(Installer::Linux::Distro::Distro);
+use base qw(Linux::Squeezelite);
 
 sub new{
-    my $class = shift;
+    my $class  = shift;
     my $status = shift;
     
     my $self=$class->SUPER::new($status);
 
-    #$self->{_distroName}           = undef;
-    
-    bless $self, $class;  
-
-    #$self-> _initDistroName();
+    bless $self, $class;
     
     return $self;
 }
-
-################################################################################
-#override
-
 1;
