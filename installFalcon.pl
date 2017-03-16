@@ -33,7 +33,10 @@ use Linux::Installer;
 use constant ISWINDOWS    => ( $^O =~ /^m?s?win/i ) ? 1 : 0;
 use constant ISMAC        => ( $^O =~ /darwin/i ) ? 1 : 0;
 use constant ISLINUX      => ( $^O =~ /linux/i ) ? 1 : 0;
-#use constant ISDEBUG      => ( grep { /--deebug/ } @ARGV ) ? 1 : 0;
+
+use constant REMOVE       => ( grep { /--remove/ } @ARGV ) ? 1 : 0;
+#use constant ISDEBUG      => ( grep { /--deebug/ } @ARGV ) ? 1 : 5; #warnings
+
 use constant ISDEBUG      => 1;
 
 my $installer;
@@ -55,8 +58,14 @@ if (ISWINDOWS){
     warn "Architecture: $^O is not supported";
 
 }
-
-$installer->install(ISDEBUG);
+if (REMOVE){
+    print "\n****************************** REMOVE ******************************\n";
+    
+    $installer->remove(ISDEBUG);
+} else{
+    
+    $installer->install(ISDEBUG);
+}
 
 if ($installer->getError()){
 

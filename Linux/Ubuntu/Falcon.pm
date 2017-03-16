@@ -20,22 +20,26 @@
 # GNU General Public License for more details.
 #
 ################################################################################
-package Linux::Gentoo::Squeezelite;
+package Linux::Ubuntu::Falcon;
 
 use strict;
 use warnings;
 use utf8;
 
-use base qw(Linux::Squeezelite);
+use base qw(Linux::Debian::Falcon);
 
 sub new{
-    my $class  = shift;
+    my $class = shift;
     my $status = shift;
     
     my $self=$class->SUPER::new($status);
-
-    bless $self, $class;
+  
+    bless $self, $class;  
     
     return $self;
 }
+################################################################################
+# override
+#
+
 1;

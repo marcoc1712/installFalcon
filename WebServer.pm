@@ -86,7 +86,7 @@ sub upgrade{
     return 0;
 }
 
-sub uninstall{
+sub remove{
     my $self = shift;
     
     $self->getStatus()->record('',5, "not implemented yet",'');

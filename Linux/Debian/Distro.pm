@@ -26,8 +26,9 @@ use strict;
 use warnings;
 use utf8;
 
-use Linux::Debian::Squeezelite;
 use Linux::Debian::Falcon;
+use Linux::Debian::Apache2;
+use Linux::Debian::Lighttpd;
 
 use base qw(Linux::Distro);
 
@@ -37,16 +38,21 @@ sub new{
     
     my $self=$class->SUPER::new($status);
     
-    $self->{_squeezelite}  =  Linux::Debian::Squeezelite->new($status);
     $self->{_falcon}       =  Linux::Debian::Falcon->new($status);
+    $self->{_webserver}    =  undef;
 
     bless $self, $class;  
     
+    if ($self->getUtils()->whereIs('apache2')) {
+        
+        $self->{_webserver}= Linux::Debian::Apache2->new($self->getStatus())
+        
+    } else{
+        
+        $self->{_webserver}= Linux::Debian::Lighttpd->new($self->getStatus())
+    }
+    
     return $self;
-}
-sub getSqueezelite{
-    my $self = shift;
-    return $self->{_squeezelite};
 }
 
 1;

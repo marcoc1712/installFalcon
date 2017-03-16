@@ -296,4 +296,21 @@ sub whereIs{
     }
     return undef;
 }
+sub aptGetInstall{
+    my $self   = shift;
+    my $pack   = shift;
+     
+    my $command = qq(apt-get install $pack);
+
+    my ($err, @answ)= $self->executeCommand($command);
+    
+    if ($err){
+        $self->getStatus()->record($command,7, $err,(join "/n", @answ));
+        return undef;
+    }
+    if ($self->isDebug()){
+        $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
+    }
+    return 1;
+} 
 1;

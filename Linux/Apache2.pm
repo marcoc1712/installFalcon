@@ -63,6 +63,14 @@ sub isInstalled{
     return $self->{_path} ? 1 : 0;
 }
 
+sub remove{
+    my $self = shift;
+    
+    $self->_cleanUp();
+    
+    return 1;
+}
+
 ################################################################################
 # settinggs
 
@@ -96,12 +104,7 @@ sub getCurrentBackUpDirectory{
 }
 ################################################################################
 #protected
-sub _start{
-    
-}
-sub _stop { 
-    
-}
+
 sub _config{
     my $self = shift;
     
@@ -126,6 +129,15 @@ sub _config{
     #abilita le CGI
     symlink ('/etc/apache2/mods-available/cgid.conf', '/etc/apache2/mods-enabled/cgid.conf');
     symlink ('/etc/apache2/mods-available/cgid.load', '/etc/apache2/mods-enabled/cgid.load');
+
+    return 1;
+}
+sub _cleanUp{
+    my $self = shift;
+    
+    if (!$self->getUtils()->removeFile('/etc/apache2/mods-enabled/cgid.conf')){return undef;}
+    if (!$self->getUtils()->removeFile('/etc/apache2/mods-enabled/cgid.load')){return undef;}
+    if (!$self->getUtils()->removeFile($self->getConf())){return undef;}
 
     return 1;
 }

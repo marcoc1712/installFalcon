@@ -28,8 +28,7 @@ use utf8;
 
 use Linux::Utils;
 use Linux::Settings;
-use Linux::Apache2;
-use Linux::LIghttpd;
+use Linux::Squeezelite;
 use Linux::Falcon;
 
 sub new{
@@ -42,22 +41,12 @@ sub new{
         _settings                   => Linux::Settings->new(),
         
         _archName                   => undef,
-    
-        _webserver                  => undef, 
+        _squeezelite                => Linux::Squeezelite->new($status),
         _falcon                     => Linux::Falcon->new($status), 
         
     }, $class;
     
-    $self->getUtils()->getArchName();
-    
-    if ($self->getUtils()->whereIs('apache2')) {
-        
-        $self->{_webserver}= Linux::Apache2->new($self->getStatus())
-        
-    } else{
-        
-        $self->{_webserver}= Linux::LIghttpd->new($self->getStatus())
-    }
+    $self->{_archName} = $self->getUtils()->getArchName();
 
     return $self;
 }
@@ -87,16 +76,18 @@ sub getArchName{
     
     return $self->{_archName};
 } 
-sub getWebServer{
+
+sub getSqueezelite{
     my $self = shift;
     
-    return $self->{_webserver};
+    return $self->{_squeezelite};
 }
 sub getFalcon{
     my $self = shift;
     
     return $self->{_falcon};
 }
+
 sub prepare{
     my $self = shift;
     
@@ -106,16 +97,23 @@ sub prepare{
 
     return 1;
 }
+sub cleanUp {
+    my $self = shift;
+    
+    if (!$self->getUtils()->rmTree($self->getWWWDirectory())){return undef;}
+
+    return 1;
+}
 ################################################################################
 # Tobe overidden
 #
-sub getSqueezelite{
+
+sub getWebServer{
     my $self = shift;
     
     $self->getStatus()->record('',5, "not implemented yet",'');
     return 0;
 }
-
 
 ################################################################################
 # settinggs

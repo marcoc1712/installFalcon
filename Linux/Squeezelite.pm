@@ -191,10 +191,10 @@ sub upgrade{
          
     if ($self->isInstalled() && !$self->isR2Installed()){
 
-         if (!$self->_removeSqueezelite()){return undef;}
+         if (!$self->_saveAndRemoveSqueezelite()){return undef;}
     }
     #save current situation and install the new one
-    if (!$self->_removeSqueezeliteR2()) {return undef;}
+    if (!$self->_saveAndRemoveSqueezeliteR2()) {return undef;}
     if (!$self->_cleanInstall()) {return undef;}
     
     if (!$self->getUtils()->systemCtlReload()) {return undef;}
@@ -204,7 +204,7 @@ sub upgrade{
     return 1;
 }
 
-sub uninstall{
+sub remove{
     my $self = shift;
     
     $self->getUtils()->serviceStop(SQUEEZELITE);
@@ -222,8 +222,8 @@ sub uninstall{
 # privates
 #
 
-#only save a copy if non already there.
-sub _removeSqueezelite{
+#only save a copy if not already there.
+sub _saveAndRemoveSqueezelite{ 
     my $self = shift;
     
     my $buDir = $self->getBeforeBackUpDirectory();
@@ -244,7 +244,7 @@ sub _removeSqueezelite{
     return 1;
 }
 # always save a copy.
-sub _removeSqueezeliteR2{
+sub _saveAndRemoveSqueezeliteR2{
     my $self = shift;
 
     my $buDir = $self->getCurrentBackUpDirectory();
@@ -263,6 +263,22 @@ sub _removeSqueezeliteR2{
     $file = $self->getDefconDirectory().'/'.SQUEEZELITE;
     if (!$self->getUtils()->saveBUAndRemove($file, $buDir.$file)){return undef;}
 
+    return 1;
+}
+sub _removeSqueezeliteR2{
+    my $self = shift;
+
+    my $file =  $self->getBinDirectory().'/'.SQUEEZELITE_R2;
+    if (!$self->getUtils()->removeFile($file)){return undef;}
+    
+    $file = $self->getInitDirectory().'/'.SQUEEZELITE;
+    if (!$self->getUtils()->removeFile($file)){return undef;}
+     
+    $file = $self->getDefconDirectory().'/'.SQUEEZELITE;
+    if (!$self->getUtils()->removeFile($file)){return undef;}
+
+    if (!$self->getUtils()->rmTree($self->getLog())){return undef;}
+    
     return 1;
 }
 
@@ -323,6 +339,8 @@ sub _getSqueezeliteR2{
 sub _getSqueezeliteR2Default{
     my $self = shift;
 
+    my ($usr, $psw, $uid, $gid) = getpwnam ($self->getWwwUser());
+
     my $dir = $self->getDefconDirectory();
     chdir $dir;
 
@@ -340,7 +358,8 @@ sub _getSqueezeliteR2Default{
         return undef;
     
     }
-    
+    chown $uid, $gid, SQUEEZELITE;
+    my $mode = 0664; chmod $mode, SQUEEZELITE; 
     return 1;
 }
 sub _getSqueezeliteR2Initd{

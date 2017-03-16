@@ -103,6 +103,12 @@ sub prepare{
     $self->getStatus()->record('',5, "not implemented yet",'');
     return 0;
 }
+sub cleanUp{
+    my $self = shift;
+    
+    $self->getStatus()->record('',5, "not implemented yet",'');
+    return 0;
+}
 
 ################################################################################
 # main
@@ -137,6 +143,36 @@ sub install {
 
     
     return 1;
+}
+sub remove{
+    my $self = shift;
+    
+    if (!$self->getWebServer()){
+        
+        $self->getStatus()->record('',9, "cant load webserver installer",'');
+        return undef;
+    }
+    
+    if (!$self->getWebServer()->remove()){return undef;}; 
+   
+    if (!$self->getSqueezelite()){
+        
+        $self->getStatus()->record('',9, "cant load squeezelite installer",'');
+        return undef;
+    }
+    
+    if (!$self->getSqueezelite()->remove()){return undef;}
+    
+    if (!$self->getFalcon()){
+        
+        $self->getStatus()->record('',9, "cant load falcon installer",'');
+        return undef;
+    }
+    
+    if (!$self->getFalcon()->remove()){return undef;}
+    
+    if (!$self->cleanUp()){return undef;}
+    
 }
 
 ################################################################################

@@ -55,25 +55,6 @@ sub isDebug{
 ################################################################################
 # tobe overidden
 #
-sub getUtils{
-    my $self = shift;
-
-    $self->getStatus()->record('',5, "not implemented yet",'');
-    return undef;
-}
-sub getSettings{
-    my $self = shift;
-    
-    $self->getStatus()->record('',5, "not implemented yet",'');
-    return undef;
-}
-
-sub getGit{
-    my $self = shift;
-    
-    $self->getStatus()->record('',5, "not implemented yet",'');
-    return undef;
-}
 
 sub isInstalled{
     my $self = shift;

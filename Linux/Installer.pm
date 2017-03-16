@@ -94,6 +94,11 @@ sub prepare{
     
     return  $self->getDistro()->prepare();
 }
+sub cleanUp{
+    my $self = shift;
+    
+    return  $self->getDistro()->cleanUp();
+}
 
 ################################################################################
 # privates.

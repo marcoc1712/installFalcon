@@ -20,22 +20,27 @@
 # GNU General Public License for more details.
 #
 ################################################################################
-package Linux::Debian::Squeezelite;
+package Linux::Ubuntu::Distro;
 
 use strict;
 use warnings;
 use utf8;
 
-use base qw(Linux::Squeezelite);
+use Linux::Debian::Distro;
+
+use base qw(Linux::Debian::Distro);
 
 sub new{
-    my $class  = shift;
+    my $class = shift;
     my $status = shift;
     
     my $self=$class->SUPER::new($status);
     
-    bless $self, $class;
-
+    $self->{_falcon}       =  Linux::Ubuntu::Falcon->new($status);
+     
+    bless $self, $class;  
+    
     return $self;
 }
+
 1;

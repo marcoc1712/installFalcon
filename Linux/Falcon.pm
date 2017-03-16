@@ -62,6 +62,10 @@ sub isInstalled{
 }
 
 sub install{
+    
+    my ($package, $filename, $line, $subroutine) = caller(2);
+    print  $filename." - ".$line."\n";
+    
     my $self = shift;
 
     if (!$self->_removeAll()) {return undef;}
@@ -97,6 +101,15 @@ sub upgrade{
     if (!$self->_finalize()) {return undef;}
 
     return 1;
+}
+sub remove{
+    my $self    = shift;
+    
+    if (!$self->_removeAll()) {return undef;}
+    if (!$self->_cleanUp()) {return undef;}
+    
+    return 1;
+    
 }
 ###############################################################################
 # settings
@@ -226,6 +239,15 @@ sub _removeAll{
     
     return 1;
 }
+sub _cleanUp{
+    my $self = shift;
+    
+    if (!$self->getUtils()->rmTree($self->getFalconLog())){return undef;}  
+    if (!$self->getUtils()->removeFile($self->getSudoers())){return undef;}
+    #delete the user www-data?
+    
+    return 1;
+}
 sub _finalize{
     my $self = shift;
 
@@ -234,7 +256,7 @@ sub _finalize{
     if (!$self->_createLog()){return undef;}
     if (!$self->_setExecutable()){return undef;}
     if (!$self->_addWWWUser()){return undef;}
-    #if (!$self->_getChkconfig()){return undef;}
+    if (!$self->_getChkconfig()){return undef;}
     if (!$self->_getSudo()){return undef;}
     if (!$self->_sudoers()){return undef;}
 
