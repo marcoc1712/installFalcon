@@ -76,7 +76,6 @@ sub getFalconHome{
     
     return $self->getSettings()->{FALCON_HOME};
 }
-
 sub getBackUpDirectory{
     my $self = shift;
     
@@ -130,7 +129,11 @@ sub getDefConSource{
     
     return $self->getSettings()->{SQUEEZELITE_R2_DEFCON_SOURCE}; 
 }
-
+sub getLog{
+    my $self = shift;
+    
+    return $self->getSettings()->{SQUEEZELITE_R2_LOG};
+}
 
 ################################################################################
 #override
@@ -260,6 +263,8 @@ sub _cleanInstall{
     
     if (!$self->_getSqueezeliteR2Default()){return undef;}
     if (!$self->_getSqueezeliteR2Initd()){return undef;}
+    if (!$self->_createLog()){return undef;}
+    
 }
 sub _getSqueezeliteR2{
     my $self = shift;
@@ -351,4 +356,18 @@ sub _getSqueezeliteR2Initd{
     my $mode = 0755; chmod $mode, SQUEEZELITE; 
     return 1;
 }
+
+sub _createLog{
+    my $self = shift;
+   
+    if (! -d $self->getLog() && !$self->getUtils()->mkDir($self->getLog())){return undef;}  
+    chown $self->getWwwUser(), $self->getWwwUser(), $self->getLog();
+    
+    my $logfile= $self->getLog()."/squeezelite-R2.log";
+    if (! -e $logfile && !$self->getUtils()->createFile($logfile)){return undef;}
+    chown $self->getWwwUser(), $self->getWwwUser(), $logfile;
+    
+    ### TODO: Attivare la rotazione dei files di log.
+    
+    return 1;
 1;

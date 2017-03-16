@@ -50,11 +50,63 @@ sub getFalconHome{
     
     return $self->getSettings()->{FALCON_HOME};
 }
+sub getFalconCgi{
+    my $self = shift;
+    
+    return $self->getSettings()->{FALCON_CGI};
+}
 sub getFalconExit{
     my $self = shift;
     
     return $self->getSettings()->{FALCON_EXIT};
 }
+sub getFalconDefaultExit{
+    my $self = shift;
+    
+    return $self->getSettings()->{FALCON_DEFAULT_EXIT};
+}
+sub getFalconData{
+    my $self = shift;
+    
+    return $self->getSettings()->{FALCON_DATA};
+}
+sub getFalconLog{
+    my $self = shift;
+    
+    return $self->getSettings()->{FALCON_LOG};
+}
+sub getWwwUser{
+    my $self = shift;
+    
+    return $self->getSettings()->{WWW_USER};
+}
+sub getWwwGroup{
+    my $self = shift;
+    
+    return $self->getSettings()->{WWW_GROUP};
+}
+
+sub getConfSource{
+    my $self = shift;
+    
+    return $self->getSettings()->{FALCON_CONF_SOURCE}; 
+}
+sub getConf{
+    my $self = shift;
+    
+    return $self->getSettings()->{FALCON_CONF}; 
+}
+sub getSudoers{
+    my $self = shift;
+    
+    return $self->getSettings()->{FALCON_SUDOERS}; 
+}
+sub getSudoersSource{
+    my $self = shift;
+    
+    return $self->getSettings()->{FALCON_SUDOERS_SOURCE}; 
+}
+
 sub getBackUpDirectory{
     my $self = shift;
     
@@ -75,7 +127,8 @@ sub getCurrentBackUpDirectory{
 ################################################################################
 #override
 
-sub isInstalled{
+# git cloned.
+sub isInstalled{ 
     my $self = shift;
 
     return (-d $self->getFalconHome());
@@ -107,21 +160,114 @@ sub upgrade{
 }
 
 ################################################################################
-# privates
+# protected
 #
 
-# create exit directory
-#cd /var/www/falcon
-#if [ ! -d '/var/www/falcon/exit' ]; then
-#        mkdir exit
-#        ln -s /var/www/falcon/falcon/default/exit/Examples/setWakeOnLan.pl /var/www/falcon/exit/setWakeOnLan.pl 
-#        ln -s /var/www/falcon/falcon/default/exit/Examples/testAudioDevice.pl /var/www/falcon/exit/testAudioDevice.pl 
-#fi
-
 sub _createExit{
+    my $self = shift;
+    
+    if (! -d $self->getFalconExit()){
+
+        if (!$self->getUtils()->mkDir($self->getFalconExit())){return undef;}
+
+        symlink ($self->getFalconDefaultExit().'/Examples/setWakeOnLan.pl', $self->getFalconDefaultExit().'/setWakeOnLan.pl');
+        symlink ($self->getFalconDefaultExit().'/Examples/testAudioDevice.pl', $self->getFalconDefaultExit().'/testAudioDevice.pl');
+        
+    }
+    return 1;
+    
+}
+
+sub _createData{
+    my $self = shift;
+    
+    if (! -d $self->getFalconData()){
+         
+        if (!$self->getUtils()->mkDir($self->getFalconData())){return undef;}
+        chown $self->getWwwUser(), $self->getWwwUser(), $self->getFalconData();
+
+        #set Falcon configuraton to debianI386 default
+        if (!$self->getUtils()->copyFile($self->getConfSource(), $self->getConf())){return undef;}
+        chown $self->getWwwUser(), $self->getWwwUser(), $self->getConf();
+    
+    } elsif (-l $self->getConf() ) {
+        
+        #fix a bug in previous versions.
+        if (!$self->getUtils()->removeFile($self->getConf())){return undef;}
+        if (!$self->getUtils()->copyFile($self->getConfSource(), $self->getConf())){return undef;}
+        chown $self->getWwwUser(), $self->getWwwUser(), $self->getConf(); 
+    }
+    return 1;
+}    
+        
+sub _createLog{
+    my $self = shift;
+    
+    if (!$self->getUtils()->mkDir($self->getFalconLog())){return undef;}  
+    chown $self->getWwwUser(), $self->getWwwUser(), $self->getFalconLog();
+    
+    my $logfile= $self->getFalconLog()."/falcon.log";
+    if (!$self->getUtils()->createFile($logfile)){return undef;}
+    chown $self->getWwwUser(), $self->getWwwUser(), $logfile;
+    
+    my $mode = 0664; chmod $mode, $logfile; 
+    ### TODO: Attivare la rotazione dei files di log.
+    
+    return 1;
+}
+
+sub _setExecutable{
+    my $self = shift;
+    
+    if (!$self->getUtils()->chmodX($self->getFalconCgi()."/*.pl"){return undef;}
+    if (!$self->getUtils()->chmodX($self->getFalconExit()."/*.pl"){return undef;}
+    if (!$self->getUtils()->chmodX($self->getFalconDefaultExit()."/standard/linux/*.pl"){return undef;}
+    if (!$self->getUtils()->chmodX($self->getFalconDefaultExit()."/myOwn/*.pl"){return undef;}
+    if (!$self->getUtils()->chmodX($self->getFalconDefaultExit()."/Examples/*.pl"){return undef;}
+    if (!$self->getUtils()->chmodX($self->getFalconDefaultExit()."/*.pl"){return undef;}
+     
+    if (!$self->getUtils()->chmodX($self->getFalconDefaultExit()."/standard/linux/debian/*.pl"){return undef;}
+     
+    #chmod +x /var/www/falcon/falcon/resources/install/debian/*.sh
+    return 1;
+}
+
+sub _addWWWUser{
+    my $self    = shift;
+
+    if (!$self->getUtils()->addUser(getWwwUser, audio){return undef;}
+    
+    return 1;
+}
+
+
+sub _getChkconfig{
+    my $self    = shift;
+    
+    return $self->getUtils()->aptGetInstall('chkconfig');
+}
+
+sub _getSudo{
+    my $self    = shift;
+    
+    return $self->getUtils()->aptGetInstall('sudo');
+}
+
+
+if [ -e '/etc/sudoers.d/falcon' ]; then
+        rm /etc/sudoers.d/falcon
+    fi
+    cp /var/www/falcon/falcon/resources/install/debian/systemRoot/etc/sudoers.d/falcon /etc/sudoers.d/falcon
+    chown root:root /etc/sudoers.d/falcon 
+    chmod 440 /etc/sudoers.d/falcon
     
     
+sub _sudoers{
+    my $self    = shift;
     
-    
+    if (!$self->getUtils()->removeFile($self->getSudoers())){return undef;}
+    if (!$self->getUtils()->copyFile($self->getSudoersSource(), $self->getSudoers())){return undef;}
+    chown 'root', 'root', $self->getSudoers(); 
+    my $mode = 0440; chmod $mode, $self->getSudoers(); 
 }
 1;

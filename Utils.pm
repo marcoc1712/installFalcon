@@ -228,6 +228,30 @@ sub moveFile{
     
     return 1;
 }
+sub createFile{
+    my $self = shift;
+    my $path = shift;
+    my $line = shift;
+    
+    if (!$path){
+        $self->getStatus()->record( "",7, "undefined or empty filepath",'');
+        return undef;
+    }
+    if (-e $path){
+        
+        $self->getStatus()->record( "",7, "file: ".$path." already exists",'');
+        return undef;
+    }
+
+    open my $fileHandle, ">>", $path or return undef;
+    if ($line){
+        
+        print $fileHandle $message;
+    }
+    close $fileHandle;
+    return 1;
+    
+}
 sub removeFile{
     my $self = shift;
     my $path = shift;

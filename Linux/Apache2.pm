@@ -112,7 +112,7 @@ sub _config{
         ! -e $before && 
         !$self->getUtils()->saveBUAndRemove($self->getConf(),$before)){return undef;}
    
-    else (-e $self->getConf() && 
+    if (-e $self->getConf() && 
         !$self->getUtils()->saveBUAndRemove($self->getConf(),$current)){return undef;}
     
     if (!$self->getUtils()->copyFile($self->getConfSource, $self->getConf())){

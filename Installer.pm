@@ -137,7 +137,7 @@ sub install {
     if (!$self->getFalcon()->isInstalled()){
 
         $self->getGit()->gitClone();
-        $self->getFalcon()->Install();
+        $self->getFalcon()->install();
     
     } else {
         
