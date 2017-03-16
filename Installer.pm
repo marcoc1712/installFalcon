@@ -139,7 +139,7 @@ sub install {
         return undef;
     }
         
-    if (!$self->getWebServer()->install()){return undef;}; 
+    if (!$self->getWebServer()->auto()){return undef;}; 
 
     
     return 1;

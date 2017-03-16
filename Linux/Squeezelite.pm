@@ -292,6 +292,7 @@ sub _cleanInstall{
     if (!$self->_getSqueezeliteR2Initd()){return undef;}
     if (!$self->_createLog()){return undef;}
     
+    return 1;
 }
 sub _getSqueezeliteR2{
     my $self = shift;
@@ -398,11 +399,13 @@ sub _createLog{
     
     my $logfile= $self->getLog()."/squeezelite-R2.log";
     if (! -e $logfile && !$self->getUtils()->createFile($logfile)){return undef;}
-    
     chown $uid, $gid, $logfile;
     
     ### TODO: Attivare la rotazione dei files di log.
     
+    if ($self->isDebug()){
+        $self->getStatus()->record('_createLog',1, 'ok','');
+    }
     return 1;
 }
 1;

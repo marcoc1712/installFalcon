@@ -72,6 +72,13 @@ sub isInstalled{
     return 0;
 }
 
+sub auto{
+    my $self = shift;
+    
+    $self->getStatus()->record('',5, "not implemented yet",'');
+    return 0;
+}
+
 sub install{
     my $self = shift;
     

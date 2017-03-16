@@ -63,7 +63,23 @@ sub isInstalled{
     return $self->{_path} ? 1 : 0;
 }
 
-sub config{
+sub remove{
+    my $self = shift;
+    
+    $self->_cleanUp();
+    
+    return 1;
+}
+
+sub auto{
+    my $self = shift;
+    
+    return $self->install();
+}
+################################################################################
+#protected
+
+sub _config{
     my $self = shift;
    
     my $before  =  $self->getBeforeBackUpDirectory().$self->getConf();
@@ -83,6 +99,13 @@ sub config{
         return undef;
     }
     
+    return 1;
+}
+sub _cleanUp{
+    my $self = shift;
+
+    if (!$self->getUtils()->removeFile($self->getConf())){return undef;}
+
     return 1;
 }
 1;

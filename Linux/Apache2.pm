@@ -71,6 +71,12 @@ sub remove{
     return 1;
 }
 
+sub auto{
+    my $self = shift;
+    
+    return $self->install();
+}
+
 ################################################################################
 # settinggs
 

@@ -45,14 +45,21 @@ sub new{
     
     if ($self->getUtils()->whereIs('apache2')) {
         
-        $self->{_webserver}= Linux::Debian::Apache2->new($self->getStatus())
+        $self->{_webserver}= Linux::Debian::Apache2->new($self->getStatus());
         
     } else{
         
-        $self->{_webserver}= Linux::Debian::Lighttpd->new($self->getStatus())
+        $self->{_webserver}= Linux::Debian::Lighttpd->new($self->getStatus());
     }
     
     return $self;
 }
-
+################################################################################
+# override
+#
+sub getWebServer{
+    my $self = shift;
+    
+    return $self->{_webserver};
+}
 1;

@@ -256,7 +256,7 @@ sub _finalize{
     if (!$self->_createLog()){return undef;}
     if (!$self->_setExecutable()){return undef;}
     if (!$self->_addWWWUser()){return undef;}
-    if (!$self->_getChkconfig()){return undef;}
+    #if (!$self->_getChkconfig()){return undef;}
     if (!$self->_getSudo()){return undef;}
     if (!$self->_sudoers()){return undef;}
 
