@@ -115,12 +115,7 @@ sub getSqueezelite{
     $self->getStatus()->record('',5, "not implemented yet",'');
     return 0;
 }
-sub getGit{
-    my $self = shift;
-    
-    $self->getStatus()->record('',5, "not implemented yet",'');
-    return 0;
-}
+
 
 ################################################################################
 # settinggs

@@ -36,9 +36,7 @@ sub new{
 
     my $self = bless {
         
-        _status      => $status, 
-        _utils       => Utils->new($status),
-        _settings    => Settings->new(),
+        _status      => $status,
         
     }, $class;
     
@@ -54,46 +52,65 @@ sub isDebug{
     
     return $self->getStatus()->isDebug();
 }
+################################################################################
+# tobe overidden
+#
 sub getUtils{
     my $self = shift;
 
-    return $self->{_utils};
+    $self->getStatus()->record('',5, "not implemented yet",'');
+    return undef;
 }
 sub getSettings{
     my $self = shift;
     
-    return $self->{_settings};
+    $self->getStatus()->record('',5, "not implemented yet",'');
+    return undef;
 }
-################################################################################
-# tobe overidden
-#
+
+sub getGit{
+    my $self = shift;
+    
+    $self->getStatus()->record('',5, "not implemented yet",'');
+    return undef;
+}
 
 sub isInstalled{
     my $self = shift;
 
     $self->getStatus()->record('',5, "not implemented yet",'');
-    return 0;
+    return undef;
 }
 sub install{
     my $self    = shift;
     
     $self->getStatus()->record('',5, "not implemented yet",'');
-    return 0;
+    return undef;
 }
 sub upgrade{
     my $self    = shift;
     
     $self->getStatus()->record('',5, "not implemented yet",'');
-    return 0;
+    return undef;
 }
 sub remove{
     my $self    = shift;
     
     $self->getStatus()->record('',5, "not implemented yet",'');
-    return 0;
+    return undef;
 }
-################################################################################
-#privates
-#
+sub auto {
+    my $self    = shift;
+     
+    if (!$self->isInstalled()){
 
+
+        return $self->install();
+
+    } else {
+
+
+        return $self->upgrade();
+    }
+}
 1;

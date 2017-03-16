@@ -84,12 +84,7 @@ sub getSqueezelite{
     $self->getStatus()->record('',5, "not implemented yet",'');
     return 0;
 }
-sub getGit{
-    my $self = shift;
-    
-    $self->getStatus()->record('',5, "not implemented yet",'');
-    return 0;
-}
+
 sub getWebServer{
     my $self = shift;
     
@@ -122,28 +117,7 @@ sub install {
         $self->getStatus()->record('',9, "cant load falcon installer",'');
         return undef;
     }
-
-    if (!$self->getGit()){
-        
-        $self->getStatus()->record('',9, "cant load git installer",'');
-        return undef;
-    }
-    
-    if (!$self->getGit()->isInstalled()){
-        
-        if (!$self->getGit()->install()){return undef;}
-        
-    } 
-    if (!$self->getFalcon()->isInstalled()){
-
-        $self->getGit()->gitClone();
-        $self->getFalcon()->install();
-    
-    } else {
-        
-        $self->getGit()->gitPull();
-        $self->getFalcon()->upgrade();
-    }
+     if (!$self->getFalcon()->auto()){return undef;}
 
     if (!$self->getSqueezelite()){
         
@@ -158,10 +132,9 @@ sub install {
         $self->getStatus()->record('',9, "cant load webserver installer",'');
         return undef;
     }
-    #if (!$self->getWebServer()->isInstalled()){
         
-        if (!$self->getWebServer()->install()){return undef;}; 
-    #} 
+    if (!$self->getWebServer()->install()){return undef;}; 
+
     
     return 1;
 }

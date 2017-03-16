@@ -19,6 +19,7 @@ use Settings;
 
 use Linux::Utils;
 use Linux::Settings;
+use Linux::Falcon;
 #use Linux::Apache2;
 #use Linux::Lighttpd;
 
@@ -28,11 +29,11 @@ use Linux::Settings;
 #use Linux::Gentoo::Settings;
 
 
-use Linux::Falcon;
+use Linux::Debian::Falcon;
 
 my $status = Status->new(1);
-my $bin = Linux::Falcon->new($status);
+my $bin = Linux::Debian::Falcon->new($status);
 
-$bin->install();
+$bin->upgrade();
 
 $status->printout(1);

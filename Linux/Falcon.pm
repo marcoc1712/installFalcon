@@ -26,9 +26,6 @@ use strict;
 use warnings;
 use utf8;
 
-use Linux::Utils;
-use Linux::Settings;
-
 use base qw(Falcon);
 
 sub new{
@@ -44,7 +41,63 @@ sub new{
 
     return $self;
 }
+sub getUtils{
+    my $self = shift;
+    
+    return $self->{_utils};
+}
+sub getSettings{
+    my $self = shift;
+    
+    return $self->{_settings};
+}
+################################################################################
+#override
 
+# git cloned.
+sub isInstalled{ 
+    my $self = shift;
+
+    return (-d $self->getFalconHome());
+}
+
+sub install{
+    my $self = shift;
+
+    if (!$self->_removeAll()) {return undef;}
+
+    if (!$self->getGit()){
+
+        $self->getStatus()->record('',9, "cant load git installer",'');
+        return undef;
+    }
+
+    if (!$self->getGit()->isInstalled()){
+
+        if (!$self->getGit()->install()){return undef;}
+
+    }
+    if (!$self->getGit()->gitClone()) {return undef;}
+    if (!$self->_finalize()) {return undef;}
+
+    return 1;
+    
+}
+
+sub upgrade{
+    my $self = shift;
+
+    #save current situation and install the new one
+    if (!$self->_saveBackUp()) {return undef;}
+    #if (!$self->_removeCode()) {return undef;}
+    if (!$self->getGit()->gitPull()) {return undef;}
+    if (!$self->_finalize()) {return undef;}
+
+    return 1;
+}
+###############################################################################
+# settings
+#
 sub getFalconHome{
     my $self = shift;
     
@@ -135,36 +188,6 @@ sub getCurrentBackUpDirectory{
     return $self->getBackUpDirectory()."/".$timestamp;
    
 }
-################################################################################
-#override
-
-# git cloned.
-sub isInstalled{ 
-    my $self = shift;
-
-    return (-d $self->getFalconHome());
-}
-
-sub install{
-    my $self = shift;
-
-    if (!$self->_removeAll()) {return undef;}
-    if (!$self->_cleanInstall()) {return undef;}
-
-    return 1;
-    
-}
-
-sub upgrade{
-    my $self = shift;
-
-    #save current situation and install the new one
-    if (!$self->_saveBackUp()) {return undef;}
-    if (!$self->_removeCode()) {return undef;}
-    if (!$self->_cleanInstall()) {return undef;}
-
-    return 1;
-}
 
 ################################################################################
 # protected
@@ -178,7 +201,7 @@ sub _saveBackUp{
     my $file =  $self->getFalconExit();
     if (!$self->getUtils()->saveBU($file, $buDir.$file)){return undef;}
     
-    my $file =  $self->getFalconData();
+    $file =  $self->getFalconData();
     if (!$self->getUtils()->saveBU($file, $buDir.$file)){return undef;}
     
     return 1;
@@ -200,19 +223,19 @@ sub _removeAll{
     
     return 1;
 }
-sub _cleanInstall{
-     my $self = shift;
-     
-      if (!$self->_createExit()){return undef;}
-      if (!$self->_createData()){return undef;}
-      if (!$self->_createLog()){return undef;}
-      if (!$self->_setExecutable()){return undef;}
-      if (!$self->_addWWWUser()){return undef;}
-      if (!$self->_getChkconfig()){return undef;}
-      if (!$self->_getSudo()){return undef;}
-      if (!$self->_sudoers()){return undef;}
+sub _finalize{
+    my $self = shift;
 
-      return 1;
+    if (!$self->_createExit()){return undef;}
+    if (!$self->_createData()){return undef;}
+    if (!$self->_createLog()){return undef;}
+    if (!$self->_setExecutable()){return undef;}
+    if (!$self->_addWWWUser()){return undef;}
+    if (!$self->_getChkconfig()){return undef;}
+    if (!$self->_getSudo()){return undef;}
+    if (!$self->_sudoers()){return undef;}
+
+    return 1;
 }
 
 sub _createExit{
@@ -233,21 +256,23 @@ sub _createExit{
 sub _createData{
     my $self = shift;
     
+    my ($usr, $psw, $uid, $gid) = getpwnam ($self->getWwwUser());
     if (! -d $self->getFalconData()){
          
         if (!$self->getUtils()->mkDir($self->getFalconData())){return undef;}
-        chown $self->getWwwUser(), $self->getWwwUser(), $self->getFalconData();
+        
+        chown $uid, $gid, $self->getFalconData();
 
         #set Falcon configuraton to debianI386 default
         if (!$self->getUtils()->copyFile($self->getConfSource(), $self->getConf())){return undef;}
-        chown $self->getWwwUser(), $self->getWwwUser(), $self->getConf();
+        chown $uid, $gid, $self->getConf();
     
     } elsif (-l $self->getConf() ) {
         
         #fix a bug in previous versions.
         if (!$self->getUtils()->removeFile($self->getConf())){return undef;}
         if (!$self->getUtils()->copyFile($self->getConfSource(), $self->getConf())){return undef;}
-        chown $self->getWwwUser(), $self->getWwwUser(), $self->getConf(); 
+        chown $uid, $gid,  $self->getConf(); 
     }
     return 1;
 }    
@@ -256,11 +281,14 @@ sub _createLog{
     my $self = shift;
     
     if (!$self->getUtils()->mkDir($self->getFalconLog())){return undef;}  
-    chown $self->getWwwUser(), $self->getWwwUser(), $self->getFalconLog();
+    
+    my ($usr, $psw, $uid, $gid) = getpwnam ($self->getWwwUser());
+    chown $uid, $gid,  $self->getFalconLog();
     
     my $logfile= $self->getFalconLog()."/falcon.log";
-    if (!$self->getUtils()->createFile($logfile)){return undef;}
-    chown $self->getWwwUser(), $self->getWwwUser(), $logfile;
+    
+    if (! -e $logfile && !$self->getUtils()->createFile($logfile)){return undef;}
+    chown $uid, $gid,  $self->getWwwUser(), $logfile;
     
     my $mode = 0664; chmod $mode, $logfile; 
     ### TODO: Attivare la rotazione dei files di log.
@@ -310,7 +338,8 @@ sub _sudoers{
     
     if (!$self->getUtils()->removeFile($self->getSudoers())){return undef;}
     if (!$self->getUtils()->copyFile($self->getSudoersSource(), $self->getSudoers())){return undef;}
-    chown 'root', 'root', $self->getSudoers(); 
+    my ($usr, $psw, $uid, $gid) = getpwnam ('root');
+    chown $uid, $gid, $self->getSudoers(); 
     my $mode = 0440; chmod $mode, $self->getSudoers(); 
 }
 1;

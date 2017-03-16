@@ -370,4 +370,5 @@ sub _createLog{
     ### TODO: Attivare la rotazione dei files di log.
     
     return 1;
+}
 1;

@@ -77,12 +77,6 @@ sub getSqueezelite{
     return  $self->getDistro()->getSqueezelite();
 }
 
-sub getGit{
-    my $self = shift;
-    
-    return  $self->getDistro()->getGit();
-}
-
 sub getWebServer{
     my $self = shift;
     
