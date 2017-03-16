@@ -78,6 +78,9 @@ sub install{
 
     }
     if (!$self->getGit()->gitClone()) {return undef;}
+    if (!$self->getGit()->gitConfigureUser()) {return undef;}
+    if (!$self->getGit()->gitConfigureMail()) {return undef;}
+    
     if (!$self->_finalize()) {return undef;}
 
     return 1;
@@ -231,7 +234,7 @@ sub _finalize{
     if (!$self->_createLog()){return undef;}
     if (!$self->_setExecutable()){return undef;}
     if (!$self->_addWWWUser()){return undef;}
-    if (!$self->_getChkconfig()){return undef;}
+    #if (!$self->_getChkconfig()){return undef;}
     if (!$self->_getSudo()){return undef;}
     if (!$self->_sudoers()){return undef;}
 
@@ -245,8 +248,8 @@ sub _createExit{
 
         if (!$self->getUtils()->mkDir($self->getFalconExit())){return undef;}
 
-        symlink ($self->getFalconDefaultExit().'/Examples/setWakeOnLan.pl', $self->getFalconDefaultExit().'/setWakeOnLan.pl');
-        symlink ($self->getFalconDefaultExit().'/Examples/testAudioDevice.pl', $self->getFalconDefaultExit().'/testAudioDevice.pl');
+        symlink ($self->getFalconDefaultExit().'/Examples/setWakeOnLan.pl', $self->getFalconExit().'/setWakeOnLan.pl');
+        symlink ($self->getFalconDefaultExit().'/Examples/testAudioDevice.pl', $self->getFalconExit().'/testAudioDevice.pl');
         
     }
     return 1;
@@ -299,15 +302,25 @@ sub _createLog{
 sub _setExecutable{
     my $self = shift;
     
-    if (!$self->getUtils()->chmodX($self->getFalconCgi())."/*.pl"){return undef;}
-    if (!$self->getUtils()->chmodX($self->getFalconExit())."/*.pl"){return undef;}
-    if (!$self->getUtils()->chmodX($self->getFalconDefaultExit())."/standard/linux/*.pl"){return undef;}
-    if (!$self->getUtils()->chmodX($self->getFalconDefaultExit())."/myOwn/*.pl"){return undef;}
-    if (!$self->getUtils()->chmodX($self->getFalconDefaultExit())."/Examples/*.pl"){return undef;}
-    if (!$self->getUtils()->chmodX($self->getFalconDefaultExit())."/*.pl"){return undef;}
-     
-    if (!$self->getUtils()->chmodX($self->getFalconDefaultExit())."/standard/linux/debian/*.pl"){return undef;}
-     
+    my $ok=$self->getUtils()->chmodX($self->getFalconCgi()."/*.pl");
+    
+    $self->getStatus()->record('after',1, $ok,'');
+    
+    if (!$self->getUtils()->chmodX($self->getFalconCgi()."/*.pl")){return undef;}
+   
+    if (!$self->getUtils()->chmodX($self->getFalconExit()."/*.pl")){return undef;}
+        
+    #if (!$self->getUtils()->chmodX($self->getFalconDefaultExit()."/*.pl")){return undef;}
+            
+    if (!$self->getUtils()->chmodX($self->getFalconDefaultExit()."/myOwn/*.pl")){return undef;}
+    
+    if (!$self->getUtils()->chmodX($self->getFalconDefaultExit()."/Examples/*.pl")){return undef;}
+    
+    if (!$self->getUtils()->chmodX($self->getFalconDefaultExit()."/standard/linux/*.pl")){return undef;}
+    
+    if (!$self->getUtils()->chmodX($self->getFalconDefaultExit()."/standard/linux/debian/*.pl")){return undef;}
+    
+    
     #chmod +x /var/www/falcon/falcon/resources/install/debian/*.sh
     return 1;
 }
@@ -315,12 +328,12 @@ sub _setExecutable{
 sub _addWWWUser{
     my $self    = shift;
 
-    if (!$self->getUtils()->addUser(getWwwUser, 'audio')){return undef;}
+    if (!$self->getUtils()->addUser($self->getWwwUser, 'audio')){return undef;}
     
     return 1;
 }
 
-
+#non funziona in ubuntu
 sub _getChkconfig{
     my $self    = shift;
     

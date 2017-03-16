@@ -64,6 +64,21 @@ sub getSettings{
     
     return $self->{_settings};
 }
+sub getFalconHome{
+    my $self = shift;
+    
+    return $self->getSettings()->{FALCON_HOME};
+}
+sub getGitUser{
+    my $self = shift;
+    
+    return $self->getSettings()->{GIT_USER};
+}
+sub getGitMail{
+    my $self = shift;
+    
+    return $self->getSettings()->{GIT_MAIL};
+}
 ################################################################################
 # tobe overidden
 #
@@ -98,6 +113,62 @@ sub uninstall{
 ################################################################################
 #privates
 #
+sub gitConfigureUser{
+    my $self = shift;
+    
+    my $dir = $self->getFalconHome();
+    chdir $dir;
+
+    if (! getcwd eq $dir){
+        
+        $self->getStatus()->record("chdir ".$dir,7, "can't move into directory",getcwd);
+        return undef;
+    }
+    
+    
+    my $user= $self->getGitUser();
+    
+    my $command =  qq(git config user.name $user);
+    
+    my ($err, @answ)= $self->getUtils()->executeCommand($command);
+    
+    if ($err){
+        $self->getStatus()->record($command,7, $err,(join '\n', @answ));
+        return undef;
+    }
+    $self->getStatus()->record($command,3, $err ? $err : 'done',(join '\n', @answ));
+    
+    return 1;
+
+
+}
+sub gitConfigureMail{
+    my $self = shift;
+
+    my $dir = $self->getFalconHome();
+    chdir $dir;
+
+    if (! getcwd eq $dir){
+        
+        $self->getStatus()->record("chdir ".$dir,7, "can't move into directory",getcwd);
+        return undef;
+    }
+    
+    my $mail= $self->getGitMail();
+    my $command =  qq(git config user.email $mail);
+    
+    my ($err, @answ)= $self->getUtils()->executeCommand($command);
+    
+    if ($err){
+        $self->getStatus()->record($command,7, $err,(join '\n', @answ));
+        return undef;
+    }
+    $self->getStatus()->record($command,3, $err ? $err : 'done',(join '\n', @answ));
+    
+    return 1;
+}
+
+    
 sub gitClone{
     my $self = shift;
     

@@ -71,6 +71,16 @@ sub getWWWDirectory{
     
     return $self->getSettings()->{WWW_DIRECTORY};
 }
+sub getWwwUser{
+    my $self = shift;
+    
+    return $self->getSettings()->{WWW_USER};
+}
+sub getWwwGroup{
+    my $self = shift;
+    
+    return $self->getSettings()->{WWW_GROUP};
+}
 sub getFalconHome{
     my $self = shift;
     
@@ -187,6 +197,7 @@ sub upgrade{
     if (!$self->_removeSqueezeliteR2()) {return undef;}
     if (!$self->_cleanInstall()) {return undef;}
     
+    if (!$self->getUtils()->systemCtlReload()) {return undef;}
     if (!$self->getUtils()->updateRcdDefaults(SQUEEZELITE)){return undef;}
     if (!$self->getUtils()->serviceStart(SQUEEZELITE)){return undef;}
     
@@ -359,13 +370,17 @@ sub _getSqueezeliteR2Initd{
 
 sub _createLog{
     my $self = shift;
-   
-    if (! -d $self->getLog() && !$self->getUtils()->mkDir($self->getLog())){return undef;}  
-    chown $self->getWwwUser(), $self->getWwwUser(), $self->getLog();
+    
+    my ($usr, $psw, $uid, $gid) = getpwnam ($self->getWwwUser());
+    
+    if (! -d $self->getLog() && !$self->getUtils()->mkDir($self->getLog())){return undef;} 
+    
+    chown $uid, $gid, $self->getLog();
     
     my $logfile= $self->getLog()."/squeezelite-R2.log";
     if (! -e $logfile && !$self->getUtils()->createFile($logfile)){return undef;}
-    chown $self->getWwwUser(), $self->getWwwUser(), $logfile;
+    
+    chown $uid, $gid, $logfile;
     
     ### TODO: Attivare la rotazione dei files di log.
     
