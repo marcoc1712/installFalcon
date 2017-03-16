@@ -50,6 +50,16 @@ sub getFalconHome{
     
     return $self->getSettings()->{FALCON_HOME};
 }
+sub getFalconCode{
+    my $self = shift;
+    
+    return $self->getSettings()->{FALCON_CODE};
+}
+sub getFalconHttp{
+    my $self = shift;
+    
+    return $self->getSettings()->{FALCON_HTTP};
+}
 sub getFalconCgi{
     my $self = shift;
     
@@ -75,6 +85,7 @@ sub getFalconLog{
     
     return $self->getSettings()->{FALCON_LOG};
 }
+
 sub getWwwUser{
     my $self = shift;
     
@@ -137,8 +148,8 @@ sub isInstalled{
 sub install{
     my $self = shift;
 
-    #always upgrade, it's safer.
-    if (!$self->upgrade()) {return undef;}
+    if (!$self->_removeAll()) {return undef;}
+    if (!$self->_cleanInstall()) {return undef;}
 
     return 1;
     
@@ -147,14 +158,10 @@ sub install{
 sub upgrade{
     my $self = shift;
 
-         
-    if ($self->isInstalled()){
-
-         #if (!$self->_removeSqueezelite()){return undef;}
-    }
     #save current situation and install the new one
-    #if (!$self->_removeSqueezeliteR2()) {return undef;}
-    #if (!$self->_cleanInstall()) {return undef;}
+    if (!$self->_saveBackUp()) {return undef;}
+    if (!$self->_removeCode()) {return undef;}
+    if (!$self->_cleanInstall()) {return undef;}
 
     return 1;
 }
@@ -162,6 +169,51 @@ sub upgrade{
 ################################################################################
 # protected
 #
+
+sub _saveBackUp{
+    my $self = shift;
+
+    my $buDir = $self->getCurrentBackUpDirectory();
+     
+    my $file =  $self->getFalconExit();
+    if (!$self->getUtils()->saveBU($file, $buDir.$file)){return undef;}
+    
+    my $file =  $self->getFalconData();
+    if (!$self->getUtils()->saveBU($file, $buDir.$file)){return undef;}
+    
+    return 1;
+}
+sub _removeCode{
+    my $self = shift;
+    
+    if (!$self->getUtils()->rmTree($self->getFalconCode())){return undef;}
+    if (!$self->getUtils()->rmTree($self->getFalconHttp())){return undef;}
+    if (!$self->getUtils()->rmTree($self->getFalconCgi())){return undef;}
+    
+    return 1;
+
+}
+sub _removeAll{
+    my $self = shift;
+    
+    if (!$self->getUtils()->rmTree($self->getFalconHome())){return undef;}
+    
+    return 1;
+}
+sub _cleanInstall{
+     my $self = shift;
+     
+      if (!$self->_createExit()){return undef;}
+      if (!$self->_createData()){return undef;}
+      if (!$self->_createLog()){return undef;}
+      if (!$self->_setExecutable()){return undef;}
+      if (!$self->_addWWWUser()){return undef;}
+      if (!$self->_getChkconfig()){return undef;}
+      if (!$self->_getSudo()){return undef;}
+      if (!$self->_sudoers()){return undef;}
+
+      return 1;
+}
 
 sub _createExit{
     my $self = shift;
@@ -219,14 +271,14 @@ sub _createLog{
 sub _setExecutable{
     my $self = shift;
     
-    if (!$self->getUtils()->chmodX($self->getFalconCgi()."/*.pl"){return undef;}
-    if (!$self->getUtils()->chmodX($self->getFalconExit()."/*.pl"){return undef;}
-    if (!$self->getUtils()->chmodX($self->getFalconDefaultExit()."/standard/linux/*.pl"){return undef;}
-    if (!$self->getUtils()->chmodX($self->getFalconDefaultExit()."/myOwn/*.pl"){return undef;}
-    if (!$self->getUtils()->chmodX($self->getFalconDefaultExit()."/Examples/*.pl"){return undef;}
-    if (!$self->getUtils()->chmodX($self->getFalconDefaultExit()."/*.pl"){return undef;}
+    if (!$self->getUtils()->chmodX($self->getFalconCgi())."/*.pl"){return undef;}
+    if (!$self->getUtils()->chmodX($self->getFalconExit())."/*.pl"){return undef;}
+    if (!$self->getUtils()->chmodX($self->getFalconDefaultExit())."/standard/linux/*.pl"){return undef;}
+    if (!$self->getUtils()->chmodX($self->getFalconDefaultExit())."/myOwn/*.pl"){return undef;}
+    if (!$self->getUtils()->chmodX($self->getFalconDefaultExit())."/Examples/*.pl"){return undef;}
+    if (!$self->getUtils()->chmodX($self->getFalconDefaultExit())."/*.pl"){return undef;}
      
-    if (!$self->getUtils()->chmodX($self->getFalconDefaultExit()."/standard/linux/debian/*.pl"){return undef;}
+    if (!$self->getUtils()->chmodX($self->getFalconDefaultExit())."/standard/linux/debian/*.pl"){return undef;}
      
     #chmod +x /var/www/falcon/falcon/resources/install/debian/*.sh
     return 1;
@@ -235,7 +287,7 @@ sub _setExecutable{
 sub _addWWWUser{
     my $self    = shift;
 
-    if (!$self->getUtils()->addUser(getWwwUser, audio){return undef;}
+    if (!$self->getUtils()->addUser(getWwwUser, 'audio')){return undef;}
     
     return 1;
 }
@@ -253,15 +305,6 @@ sub _getSudo{
     return $self->getUtils()->aptGetInstall('sudo');
 }
 
-
-if [ -e '/etc/sudoers.d/falcon' ]; then
-        rm /etc/sudoers.d/falcon
-    fi
-    cp /var/www/falcon/falcon/resources/install/debian/systemRoot/etc/sudoers.d/falcon /etc/sudoers.d/falcon
-    chown root:root /etc/sudoers.d/falcon 
-    chmod 440 /etc/sudoers.d/falcon
-    
-    
 sub _sudoers{
     my $self    = shift;
     

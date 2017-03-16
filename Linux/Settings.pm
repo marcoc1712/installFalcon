@@ -45,10 +45,13 @@ sub new{
     $self->{INIT_DIRECTORY}     = '/etc/init.d',
     $self->{DEFCON_DIRECTORY}   = '/etc/default',
     
+    $self->{FALCON_CODE}        = '/var/log/falcon/falcon',
+    $self->{FALCON_HTTP}        = '/var/log/falcon/httpdocs',
     $self->{FALCON_CGI}         = '/var/www/falcon/cgi-bin',
     $self->{FALCON_EXIT}        = '/var/www/falcon/exit',
     $self->{FALCON_DATA}        = '/var/www/falcon/data',
     $self->{FALCON_LOG}         = '/var/log/falcon',
+   
 
     $self->{WWW_USER}          = 'www-data',
     $self->{WWW_GROUP}         = 'www-data',

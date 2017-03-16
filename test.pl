@@ -28,10 +28,10 @@ use Linux::Settings;
 #use Linux::Gentoo::Settings;
 
 
-use Linux::Debian::Apache2;
+use Linux::Falcon;
 
 my $status = Status->new(1);
-my $bin = Linux::Debian::Apache2->new($status);
+my $bin = Linux::Falcon->new($status);
 
 $bin->install();
 

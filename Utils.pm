@@ -120,7 +120,72 @@ sub mkDir{
     }
     return 1;
 }
+sub rmTree{
+    my $self    = shift;
+    my $dir     = shift;
 
+    if (!$dir){
+        $self->getStatus()->record( "",7, "undefined or empty directory name",'');
+        return undef;
+    }
+    if (! -e $dir && $self->isDebug()){
+        
+        $self->getStatus()->record( "",1, "directory: ".$dir." does not exists",'');
+        return 1;
+    }
+    
+    my $err=undef;
+    my @answ=();
+
+    rmtree( $dir, {error => \my $msg} );
+    if (@$msg) {
+        $err="Error deleting tree starting at: $dir";
+        for my $diag (@$msg) {
+            my ($file, $message) = %$diag;
+            if ($file eq '') {
+
+                push  @answ, "general error: $message";
+
+            } else {
+
+                push  @answ, "problem unlinking $file: $message";
+            }
+        }
+    }
+    
+    if ($err){
+        
+        $self->getStatus()->record( "rmtree",7, $err,(join "\n", @answ));
+        return undef;
+    }
+    if ($self->isDebug()){
+        
+        $self->getStatus()->record( "",1, "directory: ".$dir." removed",'');
+    }
+    return 1;
+}
+sub saveBU{
+    my $self    = shift;
+    my $oldPath = shift;
+    my $newPath = shift;
+    
+    if (! -e $oldPath){
+            
+        $self->getStatus()->record( "",5, "file: ".$oldPath." does not exists.",'');        
+        return 1;
+    
+    }
+    
+    if (-e $newPath){
+        
+        $self->getStatus()->record( "",5, "file: ".$newPath." already exist, keeped",'');        
+        return  $self->removeFile($oldPath);
+    }
+
+    if (!$self->mkDir(File::Basename::dirname($newPath))){return undef;}
+    
+    return  $self->copyFile($oldPath, $newPath);
+}
 
 sub saveBUAndRemove{
     my $self    = shift;
@@ -246,7 +311,7 @@ sub createFile{
     open my $fileHandle, ">>", $path or return undef;
     if ($line){
         
-        print $fileHandle $message;
+        print $fileHandle $line;
     }
     close $fileHandle;
     return 1;
