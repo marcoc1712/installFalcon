@@ -123,10 +123,10 @@ sub serviceStop{
         }
         if ($self->isDebug()){
             $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
-            return 1;
         }
+        return 1;
     }
-    $self->getStatus()->record($command,5, "can't found /etc/init.d/".$service,'');
+    $self->getStatus()->record($command,5, "can't execute /etc/init.d/".$service,'');
     return undef;
 }
 
@@ -145,9 +145,9 @@ sub serviceStart{
             return undef;
         }
         if ($self->isDebug()){
-            $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
-            return 1;
+            $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));  
         }
+        return 1;
     }
     $self->getStatus()->record($command,5, "can't found /etc/init.d/".$service,'');
     return undef;

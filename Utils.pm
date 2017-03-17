@@ -194,14 +194,14 @@ sub saveBUAndRemove{
     
     if (! -e $oldPath){
             
-        $self->getStatus()->record( "",5, "file: ".$oldPath." does not exists.",'');        
+        $self->getStatus()->record( "",1, "file: ".$oldPath." does not exists.",'');        
         return 1;
     
     }
     
     if (-e $newPath){
         
-        $self->getStatus()->record( "",5, "file: ".$newPath." already exist, keeped",'');        
+        $self->getStatus()->record( "",3, "file: ".$newPath." already exist, keeped",'');        
         return  $self->removeFile($oldPath);
     }
 

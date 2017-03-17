@@ -55,6 +55,16 @@ sub getConf{
     
     return $self->getSettings()->{APACHE2_CONF}; 
 }
+sub getInitDirectory{
+    my $self = shift;
+    
+    return $self->getSettings()->{INIT_DIRECTORY};
+}
+sub getInitFile{
+    my $self = shift;
+    
+    return $self->getInitDirectory().'/'.APACHE2;
+}
 ################################################################################
 #override
 sub isInstalled{

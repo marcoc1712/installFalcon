@@ -61,6 +61,73 @@ sub new{
 
     return $self;
 }
+################################################################################
+sub record {
+    my $self    = shift;  
+    
+    my $command = shift;
+    my $gravity = shift;
+    my $message = shift;
+    my ($details) = shift || '';
+
+    my ($package, $filename, $line, $subroutine) = caller(1);
+        
+    #my $id = $filename." line: ".$line.;
+    
+    my $id = _getTimestamp();
+
+    $gravity=$self->_gravityDescToCode($gravity);
+
+ 
+    $self->{_lines}->{$id}->{'package'}     =$package;
+    $self->{_lines}->{$id}->{'filename'}    =$filename;
+    $self->{_lines}->{$id}->{'line'}        =$line;
+    $self->{_lines}->{$id}->{'subroutine'}  =$subroutine;
+    $self->{_lines}->{$id}->{'command'}     =$command;
+    $self->{_lines}->{$id}->{'gravity'}     =$gravity;
+    $self->{_lines}->{$id}->{'message'}     =$message;
+    $self->{_lines}->{$id}->{'details'}     =$details;
+    
+    if ($gravity > $self->{_gravity}){
+
+        $self->{_gravity} = $gravity;
+        $self->{_message} = $message;
+    }
+}
+sub printout{
+    my $self = shift;
+    my $filter = shift || ($self->isDebug() ? 1 : 5);
+    
+    $filter = $self->_gravityDescToCode($filter);
+    
+    my $in = $self->getLines($filter); 
+    
+    for my $id (sort keys %$in){
+    
+        print " - Package    : ".$self->{_lines}->{$id}->{'package'}."\n";
+        print " - Filename   : ".$self->{_lines}->{$id}->{'filename'}."\n";
+        print " - Line       : ".$self->{_lines}->{$id}->{'line'}."\n";
+        print " - Subroutine : ".$self->{_lines}->{$id}->{'subroutine'}."\n";
+        print " - Command    : ".$self->{_lines}->{$id}->{'command'}."\n";
+        print " - Gravity    : ".$self->_gravityCodeToDesc($self->{_lines}->{$id}->{'gravity'})."\n";
+        print " - Message    : ".$self->{_lines}->{$id}->{'message'}."\n";
+        print " - Details    : ".$self->{_lines}->{$id}->{'details'}."\n";
+        print "\n";
+    }
+    print "\n";
+    
+    my $gravity=$self->_gravityDescToCode($self->getGravity());
+    
+    if ($gravity ge $filter){
+        print "STATUS : ".$self->getGravity()."\n";
+        if ($self->getMessage()){print "MESSAGE: ".$self->getMessage()."\n";}
+    
+    } else {
+    
+        print"ENDED with no errors\n\n";
+    } 
+
+}
 sub wasStartetAt{
     my $self = shift;
     
@@ -108,63 +175,7 @@ sub getLines{
     }
     return $out;
 }
-
-sub record {
-    my $self    = shift;  
-    
-    my $command = shift;
-    my $gravity = shift;
-    my $message = shift;
-    my ($details) = shift || '';
-
-    my ($package, $filename, $line, $subroutine) = caller(1);
-        
-    #my $id = $filename." line: ".$line.;
-    
-    my $id = _getTimestamp();
-
-    $gravity=$self->_gravityDescToCode($gravity);
-
- 
-    $self->{_lines}->{$id}->{'package'}     =$package;
-    $self->{_lines}->{$id}->{'filename'}    =$filename;
-    $self->{_lines}->{$id}->{'line'}        =$line;
-    $self->{_lines}->{$id}->{'subroutine'}  =$subroutine;
-    $self->{_lines}->{$id}->{'command'}     =$command;
-    $self->{_lines}->{$id}->{'gravity'}     =$gravity;
-    $self->{_lines}->{$id}->{'message'}     =$message;
-    $self->{_lines}->{$id}->{'details'}     =$details;
-    
-    if ($gravity > $self->{_gravity}){
-
-        $self->{_gravity} = $gravity;
-        $self->{_message} = $message;
-    }
-}
-sub printout{
-    my $self = shift;
-    my $filter = shift || ($self->isDebug() ? 1 : 5);
-    
-    $filter = $self->_gravityDescToCode($filter);
-    
-    print "STATUS : ".$self->getGravity()."\n";
-    if ($self->getMessage()){print "MESSAGE: ".$self->getMessage()."\n";}
-    
-    my $in = $self->getLines($filter); 
-    
-    for my $id (sort keys %$in){
-    
-        print " - Package    : ".$self->{_lines}->{$id}->{'package'}."\n";
-        print " - Filename   : ".$self->{_lines}->{$id}->{'filename'}."\n";
-        print " - Line       : ".$self->{_lines}->{$id}->{'line'}."\n";
-        print " - Subroutine : ".$self->{_lines}->{$id}->{'subroutine'}."\n";
-        print " - Command    : ".$self->{_lines}->{$id}->{'command'}."\n";
-        print " - Gravity    : ".$self->_gravityCodeToDesc($self->{_lines}->{$id}->{'gravity'})."\n";
-        print " - Message    : ".$self->{_lines}->{$id}->{'message'}."\n";
-        print " - Details    : ".$self->{_lines}->{$id}->{'details'}."\n";
-        print "\n";
-    }
-}
+##################################################################################
 sub _gravityDescToCode{
     my $self = shift;
     my $gravity= shift;

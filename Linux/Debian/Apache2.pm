@@ -51,8 +51,11 @@ sub new{
 sub install{
     my $self = shift;
     
-    $self->getUtils()->serviceStop('apache2');
-     
+    if  (-x $self->getInitFile()){
+        
+        $self->getUtils()->serviceStop('apache2');
+    }
+         
     if (!$self->getUtils()->aptGetInstall('apache2')){return undef};
     if (!$self->_config()){return undef;}
     

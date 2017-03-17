@@ -256,7 +256,6 @@ sub _finalize{
     if (!$self->_createLog()){return undef;}
     if (!$self->_setExecutable()){return undef;}
     if (!$self->_addWWWUser()){return undef;}
-    #if (!$self->_getChkconfig()){return undef;}
     if (!$self->_getSudo()){return undef;}
     if (!$self->_sudoers()){return undef;}
 
@@ -353,13 +352,6 @@ sub _addWWWUser{
     if (!$self->getUtils()->addUser($self->getWwwUser, 'audio')){return undef;}
     
     return 1;
-}
-
-#non funziona in ubuntu
-sub _getChkconfig{
-    my $self    = shift;
-    
-    return $self->getUtils()->aptGetInstall('chkconfig');
 }
 
 sub _getSudo{

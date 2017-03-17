@@ -113,10 +113,20 @@ sub getInitDirectory{
     
     return $self->getSettings()->{INIT_DIRECTORY};
 }
+sub getInitFile{
+    my $self = shift;
+    
+    return $self->getInitDirectory().'/'.SQUEEZELITE;
+}
 sub getDefconDirectory{
     my $self = shift;
     
     return $self->getSettings()->{DEFCON_DIRECTORY};
+}
+sub getDefconFile{
+    my $self = shift;
+    
+    return $self->getDefconDirectory().'/'.SQUEEZELITE;
 }
 sub getWgetString_X86_64{
     my $self = shift;
@@ -187,8 +197,11 @@ sub install{
 sub upgrade{
     my $self = shift;
     
-    $self->getUtils()->serviceStop('squeezelite');
-         
+    if  (-e $self->getInitFile() && ! -l $self->getInitFile()){
+        
+        $self->getUtils()->serviceStop(SQUEEZELITE);
+    }
+
     if ($self->isInstalled() && !$self->isR2Installed()){
 
          if (!$self->_saveAndRemoveSqueezelite()){return undef;}
@@ -199,7 +212,12 @@ sub upgrade{
     
     if (!$self->getUtils()->systemCtlReload()) {return undef;}
     if (!$self->getUtils()->updateRcdDefaults(SQUEEZELITE)){return undef;}
-    if (!$self->getUtils()->serviceStart(SQUEEZELITE)){return undef;}
+    
+    # with a null or default sound card will take 99% of resources in some systems
+    # let the user fix settings then start over.
+    #
+    #if (!$self->getUtils()->serviceStart(SQUEEZELITE)){return undef;}
+    
     
     return 1;
 }
@@ -207,7 +225,11 @@ sub upgrade{
 sub remove{
     my $self = shift;
     
-    $self->getUtils()->serviceStop(SQUEEZELITE);
+    if  (-e $self->getInitFile() && ! -l $self->getInitFile()){
+        
+        $self->getUtils()->serviceStop(SQUEEZELITE);
+    }
+    
     
     if (!$self->_removeSqueezeliteR2()) {return undef;}
     
@@ -235,10 +257,10 @@ sub _saveAndRemoveSqueezelite{
     my $file = $self->getBinDirectory().'/'.SQUEEZELITE;
     if (!$self->getUtils()->saveBUAndRemove($file, $buDir.$file)){return undef;}
          
-    $file = $self->getInitDirectory().'/'.SQUEEZELITE;
+    $file = $self->getInitFile();
     if (!$self->getUtils()->saveBUAndRemove($file, $buDir.$file)){return undef;}
     
-    $file = $self->getDefconDirectory.'/'.SQUEEZELITE;
+    $file = $self->getDefconFile();
     if (!$self->getUtils()->saveBUAndRemove($file, $buDir.$file)){return undef;}
 
     return 1;
@@ -257,10 +279,10 @@ sub _saveAndRemoveSqueezeliteR2{
     my $file =  $self->getBinDirectory().'/'.SQUEEZELITE_R2;
     if (!$self->getUtils()->saveBUAndRemove($file, $buDir.$file)){return undef;}
     
-    $file = $self->getInitDirectory().'/'.SQUEEZELITE;
+    $file = $self->getInitFile();
     if (!$self->getUtils()->saveBUAndRemove($file, $buDir.$file)){return undef;}
      
-    $file = $self->getDefconDirectory().'/'.SQUEEZELITE;
+    $file = $self->getDefconFile();
     if (!$self->getUtils()->saveBUAndRemove($file, $buDir.$file)){return undef;}
 
     return 1;
@@ -271,10 +293,10 @@ sub _removeSqueezeliteR2{
     my $file =  $self->getBinDirectory().'/'.SQUEEZELITE_R2;
     if (!$self->getUtils()->removeFile($file)){return undef;}
     
-    $file = $self->getInitDirectory().'/'.SQUEEZELITE;
+    $file = $self->getInitFile();
     if (!$self->getUtils()->removeFile($file)){return undef;}
      
-    $file = $self->getDefconDirectory().'/'.SQUEEZELITE;
+    $file = $self->getDefconFile();
     if (!$self->getUtils()->removeFile($file)){return undef;}
 
     if (!$self->getUtils()->rmTree($self->getLog())){return undef;}

@@ -55,6 +55,16 @@ sub getConf{
     
     return $self->getSettings()->{LIGHTTPD_CONF}; 
 }
+sub getInitDirectory{
+    my $self = shift;
+    
+    return $self->getSettings()->{INIT_DIRECTORY};
+}
+sub getInitFile{
+    my $self = shift;
+    
+    return $self->getInitDirectory().'/'.LIGHTTPD;
+}
 ################################################################################
 #override
 sub isInstalled{

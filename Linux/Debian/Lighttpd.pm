@@ -50,8 +50,11 @@ sub new{
 
 sub install{
     my $self = shift;
-
-    $self->getUtils()->serviceStop('lighttpd');
+    
+    if  (-e $self->getInitFile()){
+        
+        $self->getUtils()->serviceStop('lighttpd');
+    }
      
     if (!$self->getUtils()->aptGetInstall('lighttpd')){return undef};
     if (!$self->_config()){return undef;}
