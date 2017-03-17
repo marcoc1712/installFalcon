@@ -31,9 +31,9 @@ use Linux::Falcon;
 
 use Linux::Debian::Distro;
 
-my $status = Status->new(1);
-my $bin = Linux::Debian::Distro->new($status);
+#my $status = Status->new(1);
+#my $bin = Linux::Debian::Distro->new($status);
 
 #$bin->upgrade();
 
-$status->printout(1);
+#$status->printout(1);

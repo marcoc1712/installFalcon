@@ -248,11 +248,11 @@ sub _cleanUp{
 sub _finalize{
     my $self = shift;
 
+    if (!$self->_addWWWUser()){return undef;}
     if (!$self->_createExit()){return undef;}
     if (!$self->_createData()){return undef;}
     if (!$self->_createLog()){return undef;}
-    if (!$self->_setExecutable()){return undef;}
-    if (!$self->_addWWWUser()){return undef;}
+    if (!$self->_setExecutable()){return undef;}   
     if (!$self->_getSudo()){return undef;}
     if (!$self->_sudoers()){return undef;}
 
