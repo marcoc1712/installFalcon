@@ -205,13 +205,7 @@ sub getCurrentBackUpDirectory{
 # to be overidden
 #
 
-sub _addWWWUser{
-    my $self = shift;
-    
-    $self->getStatus()->record('',5, "not implemented yet",'');
-    return 0;
-    
-}
+
 ################################################################################
 # 
 #
@@ -266,6 +260,13 @@ sub _finalize{
     if (!$self->_getSudo()){return undef;}
     if (!$self->_sudoers()){return undef;}
 
+    return 1;
+}
+
+sub _addWWWUser{
+    my $self    = shift;
+    
+    if (!$self->getUtils()->userAdd($self->getWwwUser(), 'audio')){return undef;}
     return 1;
 }
 

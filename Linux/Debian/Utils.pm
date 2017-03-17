@@ -42,25 +42,7 @@ sub new{
 
 ################################################################################
 #
-sub addUser{
-    my $self    = shift;
-    my $user    = shift;
-    my $group   = shift;
-    
-    #my $command = qq( adduser $user $group);
-    my $command = qq( gpasswd -a $user $group);
-    my ($err, @answ)= $self->executeCommand($command);
-    
-    if ($err){
-        $self->getStatus()->record($command,7, $err,(join "/n", @answ));
-        return undef;
-    }
-    if ($self->isDebug()){
-        $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
-    }
-    return 1;
 
-}
 sub aptGetInstall{
     my $self   = shift;
     my $pack   = shift;
