@@ -20,43 +20,49 @@
 # GNU General Public License for more details.
 #
 ################################################################################
-package Linux::Gentoo::Distro;
+package Linux::Gentoo::Lighttpd;
 
 use strict;
 use warnings;
 use utf8;
 
-use Linux::Gentoo::Falcon;
-use Linux::Gentoo::Apache2;
-use Linux::Gentoo::Lighttpd;
+use Linux::Gentoo::Utils;
+use Linux::Gentoo::Settings;
 
-use base qw(Linux::Distro);
+use base qw(Linux::Lighttpd);
 
 sub new{
-    my $class = shift;
+    my $class  = shift;
     my $status = shift;
     
     my $self=$class->SUPER::new($status);
-
-    #$self->{_distroName}           = undef;
     
-    bless $self, $class;  
-
-    #$self-> _initDistroName();
+    $self->{_utils}          = Linux::Gentoo::Utils->new($status);
+    $self->{_settings}       = Linux::Gentoo::Settings->new($status);
     
+    bless $self, $class;
+
     return $self;
 }
- if ($self->getUtils()->whereIs('apache2')) {
-        
-        $self->{_webserver}= Linux::Gentoo::Apache2->new($self->getStatus());
-        
-    } else{
-        
-        $self->{_webserver}= Linux::Gentoo::Lighttpd->new($self->getStatus());
-    }
-    
-    return $self;
+
 ################################################################################
 #override
 
+sub install{
+    my $self = shift;
+    
+    if  (-e $self->getInitFile()){
+        
+        $self->getUtils()->serviceStop('lighttpd');
+    }
+     
+    if (!$self->getUtils()->emerge('lighttpd')){return undef};
+    if (!$self->_config()){return undef;}
+    
+    $self->getUtils()->serviceStart('lighttpd');
+}
+
+################################################################################
+# privates
+#
 1;

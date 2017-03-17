@@ -20,43 +20,35 @@
 # GNU General Public License for more details.
 #
 ################################################################################
-package Linux::Gentoo::Distro;
+package Linux::Gentoo::Falcon;
 
 use strict;
 use warnings;
 use utf8;
 
-use Linux::Gentoo::Falcon;
-use Linux::Gentoo::Apache2;
-use Linux::Gentoo::Lighttpd;
+use Linux::Gentoo::Git;
 
-use base qw(Linux::Distro);
+use base qw(Linux::Falcon);
 
 sub new{
     my $class = shift;
     my $status = shift;
     
     my $self=$class->SUPER::new($status);
-
-    #$self->{_distroName}           = undef;
     
-    bless $self, $class;  
+    $self->{_utils}          = Linux::Gentoo::Utils->new($status);
+    $self->{_settings}       = Linux::Gentoo::Settings->new($status);
+    $self->{_git}            = Linux::Gentoo::Git->new($status);
+    
 
-    #$self-> _initDistroName();
+    bless $self, $class;  
     
     return $self;
 }
- if ($self->getUtils()->whereIs('apache2')) {
-        
-        $self->{_webserver}= Linux::Gentoo::Apache2->new($self->getStatus());
-        
-    } else{
-        
-        $self->{_webserver}= Linux::Gentoo::Lighttpd->new($self->getStatus());
-    }
-    
-    return $self;
-################################################################################
-#override
 
+sub getGit{
+    my $self = shift;
+    
+    return $self->{_git};
+}
 1;
