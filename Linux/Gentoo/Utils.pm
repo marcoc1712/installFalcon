@@ -47,7 +47,7 @@ sub userAdd {
     my $user     = shift;
     my $group    = shift;
     
-    my $command = qq( useradd $group $user);
+    my $command = qq( useradd $user);
 
     my ($err, @answ)= $self->executeCommand($command);
     
