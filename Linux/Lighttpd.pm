@@ -122,7 +122,7 @@ sub getCurrentBackUpDirectory{
     return $self->getBackUpDirectory()."/".$timestamp;
    
 }
-sub getLoog{
+sub getLog{
     my $self = shift;
     
     return $self->getSettings()->{LIGHTTPD_LOG};
