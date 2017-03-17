@@ -87,6 +87,36 @@ sub auto{
     return $self->install();
 }
 ################################################################################
+# settinggs
+
+sub getWWWDirectory{
+    my $self = shift;
+    
+    return $self->getSettings()->{WWW_DIRECTORY};
+}
+
+sub getFalconHome{
+    my $self = shift;
+    
+    return $self->getSettings()->{FALCON_HOME};
+}
+sub getBackUpDirectory{
+    my $self = shift;
+    
+    return $self->getSettings()->{BACKUP_DIRECTORY};
+}
+sub getBeforeBackUpDirectory{
+    my $self = shift;
+    
+    return $self->getSettings()->{BEFORE_DIRECTORY};
+}
+sub getCurrentBackUpDirectory{
+    my $self = shift;
+    
+    my $timestamp = $self->getUtils()->getTimeString($self->getStatus()->wasStartetAt());
+    return $self->getBackUpDirectory()."/".$timestamp;
+   
+}################################################################################
 #protected
 
 sub _config{
