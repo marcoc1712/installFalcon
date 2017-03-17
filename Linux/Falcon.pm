@@ -62,10 +62,7 @@ sub isInstalled{
 }
 
 sub install{
-    
-    my ($package, $filename, $line, $subroutine) = caller(2);
-    print  $filename." - ".$line."\n";
-    
+
     my $self = shift;
 
     if (!$self->_removeAll()) {return undef;}
