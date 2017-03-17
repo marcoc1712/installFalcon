@@ -88,7 +88,12 @@ sub auto{
 }
 ################################################################################
 # settinggs
-
+#
+sub getWwwUser{
+    my $self = shift;
+    
+    return $self->getSettings()->{WWW_USER};
+}
 sub getWWWDirectory{
     my $self = shift;
     
