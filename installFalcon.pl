@@ -70,6 +70,6 @@ if (REMOVE){
 if ($installer->getError()){
 
     #print $installer->getStatus()->printout(1); #use 1 for debug,3 for info.
-    print $installer->getStatus()->printout();
+    print $installer->getStatus()->printout(ISDEBUG);
 }
 1;
