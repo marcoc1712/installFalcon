@@ -88,25 +88,7 @@ sub chmodX{
     }
     return 1;
 }
-sub addUser{
-    my $self    = shift;
-    my $user    = shift;
-    my $group   = shift;
-    
-    my $command = qq( adduser $user $group);
 
-    my ($err, @answ)= $self->executeCommand($command);
-    
-    if ($err){
-        $self->getStatus()->record($command,7, $err,(join "/n", @answ));
-        return undef;
-    }
-    if ($self->isDebug()){
-        $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
-    }
-    return 1;
-
-}
 sub serviceStop{
     my $self       = shift;
     my $service     = shift;

@@ -201,9 +201,19 @@ sub getCurrentBackUpDirectory{
     return $self->getBackUpDirectory()."/".$timestamp;
    
 }
+#################################################################################
+# to be overidden
+#
 
+sub _addWWWUser{
+    my $self = shift;
+    
+    $self->getStatus()->record('',5, "not implemented yet",'');
+    return 0;
+    
+}
 ################################################################################
-# protected
+# 
 #
 
 sub _saveBackUp{
@@ -340,14 +350,6 @@ sub _setExecutable{
     
     
     #chmod +x /var/www/falcon/falcon/resources/install/debian/*.sh
-    return 1;
-}
-
-sub _addWWWUser{
-    my $self    = shift;
-
-    if (!$self->getUtils()->addUser($self->getWwwUser, 'audio')){return undef;}
-    
     return 1;
 }
 

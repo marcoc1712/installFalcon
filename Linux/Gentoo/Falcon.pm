@@ -51,4 +51,11 @@ sub getGit{
     
     return $self->{_git};
 }
+sub _addWWWUser{
+    my $self    = shift;
+
+    if (!$self->getUtils()->userAdd($self->getWwwUser, 'audio')){return undef;}
+    
+    return 1;
+}
 1;
