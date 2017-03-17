@@ -39,7 +39,7 @@ sub new{
     
     my $self=$class->SUPER::new($status);
     
-    $self->{_squeezelite}  =  Linux::Debian::Squeezelite->new($status),
+    $self->{_squeezelite}  =  Linux::Gentoo::Squeezelite->new($status),
     $self->{_webserver}    =  undef;
     
     bless $self, $class;  

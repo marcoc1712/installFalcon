@@ -60,5 +60,38 @@ sub emerge{
     }
     return 1;
 } 
-
+sub rcUpdateAddDefaults{
+    my $self       = shift;
+    my $scirpt     = shift;    
+     
+    my $command = qq(rc-update add $scirpt default);
+    
+    my ($err, @answ)= $self->executeCommand($command);
+    
+    if ($err){
+        $self->getStatus()->record($command,7, $err,(join "/n", @answ));
+        return undef;
+    }
+    if ($self->isDebug()){
+        $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
+    }
+    return 1;
+}
+sub rcUpdateDel{
+    my $self       = shift;
+    my $scirpt     = shift;    
+     
+    my $command = qq(rc-update del $scirpt);
+    
+    my ($err, @answ)= $self->executeCommand($command);
+    
+    if ($err){
+        $self->getStatus()->record($command,7, $err,(join "/n", @answ));
+        return undef;
+    }
+    if ($self->isDebug()){
+        $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
+    }
+    return 1;
+}
 1;

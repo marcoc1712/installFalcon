@@ -81,7 +81,7 @@ sub upgrade{
     if (!$self->_cleanInstall()) {return undef;}
     
     if (!$self->getUtils()->systemCtlReload()) {return undef;}
-    if (!$self->getUtils()->updateRcdDefaults(SQUEEZELITE)){return undef;}
+    if (!$self->getUtils()->rcUpdateAddDefaults(SQUEEZELITE)){return undef;}
     
     # with a null or default sound card will take 99% of resources in some systems
     # let the user fix settings then start over.
@@ -102,8 +102,7 @@ sub remove{
 
     if (!$self->_removeSqueezeliteR2()) {return undef;}
     
-    if (!$self->getUtils()->updateRcdRemove(SQUEEZELITE)){return undef;}
-    if (!$self->getUtils()->systemCtlReload()) {return undef;}
+    if (!$self->getUtils()->rcUpdateDel(SQUEEZELITE)){return undef;}
     
     return 1;
 }
