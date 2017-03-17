@@ -80,18 +80,32 @@ sub rcUpdateAddDefaults{
 sub rcUpdateDel{
     my $self       = shift;
     my $scirpt     = shift;    
-     
+    
+    if (!$self->rcUpdate($scirpt)){
+        
+        $self->getStatus()->record('rcUpdate',1, 'not in the default level');
+        return 1
+    }
+    
     my $command = qq(rc-update del $scirpt);
     
     my ($err, @answ)= $self->executeCommand($command);
     
     if ($err){
-        $self->getStatus()->record($command,7, $err,(join "/n", @answ));
+        $self->getStatus()->record($command,1, $err,(join "/n", @answ)); #sistemare
         return undef;
     }
     if ($self->isDebug()){
         $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
     }
     return 1;
+}
+
+sub rcUpdate{
+    my $self       = shift;
+    my $scirpt     = shift;  
+    
+    #if is there should return 1
+    return 0;
 }
 1;
