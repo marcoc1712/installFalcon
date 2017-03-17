@@ -20,7 +20,7 @@
 # GNU General Public License for more details.
 #
 ################################################################################
-package Linux::Gento::Distro;
+package Linux::Gentoo::Distro;
 
 use strict;
 use warnings;
