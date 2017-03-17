@@ -29,6 +29,8 @@ use utf8;
 use Cwd;
 use URI;
 
+use Linux::Utils;
+
 use base qw(Squeezelite);
 
 use constant SQUEEZELITE => 'squeezelite';
@@ -41,9 +43,6 @@ sub new{
     my $self=$class->SUPER::new($status);
     
     $self->{_utils}   = Linux::Utils->new($status);
-    
-    $self->{_settings}= Linux::Settings->new($status);
-   
     $self->{_archName}= $self->getUtils()->getArchName();
     
     $self->{_path}    = $self->getUtils()->whereIs(SQUEEZELITE);
@@ -56,11 +55,7 @@ sub new{
 
     return $self;
 }
-sub getSettings{
-    my $self = shift;
-    
-    return $self->{_settings};
-}
+
 sub getArchName{
     my $self = shift;
     
@@ -157,6 +152,7 @@ sub getLog{
 
 ################################################################################
 #override
+
 sub isInstalled{
     my $self = shift;
 
@@ -193,52 +189,6 @@ sub install{
 
     return 1;
 }
-
-sub upgrade{
-    my $self = shift;
-    
-    if  (-e $self->getInitFile() && ! -l $self->getInitFile()){
-        
-        $self->getUtils()->serviceStop(SQUEEZELITE);
-    }
-
-    if ($self->isInstalled() && !$self->isR2Installed()){
-
-         if (!$self->_saveAndRemoveSqueezelite()){return undef;}
-    }
-    #save current situation and install the new one
-    if (!$self->_saveAndRemoveSqueezeliteR2()) {return undef;}
-    if (!$self->_cleanInstall()) {return undef;}
-    
-    if (!$self->getUtils()->systemCtlReload()) {return undef;}
-    if (!$self->getUtils()->updateRcdDefaults(SQUEEZELITE)){return undef;}
-    
-    # with a null or default sound card will take 99% of resources in some systems
-    # let the user fix settings then start over.
-    #
-    #if (!$self->getUtils()->serviceStart(SQUEEZELITE)){return undef;}
-    
-    
-    return 1;
-}
-
-sub remove{
-    my $self = shift;
-    
-    if  (-e $self->getInitFile() && ! -l $self->getInitFile()){
-        
-        $self->getUtils()->serviceStop(SQUEEZELITE);
-    }
-    
-    
-    if (!$self->_removeSqueezeliteR2()) {return undef;}
-    
-    if (!$self->getUtils()->updateRcdRemove(SQUEEZELITE)){return undef;}
-    if (!$self->getUtils()->systemCtlReload()) {return undef;}
-    
-    return 1;
-}
-
 
 ################################################################################
 # privates

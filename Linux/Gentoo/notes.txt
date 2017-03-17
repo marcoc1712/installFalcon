@@ -1,2 +1,2 @@
 emerge dev-perl/URI
-
+emerge -–ask -–verbose dev-vcs/git

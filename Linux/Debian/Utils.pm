@@ -59,5 +59,64 @@ sub aptGetInstall{
     }
     return 1;
 } 
+sub updateRcdDefaults{
+    my $self       = shift;
+    my $scirpt     = shift;    
+     
+    my $command = qq(update-rc.d $scirpt defaults);
+    
+    my ($err, @answ)= $self->executeCommand($command);
+    
+    if ($err){
+        $self->getStatus()->record($command,7, $err,(join "/n", @answ));
+        return undef;
+    }
+    if ($self->isDebug()){
+        $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
+    }
+    return 1;
+}
+sub updateRcdRemove{
+    my $self       = shift;
+    my $scirpt     = shift;    
+     
+    my $command = qq(update-rc.d $scirpt remove);
+    
+    my ($err, @answ)= $self->executeCommand($command);
+    
+    if ($err){
+        $self->getStatus()->record($command,7, $err,(join "/n", @answ));
+        return undef;
+    }
+    if ($self->isDebug()){
+        $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
+    }
+    return 1;
+}
 
+sub systemCtlReload{
+    my $self       = shift;
+    
+    my $command = qq( systemctl --system daemon-reload || true );
+     
+    if ( -d '/run/systemd/system' ){
+        
+        my ($err, @answ)= $self->executeCommand($command);
+    
+        if ($err){
+            
+            $self->getStatus()->record($command,7, $err,(join "/n", @answ));
+            return undef;
+        }
+        if ($self->isDebug()){
+            $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
+        }
+        
+    } elsif ($self->isDebug()){
+        
+        $self->getStatus()->record($command,1, '/run/systemd/system not found','');
+    }
+    
+    return 1;
+}
 1;

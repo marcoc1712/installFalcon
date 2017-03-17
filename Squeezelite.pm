@@ -35,7 +35,6 @@ sub new{
        
     my $self = bless {
         _status      => $status, 
-        _utils       => Utils->new($status),
         
     }, $class;
 
@@ -51,14 +50,23 @@ sub isDebug{
     
     return $self->getStatus()->isDebug();
 }
-sub getUtils{
-    my $self = shift;
 
-    return $self->{_utils};
-}
 ################################################################################
 # tobe overidden
 #
+sub getUtils{
+    my $self = shift;
+    
+    $self->getStatus()->record('',5, "not implemented yet",'');
+    return 0;
+}
+
+sub getSettings{
+    my $self = shift;
+    
+    $self->getStatus()->record('',5, "not implemented yet",'');
+    return 0;
+}
 
 sub isInstalled{
     my $self = shift;

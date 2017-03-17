@@ -27,6 +27,7 @@ use warnings;
 use utf8;
 
 use Linux::Debian::Falcon;
+use Linux::Debian::Squeezelite;
 use Linux::Debian::Apache2;
 use Linux::Debian::Lighttpd;
 
@@ -39,6 +40,7 @@ sub new{
     my $self=$class->SUPER::new($status);
     
     $self->{_falcon}       =  Linux::Debian::Falcon->new($status);
+    $self->{_squeezelite}  =  Linux::Debian::Squeezelite->new($status),
     $self->{_webserver}    =  undef;
 
     bless $self, $class;  
@@ -57,6 +59,11 @@ sub new{
 ################################################################################
 # override
 #
+sub getSqueezelite{
+    my $self = shift;
+    
+    return $self->{_squeezelite};
+}
 sub getWebServer{
     my $self = shift;
     

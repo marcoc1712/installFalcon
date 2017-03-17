@@ -41,7 +41,6 @@ sub new{
         _settings                   => Linux::Settings->new(),
         
         _archName                   => undef,
-        _squeezelite                => Linux::Squeezelite->new($status),
         _falcon                     => Linux::Falcon->new($status), 
         
     }, $class;
@@ -77,11 +76,7 @@ sub getArchName{
     return $self->{_archName};
 } 
 
-sub getSqueezelite{
-    my $self = shift;
-    
-    return $self->{_squeezelite};
-}
+
 sub getFalcon{
     my $self = shift;
     
@@ -107,7 +102,12 @@ sub cleanUp {
 ################################################################################
 # Tobe overidden
 #
-
+sub getSqueezelite{
+    my $self = shift;
+    
+    $self->getStatus()->record('',5, "not implemented yet",'');
+    return 0;
+}
 sub getWebServer{
     my $self = shift;
     

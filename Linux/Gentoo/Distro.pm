@@ -27,6 +27,7 @@ use warnings;
 use utf8;
 
 use Linux::Gentoo::Falcon;
+use Linux::Gentoo::Squeezelite;
 use Linux::Gentoo::Apache2;
 use Linux::Gentoo::Lighttpd;
 
@@ -37,7 +38,10 @@ sub new{
     my $status = shift;
     
     my $self=$class->SUPER::new($status);
-
+    
+    $self->{_squeezelite}  =  Linux::Debian::Squeezelite->new($status),
+    $self->{_webserver}    =  undef;
+    
     bless $self, $class;  
 
     if ($self->getUtils()->whereIs('apache2')) {
@@ -54,6 +58,11 @@ sub new{
 ################################################################################
 # override
 #
+sub getSqueezelite{
+    my $self = shift;
+    
+    return $self->{_squeezelite};
+}
 sub getWebServer{
     my $self = shift;
     
