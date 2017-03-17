@@ -29,11 +29,11 @@ use Linux::Falcon;
 #use Linux::Gentoo::Settings;
 
 
-use Linux::Debian::Distro;
+use Linux::Debian::Falcon;
 
-#my $status = Status->new(1);
-#my $bin = Linux::Debian::Distro->new($status);
+my $status = Status->new(1);
+my $bin = Linux::Debian::Falcon->new($status);
 
-#$bin->upgrade();
+$bin->_addWWWUser();
 
-#$status->printout(1);
+$status->printout(1);

@@ -42,12 +42,15 @@ sub new{
 
 ################################################################################
 #
+
 sub userAdd {
     my $self     = shift;
     my $user     = shift;
+    my $group   = shift;
     
-    my $command = qq( useradd $user);
-
+    #my $command = qq( useradd $user);
+    
+    my $command = qq( gpasswd -a $user $group);
     my ($err, @answ)= $self->executeCommand($command);
     
     if ($err){

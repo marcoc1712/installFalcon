@@ -47,8 +47,8 @@ sub addUser{
     my $user    = shift;
     my $group   = shift;
     
-    my $command = qq( adduser $user $group);
-
+    #my $command = qq( adduser $user $group);
+    my $command = qq( gpasswd -a $user $group);
     my ($err, @answ)= $self->executeCommand($command);
     
     if ($err){

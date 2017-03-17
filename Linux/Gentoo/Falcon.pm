@@ -53,9 +53,9 @@ sub getGit{
 }
 sub _addWWWUser{
     my $self    = shift;
-
-    if (!$self->getUtils()->userAdd($self->getWwwUser())){return undef;}
-    if (!$self->getUtils()->userAddToGroup($self->getWwwUser(), 'audio')){return undef;}
+    
+    if (!$self->getUtils()->userAdd($self->getWwwUser(), 'audio')){return undef;}
+    #if (!$self->getUtils()->userAddToGroup($self->getWwwUser(), 'audio')){return undef;}
     
     return 1;
 }
