@@ -38,15 +38,9 @@ sub new{
     
     my $self=$class->SUPER::new($status);
 
-    #$self->{_distroName}           = undef;
-    
     bless $self, $class;  
 
-    #$self-> _initDistroName();
-    
-    return $self;
-}
- if ($self->getUtils()->whereIs('apache2')) {
+    if ($self->getUtils()->whereIs('apache2')) {
         
         $self->{_webserver}= Linux::Gentoo::Apache2->new($self->getStatus());
         
@@ -56,7 +50,8 @@ sub new{
     }
     
     return $self;
-################################################################################
+}
+###############################################################################
 #override
 
 1;
