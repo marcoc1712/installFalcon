@@ -39,6 +39,7 @@ sub new{
     
     my $self=$class->SUPER::new($status);
     
+    $self->{_falcon}       =  Linux::Gentoo::Falcon->new($status);
     $self->{_squeezelite}  =  Linux::Gentoo::Squeezelite->new($status),
     $self->{_webserver}    =  undef;
     
@@ -58,6 +59,13 @@ sub new{
 ################################################################################
 # override
 #
+
+sub getFalcon{
+    my $self = shift;
+    
+    return $self->{_falcon};
+}
+
 sub getSqueezelite{
     my $self = shift;
     

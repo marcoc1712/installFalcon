@@ -59,6 +59,13 @@ sub new{
 ################################################################################
 # override
 #
+
+sub getFalcon{
+    my $self = shift;
+    
+    return $self->{_falcon};
+}
+
 sub getSqueezelite{
     my $self = shift;
     

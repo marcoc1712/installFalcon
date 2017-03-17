@@ -28,8 +28,6 @@ use utf8;
 
 use Linux::Utils;
 use Linux::Settings;
-use Linux::Squeezelite;
-use Linux::Falcon;
 
 sub new{
     my $class = shift;
@@ -40,8 +38,7 @@ sub new{
         _utils                      => Linux::Utils->new($status),
         _settings                   => Linux::Settings->new(),
         
-        _archName                   => undef,
-        _falcon                     => Linux::Falcon->new($status), 
+        _archName                   => undef, 
         
     }, $class;
     
@@ -77,12 +74,6 @@ sub getArchName{
 } 
 
 
-sub getFalcon{
-    my $self = shift;
-    
-    return $self->{_falcon};
-}
-
 sub prepare{
     my $self = shift;
     
@@ -102,11 +93,18 @@ sub cleanUp {
 ################################################################################
 # Tobe overidden
 #
-sub getSqueezelite{
+
+sub getFalcon{
     my $self = shift;
     
     $self->getStatus()->record('',5, "not implemented yet",'');
     return 0;
+}
+
+sub getSqueezelite{
+    my $self = shift;
+    
+
 }
 sub getWebServer{
     my $self = shift;
