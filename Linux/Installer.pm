@@ -46,7 +46,7 @@ sub new{
 
     $self-> _initDistroName();
     
-    if ($self->{_distroName} eq 'gentoo'){
+    if ($self->{_distroName} eq 'gentooxxx'){
         
         $self->{_distro}  = Linux::Gentoo::Distro->new($self->getStatus());
         
