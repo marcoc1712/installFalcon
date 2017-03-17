@@ -45,7 +45,6 @@ sub new{
 sub userAdd {
     my $self     = shift;
     my $user     = shift;
-    my $group    = shift;
     
     my $command = qq( useradd $user);
 
@@ -60,6 +59,24 @@ sub userAdd {
     }
     return 1;
 
+}
+sub userAddToGroup {
+    my $self     = shift;
+    my $user     = shift;
+    my $group   = shift;
+    
+    my $command = qq(  usermod -aG $group $user);
+
+    my ($err, @answ)= $self->executeCommand($command);
+    
+    if ($err){
+        $self->getStatus()->record($command,7, $err,(join "/n", @answ));
+        return undef;
+    }
+    if ($self->isDebug()){
+        $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
+    }
+    return 1;
 }
 sub emerge{
     my $self   = shift;
