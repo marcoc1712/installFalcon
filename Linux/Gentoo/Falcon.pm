@@ -51,5 +51,9 @@ sub getGit{
     
     return $self->{_git};
 }
-
+sub _getSudo{
+    my $self    = shift;
+    
+    return $self->getUtils()->emerge('sudo');
+}
 1;

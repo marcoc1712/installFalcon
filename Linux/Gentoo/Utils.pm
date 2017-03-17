@@ -66,7 +66,7 @@ sub emerge{
     my $pack   = shift;
     
     #emerge -–ask -–verbose
-    my $command = qq(emerge $pack);
+    my $command = qq(emerge -n $pack);
 
     my ($err, @answ)= $self->executeCommand($command);
     

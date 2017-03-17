@@ -204,7 +204,12 @@ sub getCurrentBackUpDirectory{
 #################################################################################
 # to be overidden
 #
+sub _getSudo{
+    my $self    = shift;
 
+    $self->getStatus()->record('',5, "not implemented yet",'');
+    return 0;
+}
 
 ################################################################################
 # 
@@ -352,12 +357,6 @@ sub _setExecutable{
     
     #chmod +x /var/www/falcon/falcon/resources/install/debian/*.sh
     return 1;
-}
-
-sub _getSudo{
-    my $self    = shift;
-    
-    return $self->getUtils()->aptGetInstall('sudo');
 }
 
 sub _sudoers{
