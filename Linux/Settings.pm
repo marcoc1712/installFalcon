@@ -84,6 +84,8 @@ sub new{
     $self->{LIGHTTPD_CONF}                      = '/etc/lighttpd/lighttpd.conf',
     $self->{LIGHTTPD_CONF_SOURCE}               = '/var/www/falcon/falcon/resources/install/webServer/lighttpd/etc/lighttpd/lighttpd.conf';
     
+    $self->{LIGHTTPD_LOG}                       ='/var/log/lighttpd';
+    
     $self->{APACHE2_CONF}                       = '/etc/apache2/sites-available/000-default.conf',
     $self->{APACHE2_CONF_SOURCE}                = '/var/www/falcon/falcon/resources/install/webServer/apache2/etc/apache2/sites-available/000-default.conf';
      

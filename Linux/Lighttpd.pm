@@ -116,8 +116,31 @@ sub getCurrentBackUpDirectory{
     my $timestamp = $self->getUtils()->getTimeString($self->getStatus()->wasStartetAt());
     return $self->getBackUpDirectory()."/".$timestamp;
    
-}################################################################################
+}
+sub getLoog{
+    my $self = shift;
+    
+    return $self->getSettings()->{LIGHTTPD_LOG};
+}
+################################################################################
 #protected
+
+sub _createLog{
+    my $self = shift;
+    
+    my ($usr, $psw, $uid, $gid) = getpwnam ($self->getWwwUser());
+    
+    if (! -d $self->getLog() && !$self->getUtils()->mkDir($self->getLog())){return undef;} 
+    
+    chown $uid, $gid, $self->getLog();
+    
+    ### TODO: Attivare la rotazione dei files di log.
+    
+    if ($self->isDebug()){
+        $self->getStatus()->record('_createLog',1, 'ok','');
+    }
+    return 1;
+}
 
 sub _config{
     my $self = shift;
@@ -136,10 +159,11 @@ sub _config{
         
         $self->getStatus()->record("copy ".$self->getConfSource()." , ". $self->getConf(),7, 
                                    "can't copy".$self->getConfSource()." into ".$self->getConf(),'');
+        
         return undef;
     }
     
-    return 1;
+    return $self->_createLog();
 }
 sub _cleanUp{
     my $self = shift;
