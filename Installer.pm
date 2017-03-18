@@ -29,6 +29,7 @@ use utf8;
 sub new{
     my $class 	= shift;
     my $isDebug = shift || 0;
+    my $noGit   = shift || 0;
     
     
     my $self = bless {        
@@ -41,6 +42,7 @@ sub new{
     $self->{_status}    = Status->new($isDebug);
     $self->{_utils}     = Utils->new($self->{_status});
     $self->{_settings}  = Settings->new();
+    $self->{_noGit }    = Status->new($noGit);
     
     return $self;
 }
@@ -58,6 +60,11 @@ sub isDebug{
     my $self = shift;
     
     return $self->getStatus()->isDebug();
+}
+sub noGit{
+    my $self = shift;
+    
+    return $self->{_noGit};
 }
 sub getUtils{
     my $self = shift;
@@ -123,7 +130,7 @@ sub install {
         $self->getStatus()->record('',9, "cant load falcon installer",'');
         return undef;
     }
-     if (!$self->getFalcon()->auto()){return undef;}
+    if (!$self->getFalcon()->auto($self->noGit())){return undef;}
 
     if (!$self->getSqueezelite()){
         

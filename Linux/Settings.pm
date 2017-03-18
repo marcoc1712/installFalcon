@@ -62,7 +62,6 @@ sub new{
     
     $self->{FALCON_SUDOERS}        = '/etc/sudoers.d/falcon';
     $self->{FALCON_SUDOERS_SOURCE} = '/var/www/falcon/falcon/resources/install/debian/systemRoot/etc/sudoers.d/falcon';
-    
 
     #TOBE REPLACED BEFORE RELEASE.
     #$self->{GIT_CLONE_STRING}                  = 'git clone https://github.com/marcoc1712/falcon.git';
@@ -70,7 +69,10 @@ sub new{
     $self->{GIT_USER}                           = 'falcon';
     $self->{GIT_MAIL}                           = 'falcon@gmail.com';
     
-    
+    #TOBE REPLACED BEFORE RELEASE.
+    #$self->{DOWNLOAD_URL}                      = 'https://github.com/marcoc1712/falcon/archive/master.tar.gz';
+    $self->{DOWNLOAD_URL}                       = 'https://github.com/marcoc1712/falcon/archive/feature_DSD.tar.gz';
+
     #TOBE REPLACED BEFORE RELEASE.
     $self->{SQUEEZELITE_R2_X86_64_WGET_STRING}  = 'https://github.com/marcoc1712/squeezelite-R2/releases/download/v1.8.3-(R2)/squeezelite-R2-min-x86_64';
     $self->{SQUEEZELITE_R2_i86_WGET_STRING}     = 'https://github.com/marcoc1712/squeezelite-R2/releases/download/v1.8.3-(R2)/squeezelite-R2-min-i386';

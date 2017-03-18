@@ -35,8 +35,9 @@ use base qw(Installer);
 sub new{
     my $class 	= shift;
     my $isDebug = shift || 0;
+    my $noGit   = shift || 0;
     
-    my $self=$class->SUPER::new($isDebug);
+    my $self=$class->SUPER::new($isDebug, $noGit);
     
     $self->{_distroName}           = undef;
     $self->{_distro}               = undef;

@@ -55,7 +55,12 @@ sub isDebug{
 ################################################################################
 # tobe overidden
 #
-
+sub getGit{
+    my $self = shift;
+    
+    $self->getStatus()->record('',5, "not implemented yet",'');
+    return undef;
+}
 sub isInstalled{
     my $self = shift;
 
@@ -64,12 +69,14 @@ sub isInstalled{
 }
 sub install{
     my $self    = shift;
+    my $noGit   = shift;
     
     $self->getStatus()->record('',5, "not implemented yet",'');
     return undef;
 }
 sub upgrade{
     my $self    = shift;
+    my $noGit   = shift;
     
     $self->getStatus()->record('',5, "not implemented yet",'');
     return undef;
@@ -82,16 +89,15 @@ sub remove{
 }
 sub auto {
     my $self    = shift;
+    my $noGit   = shift;
      
     if (!$self->isInstalled()){
 
-
-        return $self->install();
+        return $self->install($noGit);
 
     } else {
 
-
-        return $self->upgrade();
+        return $self->upgrade($noGit);
     }
 }
 1;

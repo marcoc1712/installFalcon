@@ -26,6 +26,9 @@ use strict;
 use warnings;
 use utf8;
 
+use Cwd;
+use URI;
+
 use base qw(Falcon);
 
 sub new{
@@ -62,26 +65,33 @@ sub isInstalled{
 }
 
 sub install{
-
-    my $self = shift;
+    my $self    = shift;
+    my $noGit   = shift || 0;
 
     if (!$self->_removeAll()) {return undef;}
-
-    if (!$self->getGit()){
-
-        $self->getStatus()->record('',9, "cant load git installer",'');
-        return undef;
-    }
-
-    if (!$self->getGit()->isInstalled()){
-
-        if (!$self->getGit()->install()){return undef;}
-
-    }
-    if (!$self->getGit()->gitClone()) {return undef;}
-    if (!$self->getGit()->gitConfigureUser()) {return undef;}
-    if (!$self->getGit()->gitConfigureMail()) {return undef;}
     
+    if ($noGit){
+        
+        if (!$self->download()) {return undef;}
+        
+    } else {
+        
+        if (!$self->getGit()){
+
+            $self->getStatus()->record('',9, "cant load git installer",'');
+            return undef;
+        }
+
+        if (!$self->getGit()->isInstalled()){
+
+            if (!$self->getGit()->install()){return undef;}
+
+        }
+        if (!$self->getGit()->gitClone()) {return undef;}
+        if (!$self->getGit()->gitConfigureUser()) {return undef;}
+        if (!$self->getGit()->gitConfigureMail()) {return undef;}
+    
+    }
     if (!$self->_finalize()) {return undef;}
 
     return 1;
@@ -89,12 +99,22 @@ sub install{
 }
 
 sub upgrade{
-    my $self = shift;
+    my $self    = shift;
+    my $noGit   = shift || 0;
 
     #save current situation and install the new one
     if (!$self->_saveBackUp()) {return undef;}
     #if (!$self->_removeCode()) {return undef;}
-    if (!$self->getGit()->gitPull()) {return undef;}
+    
+    if ($noGit){
+        
+        if (!$self->download()) {return undef;}
+        
+    } else {
+
+        if (!$self->getGit()->gitPull()) {return undef;}
+    }
+
     if (!$self->_finalize()) {return undef;}
 
     return 1;
@@ -111,6 +131,11 @@ sub remove{
 ###############################################################################
 # settings
 #
+sub getWWWDirectory{
+    my $self = shift;
+    
+    return $self->getSettings()->{WWW_DIRECTORY};
+}
 sub getFalconHome{
     my $self = shift;
     
@@ -202,6 +227,11 @@ sub getCurrentBackUpDirectory{
     return $self->getBackUpDirectory()."/".$timestamp;
    
 }
+sub getDownloadUrl{
+    my $self = shift;
+    
+    return $self->getSettings()->{DOWNLOAD_URL};
+}
 #################################################################################
 # to be overidden
 #
@@ -213,9 +243,8 @@ sub _getSudo{
 }
 
 ################################################################################
-# 
+# protected
 #
-
 sub _saveBackUp{
     my $self = shift;
 
@@ -363,5 +392,47 @@ sub _sudoers{
     my ($usr, $psw, $uid, $gid) = getpwnam ('root');
     chown $uid, $gid, $self->getSudoers(); 
     my $mode = 0440; chmod $mode, $self->getSudoers(); 
+}
+#################################################################################
+#
+
+sub download{
+    my $self= shift;
+    
+    my $url = $self->getDownloadUrl();
+    
+    my $uri = URI->new($url);
+    my $archive = +($uri->path_segments)[-1];
+    my $ind = index($archive, ".tar.gz");
+    my $name = substr($archive,0,$Ind-1);
+    
+    if ($ind <1) {
+       
+        $self->getStatus()->record('getTarball',7, "invalid archive $archive",'');
+        retuen undef;
+    }
+    
+    #delete transit if present;
+    if (-e $name && !$self->getUtils()->removeFile($name)){return undef;}
+
+    #delete archive if present;
+     if (-e $archive && !$self->getUtils()->removeFile($archive)){return undef;}
+
+    #download
+    if (!$self->getUtils()->wget($url)){return undef;}
+    
+    #unpack to name
+    if (!$self->getUtils()->tarZxvf($archive)){return undef;}
+    
+    #rename name to falcon
+    if (!$self->getUtils()->moveFile($name, 'falcon')){return undef;}
+    
+    #pack to falcon.tar
+    if (!$self->getUtils()->tarPack('falcon.tar', 'falcon')){return undef;}
+    
+    #Unpack inTo war-www
+    if (!$self->getUtils()->tarZxvf('falcon.tar', $self->getWWWDirectory())){return undef;}
+
+    return 1
 }
 1;
