@@ -35,6 +35,7 @@ use constant ISMAC        => ( $^O =~ /darwin/i ) ? 1 : 0;
 use constant ISLINUX      => ( $^O =~ /linux/i ) ? 1 : 0;
 
 use constant REMOVE       => ( grep { /--remove/ } @ARGV ) ? 1 : 0;
+use constant CLEAN       => ( grep { /--clean/ } @ARGV ) ? 1 : 0;
 use constant ISDEBUG      => ( grep { /--debug/ } @ARGV ) ? 1 : 0;
 
 my $installer;
@@ -56,20 +57,33 @@ if (ISWINDOWS){
     warn "Architecture: $^O is not supported";
 
 }
+
+my $err;
+
 if (REMOVE){
     
     print "\n***************************** REMOVE ******************************\n";
-    $installer->remove(ISDEBUG);
+    if (!$installer->remove(ISDEBUG)){$err=1};
     
-} else{
+} elsif (CLEAN){
+  
+    print "\n************************* CLEAN INSTALL ***************************\n";
     
-    print "\n**************************** INSTALL ******************************\n";
-    $installer->install(ISDEBUG);
+    if (!$installer->remove(ISDEBUG) || !$installer->install(ISDEBUG)) {$err=1};
+    
+} else {
+    
+    print "\n*************************** INSTALL *******************************\n";
+    
+    if (!$installer->install(ISDEBUG)) {$err=1};
 }
 
 if ($installer->getError()){
 
     #$installer->getStatus()->printout(1); #use 1 for debug,3 for info.
     $installer->getStatus()->printout(ISDEBUG);
+} elsif ($err){
+    
+    warn "something went wrong."
 }
 1;
