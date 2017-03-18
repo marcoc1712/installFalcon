@@ -404,12 +404,12 @@ sub download{
     my $uri = URI->new($url);
     my $archive = +($uri->path_segments)[-1];
     my $ind = index($archive, ".tar.gz");
-    my $name = substr($archive,0,$Ind-1);
+    my $name = substr($archive,0,$ind-1);
     
     if ($ind <1) {
        
         $self->getStatus()->record('getTarball',7, "invalid archive $archive",'');
-        retuen undef;
+        return undef;
     }
     
     #delete transit if present;
