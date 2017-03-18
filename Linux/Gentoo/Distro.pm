@@ -76,4 +76,12 @@ sub getWebServer{
     
     return $self->{_webserver};
 }
+sub prepare{
+    my $self    = shift;
+     
+    if (!$self->SUPER::prepare()){return undef;}
+    if (!$self->getUtils()->emerge('dev-perl/URI')){return undef};
+    if (!$self->getUtils()->emerge('dev-perl/CGI')){return undef};
+    
+}
 1;
