@@ -36,27 +36,26 @@ sub new{
     bless $self, $class; 
     
     $self->{WWW_DIRECTORY}      = '/var/www';
-    $self->{FALCON_HOME}        = '/var/www/falcon',
+    $self->{FALCON_HOME}        = '/var/www/falcon';
     
-    $self->{BACKUP_DIRECTORY}   = '/var/www/backupFalcon',
-    $self->{BEFORE_DIRECTORY}   = '/var/www/backupFalcon/before',
+    $self->{BACKUP_DIRECTORY}   = '/var/www/backupFalcon';
+    $self->{BEFORE_DIRECTORY}   = '/var/www/backupFalcon/before';
     
-    $self->{BIN_DIRECTORY}      = '/usr/bin',
-    $self->{INIT_DIRECTORY}     = '/etc/init.d',
-    $self->{DEFCON_DIRECTORY}   = '/etc/default',
-    
-    $self->{FALCON_CODE}        = '/var/log/falcon/falcon',
-    $self->{FALCON_HTTP}        = '/var/log/falcon/httpdocs',
-    $self->{FALCON_CGI}         = '/var/www/falcon/cgi-bin',
-    $self->{FALCON_EXIT}        = '/var/www/falcon/exit',
-    $self->{FALCON_DATA}        = '/var/www/falcon/data',
-    $self->{FALCON_LOG}         = '/var/log/falcon',
+    $self->{BIN_DIRECTORY}      = '/usr/bin';
+    $self->{INIT_DIRECTORY}     = '/etc/init.d';
+
+    $self->{FALCON_CODE}        = '/var/log/falcon/falcon';
+    $self->{FALCON_HTTP}        = '/var/log/falcon/httpdocs';
+    $self->{FALCON_CGI}         = '/var/www/falcon/cgi-bin';
+    $self->{FALCON_EXIT}        = '/var/www/falcon/exit';
+    $self->{FALCON_DATA}        = '/var/www/falcon/data';
+    $self->{FALCON_LOG}         = '/var/log/falcon';
    
 
-    $self->{WWW_USER}          = 'www-data',
-    $self->{WWW_GROUP}         = 'www-data',
+    $self->{WWW_USER}          = 'www-data';
+    $self->{WWW_GROUP}         = 'www-data';
 
-    $self->{FALCON_CONF}           = '/var/www/falcon/data/falcon.conf',
+    $self->{FALCON_CONF}           = '/var/www/falcon/data/falcon.conf';
     $self->{FALCON_CONF_SOURCE}    = '/var/www/falcon/falcon/default/conf/debianI386.conf';
     
     $self->{FALCON_DEFAULT_EXIT}   = '/var/www/falcon/falcon/default/exit';
@@ -76,9 +75,6 @@ sub new{
     $self->{SQUEEZELITE_R2_X86_64_WGET_STRING}  = 'https://github.com/marcoc1712/squeezelite-R2/releases/download/v1.8.3-(R2)/squeezelite-R2-min-x86_64';
     $self->{SQUEEZELITE_R2_i86_WGET_STRING}     = 'https://github.com/marcoc1712/squeezelite-R2/releases/download/v1.8.3-(R2)/squeezelite-R2-min-i386';
 
-    $self->{SQUEEZELITE_R2_INIT_SOURCE}         = '/var/www/falcon/falcon/resources/install/debian/systemRoot/etc/init.d/squeezelite';
-    $self->{SQUEEZELITE_R2_DEFCON_SOURCE}       = '/var/www/falcon/falcon/resources/install/debian/systemRoot/etc/default/squeezelite';
-    
     $self->{SQUEEZELITE_R2_LOG}                 = '/var/log/squeezelite-R2';
     
     $self->{LIGHTTPD_CONF}                      = '/etc/lighttpd/lighttpd.conf',

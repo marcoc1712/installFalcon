@@ -35,6 +35,8 @@ sub new{
     
     $self->{DEFCON_DIRECTORY}   = '/etc/conf.d',
     
+    $self->{SQUEEZELITE_R2_INIT_SOURCE}         = '/var/www/falcon/falcon/resources/install/gentoo/systemRoot/etc/init.d/squeezelite';
+    $self->{SQUEEZELITE_R2_DEFCON_SOURCE}       = '/var/www/falcon/falcon/resources/install/gentoo/systemRoot/etc/conf.d/squeezelite';
     bless $self, $class; 
 
     return $self;

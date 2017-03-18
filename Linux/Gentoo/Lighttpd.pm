@@ -58,6 +58,7 @@ sub install{
      
     if (!$self->getUtils()->emerge('lighttpd')){return undef};
     if (!$self->_config()){return undef;}
+    if (!$self->getUtils()->rcUpdateAddDefaults('lighttpd')){return undef;}
     
     $self->getUtils()->serviceStart('lighttpd');
 }
