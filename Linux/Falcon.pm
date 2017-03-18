@@ -422,7 +422,7 @@ sub download{
     if (!$self->getUtils()->wget($url)){return undef;}
     
     #unpack to name
-    if (!$self->getUtils()->tarZxvf($archive)){return undef;}
+    if (!$self->getUtils()->tarUnpack($archive)){return undef;}
     
     #rename name to falcon
     if (!$self->getUtils()->moveFile($name, 'falcon')){return undef;}
@@ -431,7 +431,7 @@ sub download{
     if (!$self->getUtils()->tarPack('falcon.tar', 'falcon')){return undef;}
     
     #Unpack inTo war-www
-    if (!$self->getUtils()->tarZxvf('falcon.tar', $self->getWWWDirectory())){return undef;}
+    if (!$self->getUtils()->tarUnpack('falcon.tar', $self->getWWWDirectory())){return undef;}
 
     return 1
 }
