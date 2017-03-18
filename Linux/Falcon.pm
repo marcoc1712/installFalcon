@@ -411,8 +411,8 @@ sub download{
         return undef;
     }
     my $name = substr($archive,0,$ind);
-    print $archive." - "-$name;
-    die;
+    #print $archive." - ".$name;
+    #die;
     
     #delete transit if present;
     if (-e $name && !$self->getUtils()->removeFile($name)){return undef;}
