@@ -33,7 +33,9 @@ sub new{
 
     my $self=$class->SUPER::new();
     
-    $self->{DEFCON_DIRECTORY}   = '/etc/default';
+    $self->{FALCON_CONF_SOURCE}                 = '/var/www/falcon/falcon/default/conf/debianI386.conf';
+    
+    $self->{DEFCON_DIRECTORY}                   = '/etc/default';
     
     $self->{SQUEEZELITE_R2_INIT_SOURCE}         = '/var/www/falcon/falcon/resources/install/debian/systemRoot/etc/init.d/squeezelite';
     $self->{SQUEEZELITE_R2_DEFCON_SOURCE}       = '/var/www/falcon/falcon/resources/install/debian/systemRoot/etc/default/squeezelite';

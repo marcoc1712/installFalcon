@@ -56,4 +56,37 @@ sub _getSudo{
     
     return $self->getUtils()->emerge('sudo');
 }
+sub getSqueezeliteUser{
+    my $self = shift;
+    
+    return $self->getSettings()->{SQUEEZELITE_R2_USER};
+}
+sub getSqueezeliteGroup{
+    my $self = shift;
+    
+    return $self->getSettings()->{SQUEEZELITE_R2_GROUP};
+}    
+sub _setExecutable{
+    my $self = shift;
+    
+    if (!$self->SUPER::_setExecutable()){return undef;}
+    
+    if (!$self->getUtils()->chmodX($self->getFalconDefaultExit()."/standard/linux/gentoo/*.pl")){return undef;}
+
+    return 1;
+}
+sub _addUsers{
+    my $self    = shift;
+     
+    if (!$self->SUPER::_addUsers()){return undef;}
+    
+    
+    if (!$self->getUtils()->userAdd($self->getWwwUser(), $self->getSqueezeliteGroup())){return undef;}
+    
+    if (!$self->getUtils()->userAdd($self->getSqueezeliteUser(), $self->getSqueezeliteGroup())){return undef;}
+    if (!$self->getUtils()->userAdd($self->getSqueezeliteUser(), 'audio')){return undef;}
+    if (!$self->getUtils()->userAdd($self->getSqueezeliteUser(), 'realtime')){return undef;}
+    
+    return 1;
+}
 1;

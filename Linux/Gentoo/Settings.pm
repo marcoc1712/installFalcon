@@ -33,8 +33,12 @@ sub new{
 
     my $self=$class->SUPER::new();
     
-    $self->{DEFCON_DIRECTORY}   = '/etc/conf.d',
+    $self->{FALCON_CONF_SOURCE}                 = '/var/www/falcon/falcon/default/conf/gentoox86.conf';
     
+    $self->{DEFCON_DIRECTORY}                   = '/etc/conf.d';
+    
+    $self->{SQUEEZELITE_R2_USER}                = 'squeezelite';
+    $self->{SQUEEZELITE_R2_GROUP}               = 'squeezelite';
     $self->{SQUEEZELITE_R2_INIT_SOURCE}         = '/var/www/falcon/falcon/resources/install/gentoo/systemRoot/etc/init.d/squeezelite';
     $self->{SQUEEZELITE_R2_DEFCON_SOURCE}       = '/var/www/falcon/falcon/resources/install/gentoo/systemRoot/etc/conf.d/squeezelite';
     bless $self, $class; 

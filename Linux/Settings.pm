@@ -56,7 +56,7 @@ sub new{
     $self->{WWW_GROUP}         = 'www-data';
 
     $self->{FALCON_CONF}           = '/var/www/falcon/data/falcon.conf';
-    $self->{FALCON_CONF_SOURCE}    = '/var/www/falcon/falcon/default/conf/debianI386.conf';
+    
     
     $self->{FALCON_DEFAULT_EXIT}   = '/var/www/falcon/falcon/default/exit';
     

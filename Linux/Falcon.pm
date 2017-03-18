@@ -257,7 +257,7 @@ sub _cleanUp{
 sub _finalize{
     my $self = shift;
 
-    if (!$self->_addWWWUser()){return undef;}
+    if (!$self->_addUsers()){return undef;}
     if (!$self->_createExit()){return undef;}
     if (!$self->_createData()){return undef;}
     if (!$self->_createLog()){return undef;}
@@ -265,6 +265,13 @@ sub _finalize{
     if (!$self->_getSudo()){return undef;}
     if (!$self->_sudoers()){return undef;}
 
+    return 1;
+}
+
+sub _addUsers{
+     my $self    = shift;
+     
+    if (!$self->_addWWWUser($self->getWwwUser(), 'audio')){return undef;}
     return 1;
 }
 
@@ -338,26 +345,19 @@ sub _setExecutable{
     
     my $ok=$self->getUtils()->chmodX($self->getFalconCgi()."/*.pl");
     
-    $self->getStatus()->record('after',1, $ok,'');
-    
     if (!$self->getUtils()->chmodX($self->getFalconCgi()."/*.pl")){return undef;}
    
     if (!$self->getUtils()->chmodX($self->getFalconExit()."/*.pl")){return undef;}
-        
-    #if (!$self->getUtils()->chmodX($self->getFalconDefaultExit()."/*.pl")){return undef;}
-            
+             
     if (!$self->getUtils()->chmodX($self->getFalconDefaultExit()."/myOwn/*.pl")){return undef;}
     
     if (!$self->getUtils()->chmodX($self->getFalconDefaultExit()."/Examples/*.pl")){return undef;}
     
     if (!$self->getUtils()->chmodX($self->getFalconDefaultExit()."/standard/linux/*.pl")){return undef;}
     
-    if (!$self->getUtils()->chmodX($self->getFalconDefaultExit()."/standard/linux/debian/*.pl")){return undef;}
-    
-    
-    #chmod +x /var/www/falcon/falcon/resources/install/debian/*.sh
     return 1;
 }
+ 
 
 sub _sudoers{
     my $self    = shift;

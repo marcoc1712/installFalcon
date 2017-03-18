@@ -372,7 +372,7 @@ sub _createLog{
     my $logfile= $self->getLog()."/squeezelite-R2.log";
     if (! -e $logfile && !$self->getUtils()->createFile($logfile)){return undef;}
     chown $uid, $gid, $logfile;
-    
+    my $mode = 0664; chmod $mode, $logfile; 
     ### TODO: Attivare la rotazione dei files di log.
     
     if ($self->isDebug()){

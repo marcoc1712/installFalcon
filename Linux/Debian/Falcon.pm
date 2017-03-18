@@ -56,4 +56,13 @@ sub _getSudo{
     
     return $self->getUtils()->aptGetInstall('sudo');
 }
+sub _setExecutable{
+    my $self = shift;
+    
+    if (!$self->SUPER::_setExecutable()){return undef;}
+    
+    if (!$self->getUtils()->chmodX($self->getFalconDefaultExit()."/standard/linux/debian/*.pl")){return undef;}
+
+    return 1;
+}
 1;
