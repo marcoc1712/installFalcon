@@ -80,11 +80,8 @@ sub _addUsers{
      
     if (!$self->SUPER::_addUsers()){return undef;}
     
-    
+    if (!$self->getUtils()->userAdd($self->getSqueezeliteUser(),'audio')){return undef;}
     if (!$self->getUtils()->userAdd($self->getWwwUser(), $self->getSqueezeliteGroup())){return undef;}
-    
-    if (!$self->getUtils()->userAdd($self->getSqueezeliteUser(), $self->getSqueezeliteGroup())){return undef;}
-    if (!$self->getUtils()->userAdd($self->getSqueezeliteUser(), 'audio')){return undef;}
     if (!$self->getUtils()->userAdd($self->getSqueezeliteUser(), 'realtime')){return undef;}
     
     return 1;
