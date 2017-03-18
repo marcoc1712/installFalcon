@@ -189,14 +189,19 @@ sub wget{
 }
 
 sub tarUnpack {
-     my $self       = shift;
-     my $archive    = shift;
-     my $dir        = shift;
+    my $self       = shift;
+    my $archive    = shift;
+    my $dir        = shift;
+    
+    my $command;
     
     if ($dir){
-         my $command = qq(tar -C $dir -zxvf $archive);
+        
+         $command = qq(tar -C $dir -zxvf $archive);
+    
     else{
-         my $command = qq(tar -zxvf $archive);
+         
+         $command = qq(tar -zxvf $archive);
     }
     my ($err, @answ)= $self->executeCommand($command);
     
