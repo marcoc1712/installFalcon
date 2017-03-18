@@ -35,7 +35,7 @@ use constant ISMAC        => ( $^O =~ /darwin/i ) ? 1 : 0;
 use constant ISLINUX      => ( $^O =~ /linux/i ) ? 1 : 0;
 
 use constant REMOVE       => ( grep { /--remove/ } @ARGV ) ? 1 : 0;
-use constant ISDEBUG      => ( grep { /--deebug/ } @ARGV ) ? 1 : 0;
+use constant ISDEBUG      => ( grep { /--debug/ } @ARGV ) ? 1 : 0;
 
 my $installer;
 
@@ -69,7 +69,7 @@ if (REMOVE){
 
 if ($installer->getError()){
 
-    #print $installer->getStatus()->printout(1); #use 1 for debug,3 for info.
-    print $installer->getStatus()->printout(ISDEBUG);
+    #$installer->getStatus()->printout(1); #use 1 for debug,3 for info.
+    $installer->getStatus()->printout(ISDEBUG);
 }
 1;
