@@ -76,9 +76,17 @@ sub userAdd {
     my $user     = shift;
     my $group   = shift;
     
-    #my $command = qq( useradd $user);
+    my $command;
     
-    my $command = qq( gpasswd -a $user $group);
+    if (!$group){
+    
+        $command = qq( useradd $user)
+    
+    else {
+    
+        $command = qq( gpasswd -a $user $group);
+    }
+
     my ($err, @answ)= $self->executeCommand($command);
     
     if ($err){

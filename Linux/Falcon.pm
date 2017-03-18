@@ -271,14 +271,9 @@ sub _finalize{
 sub _addUsers{
      my $self    = shift;
      
-    if (!$self->_addWWWUser($self->getWwwUser(), 'audio')){return undef;}
-    return 1;
-}
-
-sub _addWWWUser{
-    my $self    = shift;
-    
+    if (!$self->getUtils()->userAdd($self->getWwwUser())){return undef;}
     if (!$self->getUtils()->userAdd($self->getWwwUser(), 'audio')){return undef;}
+    
     return 1;
 }
 
