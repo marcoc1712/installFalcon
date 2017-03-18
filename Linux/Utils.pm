@@ -113,7 +113,7 @@ sub serviceStop{
     my $self       = shift;
     my $service     = shift;
     
-    my $command = qq(invoke-rc.d $service stop || exit $?);
+    my $command = qq(service $service stop || exit $?);
     
     if ( -x "/etc/init.d/".$service ){
     
@@ -136,7 +136,7 @@ sub serviceStart{
     my $self       = shift;
     my $service     = shift;
     
-    my $command = qq(invoke-rc.d $service start || exit $?);
+    my $command = qq(service $service start || exit $?);
     
     if ( -x "/etc/init.d/".$service ){
     
