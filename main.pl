@@ -40,50 +40,50 @@ use constant ISDEBUG      => ( grep { /--debug/ } @ARGV ) ? 1 : 0;
 
 my $installer;
 
-if (ISWINDOWS){
-        
-    $installer= Windows::Installer->new(ISDEBUG);
+    if (ISWINDOWS){
 
-} elsif (ISMAC){
+        $installer= Windows::Installer->new(ISDEBUG);
 
-    $installer= Mac::Installer->new(ISDEBUG);
+    } elsif (ISMAC){
 
-} elsif (ISLINUX){
+        $installer= Mac::Installer->new(ISDEBUG);
 
-    $installer= Linux::Installer->new(ISDEBUG);
+    } elsif (ISLINUX){
 
-}else {
+        $installer= Linux::Installer->new(ISDEBUG);
 
-    warn "Architecture: $^O is not supported";
+    }else {
 
-}
+        warn "Architecture: $^O is not supported";
 
-my $err;
+    }
 
-if (REMOVE){
-    
-    print "\n***************************** REMOVE ******************************\n";
-    if (!$installer->remove(ISDEBUG)){$err=1};
-    
-} elsif (CLEAN){
-  
-    print "\n************************* CLEAN INSTALL ***************************\n";
-    
-    if (!$installer->remove(ISDEBUG) || !$installer->install(ISDEBUG)) {$err=1};
-    
-} else {
-    
-    print "\n*************************** INSTALL *******************************\n";
-    
-    if (!$installer->install(ISDEBUG)) {$err=1};
-}
+    my $err;
 
-if ($installer->getError()){
+    if (REMOVE){
 
-    #$installer->getStatus()->printout(1); #use 1 for debug,3 for info.
-    $installer->getStatus()->printout(ISDEBUG);
-} elsif ($err){
-    
-    warn "something went wrong."
-}
+        print "\n***************************** REMOVE ******************************\n";
+        if (!$installer->remove(ISDEBUG)){$err=1};
+
+    } elsif (CLEAN){
+
+        print "\n************************* CLEAN INSTALL ***************************\n";
+
+        if (!$installer->remove(ISDEBUG) || !$installer->install(ISDEBUG)) {$err=1};
+
+    } else {
+
+        print "\n*************************** INSTALL *******************************\n";
+
+        if (!$installer->install(ISDEBUG)) {$err=1};
+    }
+
+    if ($installer->getError()){
+
+        #$installer->getStatus()->printout(1); #use 1 for debug,3 for info.
+        $installer->getStatus()->printout(ISDEBUG);
+    } elsif ($err){
+
+        warn "something went wrong."
+    }
 1;

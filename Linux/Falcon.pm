@@ -54,11 +54,11 @@ sub getSettings{
 ################################################################################
 #override
 
-# git cloned.
+#installer has run
 sub isInstalled{ 
     my $self = shift;
 
-    return (-d $self->getFalconHome());
+    return (-d $self->getFalconData());
 }
 
 sub install{
@@ -121,6 +121,7 @@ sub getFalconCode{
     
     return $self->getSettings()->{FALCON_CODE};
 }
+
 sub getFalconHttp{
     my $self = shift;
     
