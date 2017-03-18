@@ -199,7 +199,7 @@ sub tarUnpack {
         
          $command = qq(tar -C $dir -zxvf $archive);
     
-    else{
+    }else{
          
          $command = qq(tar -zxvf $archive);
     }
