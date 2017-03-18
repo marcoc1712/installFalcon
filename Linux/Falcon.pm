@@ -406,11 +406,11 @@ sub download{
     my $ind = index($archive, ".tar.gz");
     my $name = substr($archive,0,$ind-1);
     
-    $self->getStatus()->record('getTarball',3, "unpack in: $name",'');
+    $self->getStatus()->record('getTarball',7, "unpack in: $name",'');
     
     if ($ind <1) {
        
-        $self->getStatus()->record('getTarball',7, "invalid archive $archive",'');
+        $self->getStatus()->record('getTarball',3, "invalid archive $archive",'');
         return undef;
     }
     
