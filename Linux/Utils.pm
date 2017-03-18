@@ -78,11 +78,18 @@ sub userAdd {
     
     my $command;
     
-    if (!$group){
+    my ($exist) = getpwnam ($user);
+    if (!$group && $exist){
     
-        $command = qq( useradd $user)
+        if ($self->isDebug()){
+            $self->getStatus()->record("userAdd",1, "user $user aleady exists",'');
+        }
+        return 1;
+    } elsif (!$group){
     
-    else {
+        $command = qq( useradd $user);
+    
+    } else {
     
         $command = qq( gpasswd -a $user $group);
     }
