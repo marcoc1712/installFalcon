@@ -406,7 +406,7 @@ sub download{
     my $ind = index($archive, ".tar.gz");
     my $name = substr($archive,0,$ind-1);
     
-    $self->getStatus()->record('getTarball',7, "unpack in: $name",'');
+    print $name;
     
     if ($ind <1) {
        
