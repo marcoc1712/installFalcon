@@ -410,7 +410,9 @@ sub download{
         $self->getStatus()->record('getTarball',3, "invalid archive $archive",'');
         return undef;
     }
-    my $name = substr($archive,0,$ind);
+   #my $name = substr($archive,0,$ind);
+   
+    my name = 'falcon-feature_DSD';
     
     #delete transit if present;
     if (-d $name && !$self->getUtils()->rmTree($name)){return undef;}
