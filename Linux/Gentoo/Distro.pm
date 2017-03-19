@@ -85,5 +85,6 @@ sub prepare{
     if (!$self->getUtils()->emerge('dev-perl/URI')){return undef};
     if (!$self->getUtils()->emerge('dev-perl/CGI')){return undef};
     
+    return 1
 }
 1;
