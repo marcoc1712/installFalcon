@@ -28,6 +28,7 @@ use utf8;
 
 use Status;
 
+
 sub new{
     my $class 	= shift;
     my $isDebug = shift || 0;
