@@ -27,7 +27,7 @@ use warnings;
 use utf8;
 
 use Cwd;
-use URI;
+require URI;
 
 use base qw(Download);
 
