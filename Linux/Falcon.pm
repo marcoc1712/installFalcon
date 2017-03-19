@@ -411,8 +411,6 @@ sub download{
         return undef;
     }
     my $name = substr($archive,0,$ind);
-    print $archive." - ".$name;
-    die;
     
     #delete transit if present;
     if (-d $name && !$self->getUtils()->rmTree($name)){return undef;}
