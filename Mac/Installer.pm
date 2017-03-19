@@ -20,7 +20,7 @@
 # GNU General Public License for more details.
 #
 ################################################################################
-package Installer::Mac::Installer;
+package Mac::Installer;
 
 use strict;
 use warnings;

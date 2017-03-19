@@ -20,7 +20,7 @@
 # GNU General Public License for more details.
 #
 ################################################################################
-package Installer::Windows::Installer;
+package Windows::Installer;
 
 use strict;
 use warnings;
