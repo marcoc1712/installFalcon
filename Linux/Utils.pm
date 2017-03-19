@@ -219,7 +219,7 @@ sub tarPack {
      my $archive    = shift;
      my $dir        = shift;
      
-    my $command = qq(tar -cvf $archive.tar $dir);
+    my $command = qq(tar -cvf $archive $dir);
 
     my ($err, @answ)= $self->executeCommand($command);
     

@@ -411,15 +411,21 @@ sub download{
         return undef;
     }
     my $name = substr($archive,0,$ind);
-    #print $archive." - ".$name;
-    #die;
+    print $archive." - ".$name;
+    die;
     
     #delete transit if present;
-    if (-e $name && !$self->getUtils()->removeFile($name)){return undef;}
+    if (-d $name && !$self->getUtils()->rmTree($name)){return undef;}
 
     #delete archive if present;
      if (-e $archive && !$self->getUtils()->removeFile($archive)){return undef;}
-
+    
+    #delete falcon if present;
+     if (-d 'falcon' && !$self->getUtils()->rmTree('falcon')){return undef;}
+    
+    #delete falcon.tar if present;
+     if (-e 'falcon.tar' && !$self->getUtils()->removeFile('falcon.tar')){return undef;}
+     
     #download
     if (!$self->getUtils()->wget($url)){return undef;}
     
@@ -427,10 +433,10 @@ sub download{
     if (!$self->getUtils()->tarUnpack($archive)){return undef;}
     
     #rename name to falcon
-    if (!$self->getUtils()->moveFile(getcwd,"/".$name, getcwd."/falcon")){return undef;}
+    if (!$self->getUtils()->moveFile(getcwd."/".$name, getcwd."/falcon")){return undef;}
     
     #pack to falcon.tar
-    if (!$self->getUtils()->tarPack('falcon.tar', 'falcon')){return undef;}
+    if (!$self->getUtils()->tarPack('falcon.tar',"falcon")){return undef;}
     
     #Unpack inTo war-www
     if (!$self->getUtils()->tarUnpack('falcon.tar', $self->getWWWDirectory())){return undef;}
