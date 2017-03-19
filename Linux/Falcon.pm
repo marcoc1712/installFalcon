@@ -412,7 +412,7 @@ sub download{
     }
    #my $name = substr($archive,0,$ind);
    
-    my name = 'falcon-feature_DSD';
+    my $name = 'falcon-feature_DSD';
     
     #delete transit if present;
     if (-d $name && !$self->getUtils()->rmTree($name)){return undef;}
