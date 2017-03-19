@@ -26,6 +26,8 @@ use strict;
 use warnings;
 use utf8;
 
+use Linux::Download;
+
 use base qw(Falcon);
 
 sub new{
