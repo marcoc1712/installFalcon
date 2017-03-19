@@ -20,7 +20,6 @@
 # GNU General Public License for more details.
 #
 ################################################################################
-
 package WebServer;
 
 use strict;
