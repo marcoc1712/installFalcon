@@ -275,7 +275,10 @@ sub _getSqueezeliteR2{
         
         $url = $self->getWgetString_X86_64();
     
-    } elsif ($self->getArchName() eq "i386"){
+    } elsif (($self->getArchName() eq "i386") || 
+             ($self->getArchName() eq "i486") ||
+             ($self->getArchName() eq "i586") ||
+             ($self->getArchName() eq "i686")){
         
         $url = $self->getWgetString_i86();
         
