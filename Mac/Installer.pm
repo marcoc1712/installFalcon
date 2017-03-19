@@ -21,7 +21,6 @@
 #
 ################################################################################
 package Mac::Installer;
-
 use strict;
 use warnings;
 use utf8;
