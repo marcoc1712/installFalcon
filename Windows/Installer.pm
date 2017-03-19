@@ -30,13 +30,16 @@ use base qw(Installer);
 
 sub new{
     my $class 	= shift;
-
-    my $self=$class->SUPER::new();
+    my $isDebug = shift || 0;
+    my $noGit   = shift || 0;
+    
+    my $self=$class->SUPER::new($isDebug, $noGit);
     
     bless $self, $class;  
-    
+
     return $self;
 }
+
 #override
 sub install {
     my $self = shift;
