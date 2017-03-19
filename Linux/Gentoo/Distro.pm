@@ -39,6 +39,8 @@ sub new{
     
     my $self=$class->SUPER::new($status);
     
+    $self->{_utils}        = Linux::Gentoo::Utils->new($status);
+    $self->{_settings}     = Linux::Gentoo::Settings->new($status);
     $self->{_falcon}       =  Linux::Gentoo::Falcon->new($status);
     $self->{_squeezelite}  =  Linux::Gentoo::Squeezelite->new($status),
     $self->{_webserver}    =  undef;
