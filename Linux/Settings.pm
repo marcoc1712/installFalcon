@@ -72,6 +72,10 @@ sub new{
     #TOBE REPLACED BEFORE RELEASE.
     #$self->{DOWNLOAD_URL}                      = 'https://github.com/marcoc1712/falcon/archive/master.tar.gz';
     $self->{DOWNLOAD_URL}                       = 'https://github.com/marcoc1712/falcon/archive/feature_DSD.tar.gz';
+    
+    #TOBE REPLACED BEFORE RELEASE.
+    #$self->{FOLDER_IN_ARCHIVE}                      = 'falcon-master';
+    $self->{FOLDER_IN_ARCHIVE}                       = 'falcon-feature_DSD';
 
     #TOBE REPLACED BEFORE RELEASE.
     $self->{SQUEEZELITE_R2_X86_64_WGET_STRING}  = 'https://github.com/marcoc1712/squeezelite-R2/releases/download/v1.8.3-(R2)/squeezelite-R2-min-x86_64';

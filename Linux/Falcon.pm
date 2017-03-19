@@ -232,6 +232,12 @@ sub getDownloadUrl{
     
     return $self->getSettings()->{DOWNLOAD_URL};
 }
+sub getFolderInArchive{
+    my $self = shift;
+    
+    return $self->getSettings()->{FOLDER_IN_ARCHIVE};
+}
+
 #################################################################################
 # to be overidden
 #
@@ -412,7 +418,7 @@ sub download{
     }
    #my $name = substr($archive,0,$ind);
    
-    my $name = 'falcon-feature_DSD';
+    my $self->$name = getFolderInArchive();
     
     #delete transit if present;
     if (-d $name && !$self->getUtils()->rmTree($name)){return undef;}
@@ -440,7 +446,9 @@ sub download{
     
     #Unpack inTo war-www
     if (!$self->getUtils()->tarUnpack('falcon.tar', $self->getWWWDirectory())){return undef;}
-
+    
+    #cleanup
+    
     return 1
 }
 1;
