@@ -427,7 +427,7 @@ sub download{
     if (!$self->getUtils()->tarUnpack($archive)){return undef;}
     
     #rename name to falcon
-    if (!$self->getUtils()->moveFile($name, 'falcon')){return undef;}
+    if (!$self->getUtils()->moveFile(getcwd,"/".$name, getcwd."/falcon")){return undef;}
     
     #pack to falcon.tar
     if (!$self->getUtils()->tarPack('falcon.tar', 'falcon')){return undef;}
