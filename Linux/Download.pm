@@ -53,6 +53,13 @@ sub getSettings{
     my $self = shift;
     
     return $self->{_settings};
+}###############################################################################
+# settings
+#
+sub getWWWDirectory{
+    my $self = shift;
+    
+    return $self->getSettings()->{WWW_DIRECTORY};
 }
 ################################################################################
 #override
