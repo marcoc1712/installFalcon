@@ -1,0 +1,3 @@
+emerge dev-perl/URI -- ok in prepare
+emerge dev-perl/CGI -- ok in prepare
+emerge dev-vcs/git  -- ok in git
