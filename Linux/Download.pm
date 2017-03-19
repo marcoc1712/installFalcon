@@ -27,7 +27,6 @@ use warnings;
 use utf8;
 
 use Cwd;
-require URI;
 
 use base qw(Download);
 
@@ -69,6 +68,7 @@ sub download{
     
     my $url = $self->getDownloadUrl();
     
+    require URI;
     my $uri = URI->new($url);
     my $archive = +($uri->path_segments)[-1];
     my $ind = index($archive, ".tar.gz");
