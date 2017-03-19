@@ -26,9 +26,6 @@ use strict;
 use warnings;
 use utf8;
 
-use Cwd;
-use URI;
-
 use base qw(Falcon);
 
 sub new{
@@ -128,6 +125,14 @@ sub remove{
     return 1;
     
 }
+sub download{
+   my $self    = shift;
+   
+   my $download = Linux::Download->new($self->getStatus());
+   if (!$download->download()){return undef;}
+   return 1;
+   
+}
 ###############################################################################
 # settings
 #
@@ -226,16 +231,6 @@ sub getCurrentBackUpDirectory{
     my $timestamp = $self->getUtils()->getTimeString($self->getStatus()->wasStartetAt());
     return $self->getBackUpDirectory()."/".$timestamp;
    
-}
-sub getDownloadUrl{
-    my $self = shift;
-    
-    return $self->getSettings()->{DOWNLOAD_URL};
-}
-sub getFolderInArchive{
-    my $self = shift;
-    
-    return $self->getSettings()->{FOLDER_IN_ARCHIVE};
 }
 
 #################################################################################
@@ -389,7 +384,6 @@ sub _setExecutable{
     return 1;
 }
  
-
 sub _sudoers{
     my $self    = shift;
     
@@ -402,53 +396,4 @@ sub _sudoers{
 #################################################################################
 #
 
-sub download{
-    my $self= shift;
-    
-    my $url = $self->getDownloadUrl();
-    
-    my $uri = URI->new($url);
-    my $archive = +($uri->path_segments)[-1];
-    my $ind = index($archive, ".tar.gz");
-
-    if ($ind <1) {
-       
-        $self->getStatus()->record('getTarball',3, "invalid archive $archive",'');
-        return undef;
-    }
-   #my $name = substr($archive,0,$ind);
-   
-    my $self->$name = getFolderInArchive();
-    
-    #delete transit if present;
-    if (-d $name && !$self->getUtils()->rmTree($name)){return undef;}
-
-    #delete archive if present;
-     if (-e $archive && !$self->getUtils()->removeFile($archive)){return undef;}
-    
-    #delete falcon if present;
-     if (-d 'falcon' && !$self->getUtils()->rmTree('falcon')){return undef;}
-    
-    #delete falcon.tar if present;
-     if (-e 'falcon.tar' && !$self->getUtils()->removeFile('falcon.tar')){return undef;}
-     
-    #download
-    if (!$self->getUtils()->wget($url)){return undef;}
-    
-    #unpack to name
-    if (!$self->getUtils()->tarUnpack($archive)){return undef;}
-    
-    #rename name to falcon
-    if (!$self->getUtils()->moveFile(getcwd."/".$name, getcwd."/falcon")){return undef;}
-    
-    #pack to falcon.tar
-    if (!$self->getUtils()->tarPack('falcon.tar',"falcon")){return undef;}
-    
-    #Unpack inTo war-www
-    if (!$self->getUtils()->tarUnpack('falcon.tar', $self->getWWWDirectory())){return undef;}
-    
-    #cleanup
-    
-    return 1
-}
 1;
