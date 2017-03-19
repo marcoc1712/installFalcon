@@ -73,7 +73,7 @@ sub download{
     }
    #my $name = substr($archive,0,$ind);
    
-    my $self->$name = getFolderInArchive();
+    my $name = $self->getFolderInArchive();
     
     #delete transit if present;
     if (-d $name && !$self->getUtils()->rmTree($name)){return undef;}
