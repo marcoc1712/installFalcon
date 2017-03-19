@@ -27,7 +27,7 @@ use warnings;
 use utf8;
 
 use Cwd;
-use URI;
+#use URI;
 
 use Linux::Utils;
 
@@ -299,6 +299,7 @@ sub _getSqueezeliteR2{
         
         return undef;
     }
+    require URI;
     my $uri = URI->new($url);
     my $name = +($uri->path_segments)[-1];
        
