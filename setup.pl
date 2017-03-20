@@ -227,7 +227,7 @@ sub execute{
 
     my $err;
     
-    print "\n\n"
+    print "\n\n";
     
     if (REMOVE){
 
