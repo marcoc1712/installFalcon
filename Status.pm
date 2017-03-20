@@ -83,7 +83,7 @@ sub record {
 
     $gravity=$self->_gravityDescToCode($gravity);
 
-    $self->{_lines}->{$id}->{'time'}        =;
+    $self->{_lines}->{$id}->{'time'}        =$self->getUtils()->getTimeString($id);
     $self->{_lines}->{$id}->{'package'}     =$package;
     $self->{_lines}->{$id}->{'filename'}    =$filename;
     $self->{_lines}->{$id}->{'line'}        =$line;
