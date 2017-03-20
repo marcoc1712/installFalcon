@@ -65,7 +65,7 @@ sub getArchName {
         return undef;
     }
 
-    $self->getStatus()->record($command,3, "Arch: ".$archname ,'');
+    $self->getStatus()->record($command,1, "Arch: ".$archname ,'');
     return $archname;  
 }
 sub userAdd {
@@ -249,7 +249,7 @@ sub whereIs{
     }
     if (scalar @elements == 1){
         
-        $self->getStatus()->record($command,3, 'not found',(join "/n", @answ));
+        $self->getStatus()->record($command,1, 'not found',(join "/n", @answ));
         return undef;   
     }
     
@@ -265,12 +265,12 @@ sub whereIs{
         
         if ($name eq $executable){
             
-            $self->getStatus()->record($command,3,'found',$el);
+            $self->getStatus()->record($command,1,'found',$el);
             return $el; 
             last;
         }
     }
-    $self->getStatus()->record($command,3, 'not found in',(join " ", @elements));
+    $self->getStatus()->record($command,1, 'not found in',(join " ", @elements));
     return undef;
 }
 
