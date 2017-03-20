@@ -109,6 +109,7 @@ sub printout{
     
     for my $id (sort keys %$in){
     
+        print " - Time       : ".$self->{_lines}->{$id}->{'time'}."\n";
         print " - Package    : ".$self->{_lines}->{$id}->{'package'}."\n";
         print " - Filename   : ".$self->{_lines}->{$id}->{'filename'}."\n";
         print " - Line       : ".$self->{_lines}->{$id}->{'line'}."\n";
