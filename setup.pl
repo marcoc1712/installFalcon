@@ -311,14 +311,11 @@ sub finalize {
         print "WARNING: can't create $src\n";
         return 0;
     }  
-    
-    print $!."\n";
-    $!=undef;
-    print $!."\n";
-    
-    move $installerDir, $srcInstaller;
 
-    if (-e $installerDir || !-e $srcInstaller){
+    move $installerDir, $srcInstaller;
+    print $!."\n";
+    
+    if (-d $installerDir || !-d $srcInstaller){
 
         print "WARNING: can't rename $installerDir to $srcInstaller; ".$!."\n";
         return 0;
