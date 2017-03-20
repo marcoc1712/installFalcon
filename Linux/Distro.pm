@@ -78,15 +78,15 @@ sub prepare{
     my $self = shift;
     
     if (!$self->getUtils()->mkDir($self->getWWWDirectory())){
-        $self->getStatus()->record(prepare,7, "can't create $self->getWWWDirectory()",'');
+        $self->getStatus()->record('prepare',7, "can't create $self->getWWWDirectory()",'');
         return undef;
     }
     if (!$self->getUtils()->mkDir($self->getBackUpDirectory())){
-        $self->getStatus()->record(prepare,7, "can't create $self->getBackUpDirectory()",'');
+        $self->getStatus()->record('prepare',7, "can't create $self->getBackUpDirectory()",'');
         return undef;
     }
     if (!$self->getUtils()->mkDir($self->getBeforeBackUpDirectory())){
-        $self->getStatus()->record(prepare,7, "can't create $self->getBeforeBackUpDirectory()",'');
+        $self->getStatus()->record('prepare',7, "can't create $self->getBeforeBackUpDirectory()",'');
         return undef;
     }
 
