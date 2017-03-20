@@ -109,7 +109,7 @@ sub systemCtlReload{
        
         $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
         
-    } else
+    } else {
         $self->getStatus()->record($command,1, '/run/systemd/system not found','');
     }
     return 1;
