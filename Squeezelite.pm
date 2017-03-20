@@ -150,18 +150,11 @@ sub _checkVersion{
         if (lc($row) =~ /v\s*\d{1,2}\.\d{1,2}\.\d{1,2}\s*\(r2\)/){
              
             my $version =substr($row, index(lc($row),$&));
-                        
-            if ($self->isDebug()){
-            
-                $self->getStatus()->record($command,1, $version,(join "/n", @answ));
-            }
+            $self->getStatus()->record($command,1, $version,(join "/n", @answ));
             return substr($row, index(lc($row),$&), length($&));
         }
-    }
-    if ($self->isDebug()){
-            
-        $self->getStatus()->record($command,1, 'undef' ,(join "/n", @answ));
-    }
+    }    
+    $self->getStatus()->record($command,1, 'undef' ,(join "/n", @answ));
     return undef; 
 }
 1;

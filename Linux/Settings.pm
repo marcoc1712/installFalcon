@@ -90,9 +90,7 @@ sub new{
     
     $self->{APACHE2_CONF}                       = '/etc/apache2/sites-available/000-default.conf',
     $self->{APACHE2_CONF_SOURCE}                = '/var/www/falcon/falcon/resources/install/webServer/apache2/etc/apache2/sites-available/000-default.conf';
-     
 
-    
     return $self;
 }
 1;

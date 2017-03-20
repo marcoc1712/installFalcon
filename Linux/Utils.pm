@@ -64,11 +64,8 @@ sub getArchName {
         $self->getStatus()->record($command,7, 'invalid answer',(join "/n", @answ));
         return undef;
     }
-    
-    if ($self->isDebug()){
-            
-            $self->getStatus()->record($command,3, "Arch: ".$archname ,'');
-    }
+
+    $self->getStatus()->record($command,3, "Arch: ".$archname ,'');
     return $archname;  
 }
 sub userAdd {
@@ -80,11 +77,10 @@ sub userAdd {
     
     my ($exist) = getpwnam ($user);
     if (!$group && $exist){
-    
-        if ($self->isDebug()){
-            $self->getStatus()->record("userAdd",1, "user $user aleady exists",'');
-        }
+
+        $self->getStatus()->record("userAdd",1, "user $user aleady exists",'');
         return 1;
+        
     } elsif (!$group){
     
         $command = qq( useradd $user);
@@ -100,9 +96,8 @@ sub userAdd {
         $self->getStatus()->record($command,7, $err,(join "/n", @answ));
         return undef;
     }
-    if ($self->isDebug()){
-        $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
-    }
+
+    $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
     return 1;
 
 }
@@ -118,9 +113,7 @@ sub chmodX{
         $self->getStatus()->record($command,7, $err,(join "/n", @answ));
         return undef;
     }
-    if ($self->isDebug()){
-        $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
-    }
+    $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
     return 1;
 }
 
@@ -138,9 +131,8 @@ sub serviceStop{
             $self->getStatus()->record($command,7, $err,(join "/n", @answ));
             return undef;
         }
-        if ($self->isDebug()){
-            $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
-        }
+
+        $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
         return 1;
     }
     $self->getStatus()->record($command,5, "can't execute /etc/init.d/".$service,'');
@@ -161,9 +153,8 @@ sub serviceStart{
             $self->getStatus()->record($command,7, $err,(join "/n", @answ));
             return undef;
         }
-        if ($self->isDebug()){
-            $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));  
-        }
+
+        $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));  
         return 1;
     }
     $self->getStatus()->record($command,5, "can't found /etc/init.d/".$service,'');
@@ -182,9 +173,9 @@ sub wget{
         $self->getStatus()->record($command,7, $err,(join "/n", @answ));
         return undef;
     }
-    if ($self->isDebug()){
-        $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
-    }
+
+    $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
+
     return 1;
 }
 
@@ -209,9 +200,8 @@ sub tarUnpack {
         $self->getStatus()->record($command,7, $err,(join "/n", @answ));
         return undef;
     }
-    if ($self->isDebug()){
-        $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
-    }
+    $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
+
     return 1;
 }
 sub tarPack {
@@ -227,9 +217,8 @@ sub tarPack {
         $self->getStatus()->record($command,7, $err,(join "/n", @answ));
         return undef;
     }
-    if ($self->isDebug()){
-        $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
-    }
+    
+    $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
     return 1;
 }
 sub whereIs{
@@ -260,18 +249,13 @@ sub whereIs{
     }
     if (scalar @elements == 1){
         
-        if ($self->isDebug()){
-            
-            $self->getStatus()->record($command,3, 'not found',(join "/n", @answ));
-        }
+        $self->getStatus()->record($command,3, 'not found',(join "/n", @answ));
         return undef;   
     }
     
     shift @elements;
-    
-    if ($self->isDebug()){
-        $self->getStatus()->record($command,1, 'elements dopo shift',(join " ", @elements));
-    }
+
+    $self->getStatus()->record($command,1, 'elements dopo shift',(join " ", @elements));
     
     for my $el (@elements){
         
@@ -281,20 +265,12 @@ sub whereIs{
         
         if ($name eq $executable){
             
-            if ($self->isDebug()){
-            
-                $self->getStatus()->record($command,3,'found',$el);
-            }
-            
+            $self->getStatus()->record($command,3,'found',$el);
             return $el; 
             last;
-            
         }
-        
     }
-    if ($self->isDebug()){
-        $self->getStatus()->record($command,3, 'not found in',(join " ", @elements));
-    }
+    $self->getStatus()->record($command,3, 'not found in',(join " ", @elements));
     return undef;
 }
 

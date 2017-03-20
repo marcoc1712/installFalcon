@@ -55,9 +55,8 @@ sub aptGetInstall{
         $self->getStatus()->record($command,7, $err,(join "/n", @answ));
         return undef;
     }
-    if ($self->isDebug()){
-        $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
-    }
+
+    $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
     return 1;
 } 
 sub updateRcdDefaults{
@@ -72,9 +71,8 @@ sub updateRcdDefaults{
         $self->getStatus()->record($command,7, $err,(join "/n", @answ));
         return undef;
     }
-    if ($self->isDebug()){
-        $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
-    }
+
+    $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
     return 1;
 }
 sub updateRcdRemove{
@@ -89,9 +87,8 @@ sub updateRcdRemove{
         $self->getStatus()->record($command,7, $err,(join "/n", @answ));
         return undef;
     }
-    if ($self->isDebug()){
-        $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
-    }
+
+    $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
     return 1;
 }
 
@@ -109,15 +106,12 @@ sub systemCtlReload{
             $self->getStatus()->record($command,7, $err,(join "/n", @answ));
             return undef;
         }
-        if ($self->isDebug()){
-            $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
-        }
+       
+        $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
         
-    } elsif ($self->isDebug()){
-        
+    } else
         $self->getStatus()->record($command,1, '/run/systemd/system not found','');
     }
-    
     return 1;
 }
 1;

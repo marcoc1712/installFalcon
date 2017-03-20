@@ -73,9 +73,8 @@ sub rcUpdateAddDefaults{
         $self->getStatus()->record($command,7, $err,(join "/n", @answ));
         return undef;
     }
-    if ($self->isDebug()){
-        $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
-    }
+
+    $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
     return 1;
 }
 sub rcUpdateDel{
@@ -96,9 +95,7 @@ sub rcUpdateDel{
         $self->getStatus()->record($command,1, $err,(join "/n", @answ)); #sistemare
         return undef;
     }
-    if ($self->isDebug()){
-        $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
-    }
+    $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
     return 1;
 }
 

@@ -378,10 +378,8 @@ sub _createLog{
     chown $uid, $gid, $logfile;
     my $mode = 0664; chmod $mode, $logfile; 
     ### TODO: Attivare la rotazione dei files di log.
-    
-    if ($self->isDebug()){
-        $self->getStatus()->record('_createLog',1, 'ok','');
-    }
+
+    $self->getStatus()->record('_createLog',1, 'ok','');
     return 1;
 }
 1;

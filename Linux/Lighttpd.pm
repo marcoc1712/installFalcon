@@ -141,9 +141,7 @@ sub _createLog{
     
     ### TODO: Attivare la rotazione dei files di log.
     
-    if ($self->isDebug()){
-        $self->getStatus()->record('_createLog',1, 'ok','');
-    }
+    $self->getStatus()->record('_createLog',1, 'ok','');
     return 1;
 }
 

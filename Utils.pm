@@ -111,14 +111,14 @@ sub mkDir{
             $self->getStatus()->record( " mkdir ".$dir.", 0755",7, "can't create directory",'');
             return undef;
         }
-        if ($self->isDebug()){
-            $self->getStatus()->record(" mkdir ".$dir.", 0755",1, 'created','');
-        }
+       
+        $self->getStatus()->record(" mkdir ".$dir.", 0755",1, 'created','');
         
-    } elsif ($self->isDebug()){
-            $self->getStatus()->record(" mkdir ".$dir.", 0755",1, 'already exists','');
+    } else{
+        
+        $self->getStatus()->record(" mkdir ".$dir.", 0755",1, 'already exists','');
+        return 1;
     }
-    return 1;
 }
 sub rmTree{
     my $self    = shift;
@@ -128,7 +128,7 @@ sub rmTree{
         $self->getStatus()->record( "",7, "undefined or empty directory name",'');
         return undef;
     }
-    if (! -e $dir && $self->isDebug()){
+    if (! -e $dir){
         
         $self->getStatus()->record( "",1, "directory: ".$dir." does not exists",'');
         return 1;
@@ -158,10 +158,8 @@ sub rmTree{
         $self->getStatus()->record( "rmtree",7, $err,(join "\n", @answ));
         return undef;
     }
-    if ($self->isDebug()){
-        
-        $self->getStatus()->record( "",1, "directory: ".$dir." removed",'');
-    }
+
+    $self->getStatus()->record( "",1, "directory: ".$dir." removed",'');
     return 1;
 }
 sub saveBU{
@@ -243,10 +241,7 @@ sub _ckcopy{
             return undef;
 
         }
-        if ($self->isDebug()){
-
-            $self->getStatus()->record( "",1, "file: ".$newPath." removed",'');
-        }
+        $self->getStatus()->record( "",1, "file: ".$newPath." removed",'');
     }
     return 1;
 }
@@ -266,10 +261,8 @@ sub copyFile{
         $self->getStatus()->record( "",7, "can't copy ".$oldPath." to ".$newPath,$!);
         return undef;  
     }
-    if ($self->isDebug()){
-        $self->getStatus()->record( "",1, "file: ".$oldPath." copied to ".$newPath,'');
-    }
-    
+
+    $self->getStatus()->record( "",1, "file: ".$oldPath." copied to ".$newPath,''); 
     return 1;
 }
 sub moveFile{
@@ -287,10 +280,8 @@ sub moveFile{
         $self->getStatus()->record( "",7, "can't move ".$oldPath." to ".$newPath,$!);
         return undef;  
     }
-    if ($self->isDebug()){
-        $self->getStatus()->record( "",1, "file: ".$oldPath." moved to ".$newPath,'');
-    }
-    
+
+    $self->getStatus()->record( "",1, "file: ".$oldPath." moved to ".$newPath,'');
     return 1;
 }
 sub createFile{
@@ -325,7 +316,7 @@ sub removeFile{
         $self->getStatus()->record( "",7, "undefined or empty filepath",'');
         return undef;
     }
-    if (! -e $path && $self->isDebug()){
+    if (! -e $path){
         
         $self->getStatus()->record( "",1, "file: ".$path." does not exists",'');
         return 1;
@@ -338,10 +329,8 @@ sub removeFile{
         $self->getStatus()->record( "",7, "can't remove ".$path,'');
         return undef;
     }
-    if ($self->isDebug()){
-        
-        $self->getStatus()->record( "",1, "file: ".$path." removed",'');
-    }
+
+    $self->getStatus()->record( "",1, "file: ".$path." removed",'');
     return 1;
 }
 sub getTimeString {

@@ -150,7 +150,6 @@ sub install {
         
     if (!$self->getWebServer()->auto()){return undef;}; 
 
-    
     return 1;
 }
 sub remove{
