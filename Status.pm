@@ -116,6 +116,12 @@ sub printDetailed{
     print "\n";
     
 }
+printLine{
+    my $self = shift;
+    my $id = shift;
+    
+    
+}
 
 sub printout{
     my $self = shift;
