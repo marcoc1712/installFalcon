@@ -44,7 +44,7 @@ sub new{
     
     $self->{FOLDER_IN_ARCHIVE}                 = 'falcon-master';
     
-    #SEE ALSO SQUEEZELITE IN LINUX
+    #SEE SQUEEZELITE IN LINUX
     
     return $self;
 }
