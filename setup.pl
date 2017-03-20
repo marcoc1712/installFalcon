@@ -303,20 +303,22 @@ sub finalize {
         return 1;
     } 
     
-    mkpath  $src, 0755;
+    if (LINUX){
 
-    if (! -d $src){
-        
-        print "WARNING: can't create $src\n";
-        return 0;
-    }  
+        my $command = qq(mv $installerDir $srcInstaller);
+        my @ret= `$command`;
+        my $err=$?;
 
-    move $installerDir, $srcInstaller;
-   
-    if (-e $installerDir && !-e $srcInstaller){
+        if ($err){
+            print "Fatal: ".$err."\n";
+            print (join "\n", @ret);
+            die;
+        }  
+    
+    }else {
 
-        print "WARNING: can't rename $installerDir to $srcInstaller; ".$!."\n";
-        return 0;
+        warn "Architecture: $^O is not supported yet";
+        return 0; 
     }
     return 1;
 }
