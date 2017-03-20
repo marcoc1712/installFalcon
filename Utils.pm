@@ -338,6 +338,13 @@ sub getTimeString {
     my $self = shift;
     my $time = shift || time;
     
+    return POSIX::strftime('%Y%m%d%H%M%S', localtime($time));
+    
+}
+sub getNiceTimeString {
+    my $self = shift;
+    my $time = shift || time;
+    
     return POSIX::strftime('%Y/%m/%d %H:%M:%S', localtime($time));
     
 }
