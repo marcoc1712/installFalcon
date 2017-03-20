@@ -312,7 +312,11 @@ sub finalize {
         return 0;
     }  
     
-    move getcwd."/".$installerDir, $srcInstaller;
+    print $!."\n";
+    $!=undef;
+    print $!."\n";
+    
+    move $installerDir, $srcInstaller;
 
     if (-e $installerDir || !-e $srcInstaller){
 
