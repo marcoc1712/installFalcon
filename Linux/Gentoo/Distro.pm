@@ -82,8 +82,13 @@ sub prepare{
     my $self    = shift;
      
     if (!$self->SUPER::prepare()){return undef;}
-    if (!$self->getUtils()->emerge('dev-perl/URI')){return undef};
-    if (!$self->getUtils()->emerge('dev-perl/CGI')){return undef};
+    if (!$self->getUtils()->emerge('dev-perl/URI')){
+        $self->getStatus()->record(prepare,7, "can't emerge dev-perl/URI",'');
+        return undef};
+    if (!$self->getUtils()->emerge('dev-perl/CGI')){
+        $self->getStatus()->record(prepare,7, "can't emerge dev-perl/CGI",'');
+        return undef
+    };
     
     return 1
 }
