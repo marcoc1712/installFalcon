@@ -341,6 +341,12 @@ sub getTimeString {
     return POSIX::strftime('%Y%m%d%H%M%S', localtime($time));
     
 }
+sub getTimestamp{
+    my $self = shift;
+    
+    usleep(1000);
+    return time;
+}
 #################################################################################
 # privates
 

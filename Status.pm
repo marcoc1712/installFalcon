@@ -26,7 +26,6 @@ package Status;
 use strict;
 use warnings;
 use utf8;
-use Time::HiRes qw(time usleep);
 
 my %gravityMap = (
    
@@ -58,8 +57,14 @@ sub new{
        _isDebug     => $isDebug,
         
     }, $class;
-
+    
+    $self->{_utils}   =  Utils->new($self);
     return $self;
+}
+sub getUtils{
+    my $self = shift;
+    
+    return $self->{_utils};
 }
 ################################################################################
 sub record {
@@ -74,11 +79,11 @@ sub record {
         
     #my $id = $filename." line: ".$line.;
     
-    my $id = _getTimestamp();
+    my $id = $self->getUtils()->getTimestamp();
 
     $gravity=$self->_gravityDescToCode($gravity);
 
- 
+    $self->{_lines}->{$id}->{'time'}        =;
     $self->{_lines}->{$id}->{'package'}     =$package;
     $self->{_lines}->{$id}->{'filename'}    =$filename;
     $self->{_lines}->{$id}->{'line'}        =$line;
@@ -212,9 +217,6 @@ sub _getCaller{
     
     return $out;
 }
-sub _getTimestamp{
-    usleep(1000);
-    return time;
-}
+
 1;
 
