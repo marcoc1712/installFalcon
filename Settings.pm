@@ -37,8 +37,8 @@ sub new{
     
    
     $self->{GIT_CLONE_STRING}                  = 'git clone https://github.com/marcoc1712/falcon.git';
-    $self->{GIT_USER}                           = 'falcon';
-    $self->{GIT_MAIL}                           = 'falcon@gmail.com';
+    $self->{GIT_USER}                          = 'falcon';
+    $self->{GIT_MAIL}                          = 'falcon@gmail.com';
 
     $self->{DOWNLOAD_URL}                      = 'https://github.com/marcoc1712/falcon/archive/master.tar.gz';
     
