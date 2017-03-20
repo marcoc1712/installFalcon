@@ -47,7 +47,7 @@ my $verbosity = ISDEBUG ? 1 : NOINFO ? 5 : 3; #5 is warning.
 
 my $installer;
 my $src;
-
+ 
 my $branch        = 'master';
 my $url           = "https://github.com/marcoc1712/installFalcon/archive/".$branch.".tar.gz";
 my $archive       = $branch.'.tar.gz';
@@ -89,7 +89,7 @@ sub prepare{
 
     if (ISLINUX){
 
-        $src = '/var/www/falcon/falcon/src/Installer';
+        $src = '/var/www/falcon/falcon/src';
         
         if (-d $extracted){
             rmtree( $extracted, {error => \my $msg} );
@@ -257,13 +257,14 @@ sub execute{
     return 1;
 }
 sub finalize {
-
-    if (-d $src){
+    
+    my $srcInstaller= $src."/Installer";
+    if (-d $srcInstaller){
         
-        rmtree( $src, {error => \my $msg} );
+        rmtree( $srcInstaller, {error => \my $msg} );
         if (@$msg) {
 
-            print "Error deleting tree starting at: $src";
+            print "Error deleting tree starting at: $srcInstaller";
 
             for my $diag (@$msg) {
                 my ($file, $message) = %$diag;
@@ -311,11 +312,11 @@ sub finalize {
         return 0;
     }  
 
-    move $installerDir, $src;
+    move $installerDir, $srcInstaller;
 
-    if (-e $installerDir && !-e $src){
+    if (-e $installerDir || !-e $srcInstaller){
 
-        print "WARNING: can't rename $installerDir to $src\n";
+        print "WARNING: can't rename $installerDir to $srcInstaller\n";
         return 0;
     }
     return 1;
