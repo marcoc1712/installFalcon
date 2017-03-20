@@ -112,9 +112,10 @@ sub printout{
     my $self = shift;
     my $filter = shift || ($self->isDebug() ? 1 : 5);
     
-    if (! $self->isDebug()){ #in debug prints single lines for each step.
     
-        $filter = $self->_gravityDescToCode($filter);
+    $filter = $self->_gravityDescToCode($filter);
+     
+    if (! $self->isDebug()){ #in debug prints single lines diretly.
 
         my $in = $self->getLines($filter); 
 
@@ -123,9 +124,9 @@ sub printout{
            $self->_printDetailed($id);
         }
         print "\n";
-
-        my $gravity=$self->_gravityDescToCode($self->getGravity());
     }
+    
+    my $gravity=$self->_gravityDescToCode($self->getGravity());
     
     if ($gravity ge $filter){
         print "STATUS : ".$self->getGravity()."\n";
