@@ -311,7 +311,7 @@ sub finalize {
         print "WARNING: can't create $src\n";
         return 0;
     }  
-     
+    
     move getcwd."/".$installerDir, $src;
 
     if (-e $installerDir || !-e $srcInstaller){
