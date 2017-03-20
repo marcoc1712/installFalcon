@@ -165,7 +165,8 @@ sub remove{
         return undef;
     }
     
-    if (!$self->getWebServer()->remove()){return undef;}; 
+    if (!$self->getWebServer()->remove()){return undef;};
+    $self->getStatus()->record( "remove Webserver",3, "ok",'');
    
     if (!$self->getSqueezelite()){
         
@@ -174,6 +175,7 @@ sub remove{
     }
     
     if (!$self->getSqueezelite()->remove()){return undef;}
+    $self->getStatus()->record( "remove Squeezelite",3, "ok",'');
     
     if (!$self->getFalcon()){
         
@@ -182,9 +184,12 @@ sub remove{
     }
     
     if (!$self->getFalcon()->remove()){return undef;}
+    $self->getStatus()->record( "remove falcon code",3, "ok",'');
     
     if (!$self->cleanUp()){return undef;}
+    $self->getStatus()->record( "remove falcon data and backups",3, "ok",'');
     
+    return 1;
 }
 
 ################################################################################

@@ -77,7 +77,6 @@ sub remove{
     my $self = shift;
     
     if (!$self->_cleanUp()) {return undef;};
-    $self->getStatus()->record( "remove Webserver",3, "configuration file removed, binaries are lived untoched",'');
     return 1;
 }
 
