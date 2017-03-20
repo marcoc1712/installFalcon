@@ -52,7 +52,6 @@ my $branch        = 'master';
 my $url           = "https://github.com/marcoc1712/installFalcon/archive/".$branch.".tar.gz";
 my $archive       = $branch.'.tar.gz';
 my $installerDir  = 'Installer';
-my $DownloadedDir = 'Installer';
 
 my $extracted     = 'installFalcon-master';
 my $target        = 'falcon';
@@ -313,9 +312,8 @@ sub finalize {
     }  
 
     move $installerDir, $srcInstaller;
-    print $!."\n";
-    
-    if (-d $installerDir || !-d $srcInstaller){
+   
+    if (-e $installerDir && !-e $srcInstaller){
 
         print "WARNING: can't rename $installerDir to $srcInstaller; ".$!."\n";
         return 0;
