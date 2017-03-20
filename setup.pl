@@ -316,7 +316,7 @@ sub finalize {
 
     if (-e $installerDir || !-e $srcInstaller){
 
-        print "WARNING: can't rename $installerDir to $srcInstaller\n";
+        print "WARNING: can't rename $installerDir to $srcInstaller; ".$!."\n";
         return 0;
     }
     return 1;
