@@ -98,7 +98,7 @@ sub record {
         $self->{_gravity} = $gravity;
         $self->{_message} = $message;
     }
-    $self->printLine();
+    $self->printLine($id);
 }
 sub printDetailed{
     my $self = shift;
