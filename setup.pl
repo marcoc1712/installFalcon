@@ -47,7 +47,6 @@ my $verbosity = ISDEBUG ? 1 : NOINFO ? 5 : 3; #5 is warning.
 
 my $installer;
 my $src;
-my $main;
 
 my $branch        = 'master';
 my $url           = "https://github.com/marcoc1712/installFalcon/archive/".$branch.".tar.gz";
@@ -90,14 +89,9 @@ sub prepare{
 
     if (ISLINUX){
 
-        $src          = '/var/www/falcon/falcon/src/installer';
-        $main         = '/var/www/falcon/falcon/src/installer/main.pl';
-
-        if (-e $main) {
-
-            #nothing to do, will update.
-
-        } elsif (-d $extracted){
+        $src = '/var/www/falcon/falcon/src/Installer';
+        
+        if (-d $extracted){
             rmtree( $extracted, {error => \my $msg} );
             if (@$msg) {
 
