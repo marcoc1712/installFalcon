@@ -32,8 +32,6 @@ sub new{
     my $self = bless {      
     }, $class;
 
-    return $self;
-    
     $self->{WWW_USER}          = 'www-data';
     $self->{WWW_GROUP}         = 'www-data';
     
@@ -52,6 +50,7 @@ sub new{
     $self->{FOLDER_IN_ARCHIVE}                  = 'falcon-feature_DSD';
     
     #SEE ALSO SQUEEZELITE IN LINUX
-
+    
+    return $self;
 }
 1;
