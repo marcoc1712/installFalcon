@@ -120,13 +120,17 @@ sub printLine{
     my $self = shift;
     my $id = shift;
     
-    my $gravity= $self->{_lines}->{$id}->{'gravity'};
-    
-    print $self->{_lines}->{$id}->{'time'}." - ".
-          $self->{_lines}->{$id}->{'filename'}." line: ".
-          $self->{_lines}->{$id}->{'line'}." - ".
+    my $time        = $self->{_lines}->{$id}->{'time'};
+    my $filename    = $self->{_lines}->{$id}->{'filename'};
+    my $line        = $self->{_lines}->{$id}->{'line'};
+    my $gravity     = $self->{_lines}->{$id}->{'gravity'};
+    my $message     = $self->{_lines}->{$id}->{'message'} ? $self->{_lines}->{$id}->{'message'} : '';
+   
+    print $time." - ".
+          $filename." line: ".
+          $line." - ".
           $self->_gravityCodeToDesc($gravity)." : ".
-          $self->{_lines}->{$id}->{'message'}."\n";
+          $message."\n";
 }
 
 sub printout{
