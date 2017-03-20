@@ -116,16 +116,6 @@ sub printDetailed{
     print "\n";
     
 }
-printLine{
-    my $self = shift;
-    my $id = shift;
-    
-    print $self->{_lines}->{$id}->{'time'}." - ".
-          $self->{_lines}->{$id}->{'filename'}." line: ".
-          $self->{_lines}->{$id}->{'line'}." - ".
-          $self->_gravityCodeToDesc($self->{_lines}->{$id}->{'gravity'})." : ".
-          $self->{_lines}->{$id}->{'message'}."\n";
-}
 
 sub printout{
     my $self = shift;
