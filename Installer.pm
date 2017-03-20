@@ -188,7 +188,7 @@ sub remove{
     
     if (!$self->cleanUp()){return undef;}
     $self->getStatus()->record( "remove falcon data and backups",3, "ok",'');
-    
+    $self->getStatus()->record( "falcon nuked!",2, "ok",'');
     return 1;
 }
 
