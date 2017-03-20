@@ -51,7 +51,7 @@ my $main;
 
 my $branch        = 'master';
 my $url           = "https://github.com/marcoc1712/installFalcon/archive/".$branch.".tar.gz";
-my $archive       = 'master';
+my $archive       = $branch.'.tar.gz';
 my $installerDir  = 'Installer';
 my $DownloadedDir = 'Installer';
 
@@ -171,7 +171,7 @@ sub prepare{
             die;
         }  
         
-        $command = qq(tar -zxvf $archive.tar.gz);
+        $command = qq(tar -zxvf $archive);
         @ret= `$command`;
         $err=$?;
 
@@ -191,13 +191,11 @@ sub prepare{
         }
         print "Info: ".$extracted." renamed to ".$installerDir."\n";
 
-        my $file= $archive.".tar.gz";
+        unlink $archive;
 
-        unlink $file;
+        if (-e $archive){
 
-        if (-e $file){
-
-            print "WARNING: can't remove ".$file;
+            print "WARNING: can't remove ".$archive;
         }
       
         loadInstallers();
