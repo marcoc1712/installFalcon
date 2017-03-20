@@ -303,7 +303,7 @@ sub finalize {
         return 1;
     } 
     
-    if (LINUX){
+    if (ISLINUX){
 
         my $command = qq(mv $installerDir $srcInstaller);
         my @ret= `$command`;
