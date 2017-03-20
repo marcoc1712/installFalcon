@@ -33,5 +33,25 @@ sub new{
     }, $class;
 
     return $self;
+    
+    $self->{WWW_USER}          = 'www-data';
+    $self->{WWW_GROUP}         = 'www-data';
+    
+    #TOBE REPLACED BEFORE RELEASE.
+    #$self->{GIT_CLONE_STRING}                  = 'git clone https://github.com/marcoc1712/falcon.git';
+    $self->{GIT_CLONE_STRING}                   = 'git clone https://github.com/marcoc1712/falcon.git -b feature_DSD --single-branch';
+    $self->{GIT_USER}                           = 'falcon';
+    $self->{GIT_MAIL}                           = 'falcon@gmail.com';
+    
+    #TOBE REPLACED BEFORE RELEASE.
+    #$self->{DOWNLOAD_URL}                      = 'https://github.com/marcoc1712/falcon/archive/master.tar.gz';
+    $self->{DOWNLOAD_URL}                       = 'https://github.com/marcoc1712/falcon/archive/feature_DSD.tar.gz';
+    
+    #TOBE REPLACED BEFORE RELEASE.
+    #$self->{FOLDER_IN_ARCHIVE}                 = 'falcon-master';
+    $self->{FOLDER_IN_ARCHIVE}                  = 'falcon-feature_DSD';
+    
+    #SEE ALSO SQUEEZELITE IN LINUX
+
 }
 1;

@@ -35,47 +35,28 @@ sub new{
 
     bless $self, $class; 
     
-    $self->{WWW_DIRECTORY}      = '/var/www';
-    $self->{FALCON_HOME}        = '/var/www/falcon';
+    $self->{WWW_DIRECTORY}                      = '/var/www';
+    $self->{FALCON_HOME}                        = '/var/www/falcon';
     
-    $self->{BACKUP_DIRECTORY}   = '/var/www/backupFalcon';
-    $self->{BEFORE_DIRECTORY}   = '/var/www/backupFalcon/before';
+    $self->{BACKUP_DIRECTORY}                   = '/var/www/backupFalcon';
+    $self->{BEFORE_DIRECTORY}                   = '/var/www/backupFalcon/before';
     
-    $self->{BIN_DIRECTORY}      = '/usr/bin';
-    $self->{INIT_DIRECTORY}     = '/etc/init.d';
+    $self->{BIN_DIRECTORY}                      = '/usr/bin';
+    $self->{INIT_DIRECTORY}                     = '/etc/init.d';
 
-    $self->{FALCON_CODE}        = '/var/log/falcon/falcon';
-    $self->{FALCON_HTTP}        = '/var/log/falcon/httpdocs';
-    $self->{FALCON_CGI}         = '/var/www/falcon/cgi-bin';
-    $self->{FALCON_EXIT}        = '/var/www/falcon/exit';
-    $self->{FALCON_DATA}        = '/var/www/falcon/data';
-    $self->{FALCON_LOG}         = '/var/log/falcon';
-   
+    $self->{FALCON_CODE}                        = '/var/log/falcon/falcon';
+    $self->{FALCON_HTTP}                        = '/var/log/falcon/httpdocs';
+    $self->{FALCON_CGI}                         = '/var/www/falcon/cgi-bin';
+    $self->{FALCON_EXIT}                        = '/var/www/falcon/exit';
+    $self->{FALCON_DATA}                        = '/var/www/falcon/data';
+    $self->{FALCON_LOG}                         = '/var/log/falcon';
 
-    $self->{WWW_USER}          = 'www-data';
-    $self->{WWW_GROUP}         = 'www-data';
+    $self->{FALCON_CONF}                        = '/var/www/falcon/data/falcon.conf';
 
-    $self->{FALCON_CONF}           = '/var/www/falcon/data/falcon.conf';
+    $self->{FALCON_DEFAULT_EXIT}                = '/var/www/falcon/falcon/default/exit';
     
-    
-    $self->{FALCON_DEFAULT_EXIT}   = '/var/www/falcon/falcon/default/exit';
-    
-    $self->{FALCON_SUDOERS}        = '/etc/sudoers.d/falcon';
-    $self->{FALCON_SUDOERS_SOURCE} = '/var/www/falcon/falcon/resources/install/debian/systemRoot/etc/sudoers.d/falcon';
-
-    #TOBE REPLACED BEFORE RELEASE.
-    #$self->{GIT_CLONE_STRING}                  = 'git clone https://github.com/marcoc1712/falcon.git';
-    $self->{GIT_CLONE_STRING}                   = 'git clone https://github.com/marcoc1712/falcon.git -b feature_DSD --single-branch';
-    $self->{GIT_USER}                           = 'falcon';
-    $self->{GIT_MAIL}                           = 'falcon@gmail.com';
-    
-    #TOBE REPLACED BEFORE RELEASE.
-    #$self->{DOWNLOAD_URL}                      = 'https://github.com/marcoc1712/falcon/archive/master.tar.gz';
-    $self->{DOWNLOAD_URL}                       = 'https://github.com/marcoc1712/falcon/archive/feature_DSD.tar.gz';
-    
-    #TOBE REPLACED BEFORE RELEASE.
-    #$self->{FOLDER_IN_ARCHIVE}                      = 'falcon-master';
-    $self->{FOLDER_IN_ARCHIVE}                       = 'falcon-feature_DSD';
+    $self->{FALCON_SUDOERS}                     = '/etc/sudoers.d/falcon';
+    $self->{FALCON_SUDOERS_SOURCE}              = '/var/www/falcon/falcon/resources/install/debian/systemRoot/etc/sudoers.d/falcon';
 
     #TOBE REPLACED BEFORE RELEASE.
     $self->{SQUEEZELITE_R2_X86_64_WGET_STRING}  = 'https://github.com/marcoc1712/squeezelite-R2/releases/download/v1.8.3-(R2)/squeezelite-R2-min-x86_64';
