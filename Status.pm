@@ -98,7 +98,35 @@ sub record {
         $self->{_gravity} = $gravity;
         $self->{_message} = $message;
     }
+    printLine();)
 }
+sub printDetailed{
+    my $self = shift;
+    my $id = shift;
+    
+    print " - Time       : ".$self->{_lines}->{$id}->{'time'}."\n";
+    print " - Package    : ".$self->{_lines}->{$id}->{'package'}."\n";
+    print " - Filename   : ".$self->{_lines}->{$id}->{'filename'}."\n";
+    print " - Line       : ".$self->{_lines}->{$id}->{'line'}."\n";
+    print " - Subroutine : ".$self->{_lines}->{$id}->{'subroutine'}."\n";
+    print " - Command    : ".$self->{_lines}->{$id}->{'command'}."\n";
+    print " - Gravity    : ".$self->_gravityCodeToDesc($self->{_lines}->{$id}->{'gravity'})."\n";
+    print " - Message    : ".$self->{_lines}->{$id}->{'message'}."\n";
+    print " - Details    : ".$self->{_lines}->{$id}->{'details'}."\n";
+    print "\n";
+    
+}
+printLine{
+    my $self = shift;
+    my $id = shift;
+    
+    print $self->{_lines}->{$id}->{'time'}." - ".
+          $self->{_lines}->{$id}->{'filename'}." line: ".
+          $self->{_lines}->{$id}->{'line'}." - ".
+          $self->_gravityCodeToDesc($self->{_lines}->{$id}->{'gravity'})." : ".
+          $self->{_lines}->{$id}->{'message'}."\n";
+}
+
 sub printout{
     my $self = shift;
     my $filter = shift || ($self->isDebug() ? 1 : 5);
@@ -108,17 +136,8 @@ sub printout{
     my $in = $self->getLines($filter); 
     
     for my $id (sort keys %$in){
-    
-        print " - Time       : ".$self->{_lines}->{$id}->{'time'}."\n";
-        print " - Package    : ".$self->{_lines}->{$id}->{'package'}."\n";
-        print " - Filename   : ".$self->{_lines}->{$id}->{'filename'}."\n";
-        print " - Line       : ".$self->{_lines}->{$id}->{'line'}."\n";
-        print " - Subroutine : ".$self->{_lines}->{$id}->{'subroutine'}."\n";
-        print " - Command    : ".$self->{_lines}->{$id}->{'command'}."\n";
-        print " - Gravity    : ".$self->_gravityCodeToDesc($self->{_lines}->{$id}->{'gravity'})."\n";
-        print " - Message    : ".$self->{_lines}->{$id}->{'message'}."\n";
-        print " - Details    : ".$self->{_lines}->{$id}->{'details'}."\n";
-        print "\n";
+        
+       printprintDetailed($id);
     }
     print "\n";
     
