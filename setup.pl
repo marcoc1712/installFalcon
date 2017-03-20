@@ -312,7 +312,7 @@ sub finalize {
         return 0;
     }  
     
-    move getcwd."/".$installerDir, $src;
+    move getcwd."/".$installerDir, $srcInstaller;
 
     if (-e $installerDir || !-e $srcInstaller){
 
