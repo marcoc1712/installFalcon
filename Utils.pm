@@ -113,6 +113,7 @@ sub mkDir{
         }
        
         $self->getStatus()->record(" mkdir ".$dir.", 0755",1, 'created','');
+        return 1;
         
     } else{
         
