@@ -62,7 +62,7 @@ main();
 
 sub main{
     
-    $userHome = getvwd;
+    $userHome = getcwd;
     
     print "\n* FALCON INSTALLER SETUP **********************************************\n";
     
@@ -318,25 +318,6 @@ sub finalize {
     }
     print "Info: ".$installerDir." moved to ".$srcInstaller."\n";
     return 1; 
-    
-    if (ISLINUX){
-
-        my $command = qq(mv $installerDir $srcInstaller);
-        my @ret= `$command`;
-        my $err=$?;
-
-        if ($err){
-            print "Fatal: ".$err."\n";
-            print (join "\n", @ret);
-            die;
-        }  
-    
-    }else {
-
-        #warn "Architecture: $^O is not supported yet";
-        #return 0; 
-    }
-    return 1;
 }
 sub loadInstallers{
     
