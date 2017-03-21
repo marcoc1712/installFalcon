@@ -45,6 +45,7 @@ use constant NOINFO       => ( grep { /--noinfo/ } @ARGV ) ? 1 : 0;
 
 my $verbosity = ISDEBUG ? 1 : NOINFO ? 5 : 3; #5 is warning.
 
+my $userHome;
 my $installer;
 my $src;
  
@@ -61,11 +62,15 @@ main();
 
 sub main{
     
+    $userHome = getvwd;
+    
     print "\n* FALCON INSTALLER SETUP **********************************************\n";
     
     print "Options: ";
     print join ", ", @ARGV;
     print "\n";
+    
+    print "Started in: ".$userHome;
     
     print "\n** PREPARE ************************************************************\n";
 
@@ -177,7 +182,7 @@ sub prepare{
         
         move $extracted, $installerDir;
 
-        if (-e $extracted && !-e $installerDir){
+        if (-e $extracted || !-e $installerDir){
 
             print "Fatal: can't rename $extracted to $installerDir\n";
             die;  
@@ -216,10 +221,6 @@ sub prepare{
 
 sub execute{
 
-    my $err;
-    
-    print "\n\n";
-    
     if (REMOVE){
 
         print "\n*** REMOVE ************************************************************\n";
@@ -256,8 +257,11 @@ sub execute{
     return 1;
 }
 sub finalize {
+
+    chdir $userHome;
     
     my $srcInstaller= $src."/Installer";
+    
     if (-d $srcInstaller){
         
         rmtree( $srcInstaller, {error => \my $msg} );
@@ -301,7 +305,17 @@ sub finalize {
             return 0;
         }
         return 1;
-    } 
+    }
+    
+    move $installerDir, $srcInstaller;
+        
+    if (-e $installerDir || !-e $srcInstaller){
+
+        print "Fatal: can't move $installerDir to $srcInstaller - $!\n";
+        die;  
+    }
+    print "Info: ".$installerDir." moved to ".$srcInstaller."\n";
+    return 1; 
     
     if (ISLINUX){
 
@@ -317,8 +331,8 @@ sub finalize {
     
     }else {
 
-        warn "Architecture: $^O is not supported yet";
-        return 0; 
+        #warn "Architecture: $^O is not supported yet";
+        #return 0; 
     }
     return 1;
 }
