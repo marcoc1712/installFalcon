@@ -220,7 +220,9 @@ sub prepare{
 }
 
 sub execute{
-
+    
+    my $err;
+    
     if (REMOVE){
 
         print "\n*** REMOVE ************************************************************\n";
