@@ -58,9 +58,8 @@ sub new{
     $self->{FALCON_SUDOERS}                     = '/etc/sudoers.d/falcon';
     $self->{FALCON_SUDOERS_SOURCE}              = '/var/www/falcon/falcon/resources/install/debian/systemRoot/etc/sudoers.d/falcon';
 
-    #TOBE REPLACED BEFORE RELEASE.
-    $self->{SQUEEZELITE_R2_X86_64_WGET_STRING}  = 'https://github.com/marcoc1712/squeezelite-R2/releases/download/v1.8.3-(R2)/squeezelite-R2-min-x86_64';
-    $self->{SQUEEZELITE_R2_i86_WGET_STRING}     = 'https://github.com/marcoc1712/squeezelite-R2/releases/download/v1.8.3-(R2)/squeezelite-R2-min-i386';
+    $self->{SQUEEZELITE_R2_X86_64_WGET_STRING}  = 'https://github.com/marcoc1712/squeezelite-R2/releases/download/v1.8.4-(R2)/squeezelite-R2-deb-x86_64';
+    $self->{SQUEEZELITE_R2_i86_WGET_STRING}     = 'https://github.com/marcoc1712/squeezelite-R2/releases/download/v1.8.4-(R2)/squeezelite-R2-deb-i386';
 
     $self->{SQUEEZELITE_R2_LOG}                 = '/var/log/squeezelite-R2';
     
