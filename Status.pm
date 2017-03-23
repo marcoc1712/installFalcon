@@ -187,11 +187,9 @@ sub _gravityDescToCode{
     my $gravity= shift;
     
     if (!$gravity){return 0;}
-    
-    if (_isAnumber($gravity)) {return $self->_gravityCodeToDesc($gravity);}
-    
     if (exists $revGravityMap{$gravity}){return $revGravityMap{$gravity};}
-    
+    if (exists $gravityMap{$gravity}){return  $gravity;}
+
     $self->record('','FATAL', $gravity." is not a vailid gravity",_getCaller());
     return 9;#fatal
 }
@@ -201,29 +199,18 @@ sub _gravityCodeToDesc{
     
     if (!$gravity){return 'OK';}
     if (exists $gravityMap{$gravity}){return $gravityMap{$gravity};}
+    if (exists $revGravityMap{$gravity}){return $gravity;}
     
-    if (_isAnumber($gravity)){
-         
-         my $int = int($gravity);
+    my $int = int($gravity);
     
-        if (!$int){return 'OK';}
-        if (exists $gravityMap{$int}){return $gravityMap{$int};}
-        if (exists $revGravityMap{$int}){return $int;}
-        
-    }
-
+    if (!$int){return 'OK';}
+    if (exists $gravityMap{$int}){return $gravityMap{$int};}
+    if (exists $revGravityMap{$int}){return $int;}
+    
     $self->record('','FATAL', $gravity." is not a vaild gravity",_getCaller());
     return 'FATAL';
     
 }
-
-sub _isAnumber{
-    local $_ = shift;
-    
-    if (/^-?(?:\d+(?:\.\d*)?|\.\d+)$/) {return 1};
-    return 0;
-}
-
 sub _getCaller{
     
     my ($package, $filename, $line, $subroutine) = caller(2);
