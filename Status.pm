@@ -70,7 +70,7 @@ sub getVerbosity{
 sub isDebug{
     my $self = shift;
     
-    return $self->{_verbosity} < 3;
+    return ($self->getVerbosity() < 3);
 }
 sub getUtils{
     my $self = shift;
