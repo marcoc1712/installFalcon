@@ -57,6 +57,8 @@ sub install{
     }
      
     if (!$self->getUtils()->aptGetInstall('lighttpd')){return undef};
+    print $self;
+    die;
     if (!$self->SUPER::_config()){return undef;}
     
     $self->getUtils()->serviceStart('lighttpd');
