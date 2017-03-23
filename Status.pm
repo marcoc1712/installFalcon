@@ -100,8 +100,7 @@ sub record {
     $self->{_lines}->{$id}->{'details'}     =$details;
     
     print $gravity. " - ".$self->{_gravity}." - ".$in."\n";
-    
-    
+
     if ($gravity > $self->{_gravity}){
 
         $self->{_gravity} = $gravity;
@@ -197,7 +196,7 @@ sub _gravityDescToCode{
     if (_isAnumber($gravity)){
          
         my $int = int($gravity);    
-        if (exists $gravityMap{$int}){return $int;}
+        if (exists $gravityMap{$int}){return $gravity;}
     }
     $self->record('','FATAL', $gravity." is not a vailid gravity",_getCaller());
     return 9;#fatal
