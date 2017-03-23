@@ -30,14 +30,14 @@ use utf8;
 my %gravityMap = (
    
    0 => 'OK',
-   1 => 'DEBUG',
+   1 => 'VERBOSE',
    2 => 'DEBUG',
-   3 => 'INFO',
+   3 => 'DETAILS',
    4 => 'INFO',
    5 => 'WARNING',
-   6 => 'WARNING',
+   6 => 'UNEXPECTED',
    7 => 'ERROR',
-   8 => 'ERROR',
+   8 => 'SEVERE',
    9 => 'FATAL',
 );
 
@@ -200,6 +200,12 @@ sub _gravityCodeToDesc{
     if (!$gravity){return 'OK';}
     if (exists $gravityMap{$gravity}){return $gravityMap{$gravity};}
     if (exists $revGravityMap{$gravity}){return $gravity;}
+    
+    my $int = int($gravity);
+    
+    if (!$int){return 'OK';}
+    if (exists $gravityMap{$int}){return $gravityMap{$int};}
+    if (exists $revGravityMap{$int}){return $int;}
     
     $self->record('','FATAL', $gravity." is not a vaild gravity",_getCaller());
     return 'FATAL';
