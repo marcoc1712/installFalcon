@@ -153,9 +153,11 @@ sub _config{
     if (-e $self->getConf() && 
         ! -e $before && 
         !$self->getUtils()->saveBUAndRemove($self->getConf(),$before)){return undef;}
-   
+    $self->getStatus()->record(" ",2,$self->getConf()." saved into ".$before,'');
+    
     if (-e $self->getConf() && 
         !$self->getUtils()->saveBUAndRemove($self->getConf(),$current)){return undef;}
+    $self->getStatus()->record(" ",2,$self->getConf()." saved into ".$current,'');
    
     if (!$self->getUtils()->copyFile($self->getConfSource, $self->getConf())){
         
@@ -164,7 +166,7 @@ sub _config{
         
         return undef;
     }
-    
+    $self->getStatus()->record(" ",2,$self->getConfSource()." copied into ".$self->getConf(),'');
     return $self->_createLog();
 }
 sub _cleanUp{
