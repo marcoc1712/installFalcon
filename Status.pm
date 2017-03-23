@@ -191,12 +191,14 @@ sub _gravityDescToCode{
     my $gravity= shift;
     
     if (!$gravity){return 0;}
-    
-    if (_isAnumber($gravity)) {return $self->_gravityCodeToDesc($gravity);}
-    
     if (exists $revGravityMap{$gravity}){return $revGravityMap{$gravity};}
+    if (exists $gravityMap{$gravity}){ return $gravity;}
     
-
+    if (_isAnumber($gravity)){
+         
+        my $int = int($gravity);    
+        if (exists $gravityMap{$int}){return $int;}
+    }
     $self->record('','FATAL', $gravity." is not a vailid gravity",_getCaller());
     return 9;#fatal
 }
