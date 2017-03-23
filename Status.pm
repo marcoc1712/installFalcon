@@ -30,10 +30,10 @@ use utf8;
 my %gravityMap = (
    
    0 => 'OK',
-   1 => 'VERBOSE',
-   2 => 'DEBUG',
-   3 => 'DETAILS',
-   4 => 'INFO',
+   1 => 'DEBUG',
+   2 => 'DETAILS',
+   3 => 'INFO',
+   4 => 'RESULT',
    5 => 'WARNING',
    6 => 'UNEXPECTED',
    7 => 'ERROR',
