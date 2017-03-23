@@ -143,7 +143,7 @@ sub serviceStart{
     my $self       = shift;
     my $service     = shift;
     
-    my $command = qq(service $service start || exit $?);
+    my $command = qq(service $service restart || exit $?);
     
     if ( -x "/etc/init.d/".$service ){
     
