@@ -85,8 +85,7 @@ sub record {
     #my $id = $filename." line: ".$line.;
     
     my $id = $self->getUtils()->getTimestamp();
-    
-    my $in = $gravity;
+
     $gravity=$self->_gravityDescToCode($gravity);
 
     $self->{_lines}->{$id}->{'time'}        =$self->getUtils()->getNiceTimeString($id);
@@ -99,8 +98,6 @@ sub record {
     $self->{_lines}->{$id}->{'message'}     =$message;
     $self->{_lines}->{$id}->{'details'}     =$details;
     
-    print $gravity. " - ".$self->{_gravity}." - ".$in."\n";
-
     if ($gravity > $self->{_gravity}){
 
         $self->{_gravity} = $gravity;
@@ -128,6 +125,8 @@ sub printout{
         }
         print "\n";
     }
+    
+    my $gravity=$self->_gravityDescToCode($self->getGravity());
     
     if ($gravity ge $filter){
         print "STATUS : ".$self->getGravity()."\n";
