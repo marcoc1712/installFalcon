@@ -66,4 +66,10 @@ sub install{
 ################################################################################
 # privates
 #
+_config {
+    my $self    = shift;
+     
+    if (!$self->SUPER::_config()){return undef;}
+    return 1;
+}
 1;
