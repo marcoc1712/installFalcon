@@ -99,7 +99,7 @@ sub record {
     $self->{_lines}->{$id}->{'message'}     =$message;
     $self->{_lines}->{$id}->{'details'}     =$details;
     
-    print $gravity. " -".$self->{_gravity}-" - ".$in."\n";
+    print $gravity. " - ".$self->{_gravity}." - ".$in."\n";
     
     
     if ($gravity > $self->{_gravity}){
