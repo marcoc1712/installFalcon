@@ -153,7 +153,7 @@ sub install {
         
     if (!$self->getWebServer()->auto()){return undef;}; 
     $self->getStatus()->record('install webserver',3, 'ok','');
-    $self->getStatus()->record( "install",4, "falcon correctly installed!",'');
+    $self->getStatus()->record( "install",4.2, "falcon correctly installed!",'');
     return 1;
 }
 sub remove{
@@ -188,7 +188,7 @@ sub remove{
     
     if (!$self->cleanUp()){return undef;}
     $self->getStatus()->record( "remove falcon data and backups",3, "ok",'');
-    $self->getStatus()->record( "remove",4, "falcon removed!",'');
+    $self->getStatus()->record( "remove",4.1, "falcon removed!",'');
     return 1;
 }
 

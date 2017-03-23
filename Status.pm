@@ -188,7 +188,7 @@ sub _gravityDescToCode{
     
     if (!$gravity){return 0;}
     
-    if (_isAnumber($gravity)) {return _gravityCodeToDesc($gravity);}
+    if (_isAnumber($gravity)) {return $self->_gravityCodeToDesc($gravity);}
     
     if (exists $revGravityMap{$gravity}){return $revGravityMap{$gravity};}
     
