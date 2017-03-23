@@ -93,6 +93,12 @@ sub prepare{
     };
     $self->getStatus()->record('aptGetInstall',2, "package: libcgi-pm-perl installed",'');
     
+     if (!$self->getUtils()->aptGetInstall('alsa-utils')){
+        $self->getStatus()->record('prepare',7, "cant install package: alsa-utils",'');
+        return undef
+    };
+    $self->getStatus()->record('aptGetInstall',2, "package: alsa-utils installed",'');
+    
     return 1
 }
 1;
