@@ -47,7 +47,7 @@ sub aptGetInstall{
     my $self   = shift;
     my $pack   = shift;
      
-    my $command = qq(apt-get install $pack);
+    my $command = qq(apt-get install -y $pack);
 
     my ($err, @answ)= $self->executeCommand($command);
     
