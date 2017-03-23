@@ -27,8 +27,9 @@ use warnings;
 use utf8;
 
 use Linux::Settings;
+use Linux::Debian::Distro
 use Linux::Gentoo::Distro;
-use Linux::Debian::Distro;
+;
 
 use base qw(Installer);
 
