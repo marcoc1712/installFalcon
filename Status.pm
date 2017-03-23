@@ -122,7 +122,7 @@ sub printout{
     
     $filter = $self->_gravityDescToCode($filter);
      
-    if (! $self->isDebug()){ #in debug prints single lines diretly.
+    if (!$self->isDebug()){ #in debug prints single lines diretly.
 
         my $in = $self->getLines($filter); 
 
