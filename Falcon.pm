@@ -69,14 +69,14 @@ sub isInstalled{
 }
 sub install{
     my $self    = shift;
-    my $noGit   = shift;
+    my $git     = shift;
     
     $self->getStatus()->record('',5, "not implemented yet",'');
     return undef;
 }
 sub upgrade{
     my $self    = shift;
-    my $noGit   = shift;
+    my $git     = shift;
     
     $self->getStatus()->record('',5, "not implemented yet",'');
     return undef;
@@ -89,15 +89,15 @@ sub remove{
 }
 sub auto {
     my $self    = shift;
-    my $noGit   = shift;
+    my $git     = shift;
      
     if (!$self->isInstalled()){
 
-        return $self->install($noGit);
+        return $self->install($git);
 
     } else {
 
-        return $self->upgrade($noGit);
+        return $self->upgrade($git);
     }
 }
 1;

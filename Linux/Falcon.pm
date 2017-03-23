@@ -65,17 +65,12 @@ sub isInstalled{
 
 sub install{
     my $self    = shift;
-    my $noGit   = shift || 0;
+    my $git     = shift || 0;
 
     if (!$self->_removeAll()) {return undef;}
     
-    if ($noGit){
-        
-        if (!$self->download()) {return undef;}
-        
-    } else {
-        
-        if (!$self->getGit()){
+    if ($git){
+                if (!$self->getGit()){
 
             $self->getStatus()->record('',9, "cant load git installer",'');
             return undef;
@@ -89,6 +84,11 @@ sub install{
         if (!$self->getGit()->gitClone()) {return undef;}
         if (!$self->getGit()->gitConfigureUser()) {return undef;}
         if (!$self->getGit()->gitConfigureMail()) {return undef;}
+       
+        
+    } else {
+        
+        if (!$self->download()) {return undef;}
     
     }
     if (!$self->_finalize()) {return undef;}
@@ -99,19 +99,19 @@ sub install{
 
 sub upgrade{
     my $self    = shift;
-    my $noGit   = shift || 0;
+    my $git   = shift || 0;
 
     #save current situation and install the new one
     if (!$self->_saveBackUp()) {return undef;}
     #if (!$self->_removeCode()) {return undef;}
     
-    if ($noGit){
+    if ($git){
         
-        if (!$self->download()) {return undef;}
-        
+        if (!$self->getGit()->gitPull()) {return undef;}
+
     } else {
 
-        if (!$self->getGit()->gitPull()) {return undef;}
+        if (!$self->download()) {return undef;}
     }
 
     if (!$self->_finalize()) {return undef;}

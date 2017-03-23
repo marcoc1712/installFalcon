@@ -31,7 +31,7 @@ use Status;
 sub new{
     my $class 	= shift;
     my $isDebug = shift || 0;
-    my $noGit   = shift || 0;
+    my $git     = shift || 0;
     
     
     my $self = bless {        
@@ -44,7 +44,7 @@ sub new{
     $self->{_status}    = Status->new($isDebug);
     $self->{_utils}     = Utils->new($self->{_status});
     $self->{_settings}  = Settings->new();
-    $self->{_noGit }    = Status->new($noGit);
+    $self->{_git }    = $git;
     
     return $self;
 }
@@ -63,10 +63,10 @@ sub isDebug{
     
     return $self->getStatus()->isDebug();
 }
-sub noGit{
+sub git{
     my $self = shift;
     
-    return $self->{_noGit};
+    return $self->{_git};
 }
 sub getUtils{
     my $self = shift;
@@ -133,7 +133,7 @@ sub install {
         $self->getStatus()->record('',9, "cant load falcon installer",'');
         return undef;
     }
-    if (!$self->getFalcon()->auto($self->noGit())){return undef;}
+    if (!$self->getFalcon()->auto($self->git())){return undef;}
     $self->getStatus()->record('install falcon code',3, 'ok','');
 
     if (!$self->getSqueezelite()){

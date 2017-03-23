@@ -31,9 +31,9 @@ use base qw(Installer);
 sub new{
     my $class 	= shift;
     my $isDebug = shift || 0;
-    my $noGit   = shift || 0;
+    my $git     = shift || 0;
     
-    my $self=$class->SUPER::new($isDebug, $noGit);
+    my $self=$class->SUPER::new($isDebug, $git);
     
     bless $self, $class;  
 
