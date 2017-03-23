@@ -45,7 +45,7 @@ use constant ISDEBUG      => ( grep { /--debug/ } @ARGV ) ? 1 : 0;
 use constant NODETAILS    => ( grep { /--nodetails/ } @ARGV ) ? 1 : 0;
 use constant NOINFO       => ( grep { /--noinfo/ } @ARGV ) ? 1 : 0;
 
-my $verbosity = IS VERBOSE ? 0 : ISDEBUG ? 1 : NODETAILS ? NOINFO ? 5 : 3 : 2; #5 is warning.
+my $verbosity = ISVERBOSE ? 0 : ISDEBUG ? 1 : NODETAILS ? NOINFO ? 5 : 3 : 2; #5 is warning.
 
 my $userHome;
 my $installer;
