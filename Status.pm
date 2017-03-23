@@ -129,8 +129,6 @@ sub printout{
         print "\n";
     }
     
-    my $gravity=$self->_gravityDescToCode($self->getGravity());
-    
     if ($gravity ge $filter){
         print "STATUS : ".$self->getGravity()."\n";
         if ($self->getMessage()){print "MESSAGE: ".$self->getMessage()."\n";}
