@@ -76,4 +76,21 @@ sub getWebServer{
     
     return $self->{_webserver};
 }
+sub prepare{
+    my $self    = shift;
+     
+    if (!$self->SUPER::prepare()){return undef;}
+    if (!$self->getUtils()->aptGetInstall('liburi-perl')){
+        $self->getStatus()->record('prepare',7, "cant install package: liburi-perl",'');
+        return undef};
+    $self->getStatus()->record('aptGetInstall',2, "package: liburi-perl installed",'');
+    
+    if (!$self->getUtils()->aptGetInstall('libcgi-pm-perl')){
+        $self->getStatus()->record('prepare',7, "cant install package: libcgi-pm-perl",'');
+        return undef
+    };
+    $self->getStatus()->record('aptGetInstall',2, "package: libcgi-pm-perl installed",'');
+    
+    return 1
+}
 1;

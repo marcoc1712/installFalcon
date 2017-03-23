@@ -85,10 +85,13 @@ sub prepare{
     if (!$self->getUtils()->emerge('dev-perl/URI')){
         $self->getStatus()->record('prepare',7, "can't emerge dev-perl/URI",'');
         return undef};
+    $self->getStatus()->record('emerge',2, "package: dev-perl/URI installed",'');
+    
     if (!$self->getUtils()->emerge('dev-perl/CGI')){
         $self->getStatus()->record('prepare',7, "can't emerge dev-perl/CGI",'');
         return undef
     };
+    $self->getStatus()->record('emerge',2, "package: dev-perl/CGI installed",'');
     
     return 1
 }

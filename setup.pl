@@ -226,19 +226,19 @@ sub execute{
     if (REMOVE){
 
         print "\n*** REMOVE ************************************************************\n";
-        if (!$installer->remove(ISDEBUG)){$err=1};
+        if (!$installer->remove()){$err=1};
 
     } elsif (CLEAN){
 
         print "\n*** CLEAN INSTALL *****************************************************\n";
 
-        if (!$installer->remove(ISDEBUG) || !$installer->install(ISDEBUG, NOGIT)) {$err=1};
+        if (!$installer->remove() || !$installer->install()) {$err=1};
 
     } else {
 
         print "\n*** INSTALL ***********************************************************\n";
 
-        if (!$installer->install(ISDEBUG, NOGIT)) {$err=1};
+        if (!$installer->install()) {$err=1};
     }
 
     if ($installer->getError()){

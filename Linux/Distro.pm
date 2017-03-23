@@ -81,14 +81,19 @@ sub prepare{
         $self->getStatus()->record('prepare',7, "can't create ".$self->getWWWDirectory(),'');
         return undef;
     }
+    $self->getStatus()->record('mkDir',2, "directory:".$self->getWWWDirectory()." created",'');
+    
     if (!$self->getUtils()->mkDir($self->getBackUpDirectory())){
         $self->getStatus()->record('prepare',7, "can't create ".$self->getBackUpDirectory(),'');
         return undef;
     }
+    $self->getStatus()->record('mkDir',2, "directory:".$self->getBackUpDirectory()." created",'');
+    
     if (!$self->getUtils()->mkDir($self->getBeforeBackUpDirectory())){
         $self->getStatus()->record('prepare',7, "can't create ".$self->getBeforeBackUpDirectory(),'');
         return undef;
     }
+    $self->getStatus()->record('mkDir',2, "directory:".$self->getBeforeBackUpDirectory()." created",'');
 
     return 1;
 }
