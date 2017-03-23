@@ -39,6 +39,8 @@ sub new{
     
     my $self=$class->SUPER::new($status);
     
+    $self->{_utils}        =  Linux::Debian::Utils->new($status);
+    $self->{_settings}     =  Linux::Debian::Settings->new($status);
     $self->{_falcon}       =  Linux::Debian::Falcon->new($status);
     $self->{_squeezelite}  =  Linux::Debian::Squeezelite->new($status),
     $self->{_webserver}    =  undef;
