@@ -72,7 +72,8 @@ sub main{
     print join ", ", @ARGV;
     print "\n";
     
-    print "Started in: ".$userHome;
+    print "Started in: ".$userHome."\n";;
+    print "verbosity:  ".$verbosity;
     
     print "\n** PREPARE ************************************************************\n";
 
