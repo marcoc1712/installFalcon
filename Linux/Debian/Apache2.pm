@@ -57,7 +57,7 @@ sub install{
     }
          
     if (!$self->getUtils()->aptGetInstall('apache2')){return undef};
-    if (!$self->_config()){return undef;}
+    if (!$self->SUPER::_config()){return undef;}
     
     $self->getUtils()->serviceStart('apache2');
 }
