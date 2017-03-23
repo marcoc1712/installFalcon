@@ -109,7 +109,7 @@ sub record {
         $self->{_gravity} = $gravity;
         $self->{_message} = $message;
     }
-    if (isDebug() && $self->getVerbosity() le $gravity) { 
+    if ($self->isDebug() && $self->getVerbosity() le $gravity) { 
         
         #inline printing.
         $self->_printDetailed($id);
