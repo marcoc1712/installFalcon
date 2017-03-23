@@ -29,9 +29,9 @@ use utf8;
 use Status;
 
 sub new{
-    my $class 	= shift;
-    my $isDebug = shift || 0;
-    my $git     = shift || 0;
+    my $class 	  = shift;
+    my $verbosity = shift || 0;
+    my $git       = shift || 0;
     
     
     my $self = bless {        
@@ -41,7 +41,7 @@ sub new{
 
     }, $class;
     
-    $self->{_status}    = Status->new($isDebug);
+    $self->{_status}    = Status->new($verbosity);
     $self->{_utils}     = Utils->new($self->{_status});
     $self->{_settings}  = Settings->new();
     $self->{_git }    = $git;
@@ -58,11 +58,6 @@ sub getStatus{
     return $self->{_status};
 }
 
-sub isDebug{
-    my $self = shift;
-    
-    return $self->getStatus()->isDebug();
-}
 sub git{
     my $self = shift;
     

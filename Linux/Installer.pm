@@ -33,11 +33,11 @@ use Linux::Gentoo::Distro;
 use base qw(Installer);
 
 sub new{
-    my $class 	= shift;
-    my $isDebug = shift || 0;
-    my $git   = shift || 0;
+    my $class 	  = shift;
+    my $verbosity = shift || 0;
+    my $git       = shift || 0;
     
-    my $self=$class->SUPER::new($isDebug, $git);
+    my $self=$class->SUPER::new($verbosity, $git);
     
     $self->{_distroName}           = undef;
     $self->{_distro}               = undef;
@@ -138,10 +138,7 @@ sub _initDistroName {
         return undef;
     
     }
-       if ($self->isDebug()){
-            
-            $self->getStatus()->record($command,1, "Distro: ".$self->{_distroName} ,'');
-    }
+    $self->getStatus()->record($command,1, "Distro: ".$self->{_distroName} ,'');
     return 1;
 }
 

@@ -29,11 +29,11 @@ use utf8;
 use base qw(Installer);
 
 sub new{
-    my $class 	= shift;
-    my $isDebug = shift || 0;
-    my $git     = shift || 0;
+    my $class 	  = shift;
+    my $verbosity = shift || 0;
+    my $git       = shift || 0;
     
-    my $self=$class->SUPER::new($isDebug, $git);
+    my $self=$class->SUPER::new($verbosity, $git);
     
     bless $self, $class;  
 

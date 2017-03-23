@@ -56,9 +56,8 @@ sub emerge{
         $self->getStatus()->record($command,7, $err,(join "/n", @answ));
         return undef;
     }
-    if ($self->isDebug()){
-        $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
-    }
+    
+    $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
     return 1;
 } 
 sub rcUpdateAddDefaults{

@@ -40,10 +40,12 @@ use constant ISLINUX      => ( $^O =~ /linux/i ) ? 1 : 0;
 use constant REMOVE       => ( grep { /--remove/ } @ARGV ) ? 1 : 0;
 use constant CLEAN        => ( grep { /--clean/ } @ARGV ) ? 1 : 0;
 use constant NOGIT        => ( grep { /--nogit/ } @ARGV ) ? 1 : 0;
+use constant ISVERBOSE    => ( grep { /--verbose/ } @ARGV ) ? 1 : 0;
 use constant ISDEBUG      => ( grep { /--debug/ } @ARGV ) ? 1 : 0;
+use constant NODETAILS    => ( grep { /--nodetails/ } @ARGV ) ? 1 : 0;
 use constant NOINFO       => ( grep { /--noinfo/ } @ARGV ) ? 1 : 0;
 
-my $verbosity = ISDEBUG ? 1 : NOINFO ? 5 : 3; #5 is warning.
+my $verbosity = IS VERBOSE ? 0 : ISDEBUG ? 1 : NODETAILS ? NOINFO ? 5 : 3 : 2; #5 is warning.
 
 my $userHome;
 my $installer;
@@ -197,18 +199,18 @@ sub prepare{
         }
       
         loadInstallers();
-        $installer= Linux::Installer->new(ISDEBUG, NOGIT);
+        $installer= Linux::Installer->new($verbosity, NOGIT);
 
     } elsif(ISMAC){
         
         loadInstallers();
-        $installer= Mac::Installer->new(ISDEBUG, NOGIT);
+        $installer= Mac::Installer->new($verbosity, NOGIT);
         return 0; 
 
     } elsif(ISWINDOWS){
         
         loadInstallers();
-        $installer= Windows::Installer->new(ISDEBUG, NOGIT);
+        $installer= Windows::Installer->new($verbosity, NOGIT);
         return 0; 
 
     }else {
@@ -328,8 +330,8 @@ sub loadInstallers{
     require Windows::Installer;
     
     my $dummy;
-    $dummy= Linux::Installer->new(ISDEBUG, NOGIT);
-    $dummy= Mac::Installer->new(ISDEBUG, NOGIT);
-    $dummy= Windows::Installer->new(ISDEBUG, NOGIT);
+    $dummy= Linux::Installer->new($verbosity, NOGIT);
+    $dummy= Mac::Installer->new($verbosity, NOGIT);
+    $dummy= Windows::Installer->new($verbosity, NOGIT);
 }
 1;

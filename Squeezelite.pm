@@ -45,11 +45,6 @@ sub getStatus{
     
     return $self->{_status};
 }
-sub isDebug{
-    my $self = shift;
-    
-    return $self->getStatus()->isDebug();
-}
 
 ################################################################################
 # tobe overidden

@@ -45,26 +45,32 @@ my %revGravityMap = reverse %gravityMap;
 
 sub new{   
     my $class = shift;
-    my $isDebug = shift || 0;
+    my $verbosity = shift || 0;
     
     my %lines = ();
     
     my $self = bless {
-       _startedAt   => time,
-       _gravity     => 0,
-       _message     => '',
-       _lines       => \ %lines,
-       _isDebug     => $isDebug,
+       _startedAt     => time,
+       _gravity       => 0,
+       _message       => '',
+       _lines         => \ %lines,
+       _verbosity     => $verbosity,
         
     }, $class;
     
     $self->{_utils}   =  Utils->new($self);
     return $self;
 }
+sub getVerbosity{
+    my $self = shift;
+    
+    return $self->{_verbosity};
+}
+
 sub isDebug{
     my $self = shift;
     
-    return $self->{_isDebug};
+    return $self->{_verbosity} < 3;
 }
 sub getUtils{
     my $self = shift;
@@ -103,15 +109,14 @@ sub record {
         $self->{_gravity} = $gravity;
         $self->{_message} = $message;
     }
-    if ($self->isDebug()){
+    if (if isDebug() && $self->getVerbosity() le $gravity) #inline printing.
         $self->_printDetailed($id);
     }
 }
 
 sub printout{
     my $self = shift;
-    my $filter = shift || ($self->isDebug() ? 1 : 5);
-    
+    my $filter = shift || $self->getVerbosity();
     
     $filter = $self->_gravityDescToCode($filter);
      
@@ -159,7 +164,7 @@ sub getMessage{
 
 sub getLines{
     my $self = shift;
-    my $filter = shift || ($self->isDebug() ? 1 : 5);
+    my $filter = shift || $self->getVerbosity();
     
     $filter =  $self->_gravityDescToCode($filter);
     
