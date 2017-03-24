@@ -134,7 +134,8 @@ sub printout{
 
         for my $id (sort keys %$in){
 
-           $self->_print($id,$self->getVerbosity());
+           #$self->_print($id,$self->getVerbosity());
+           $self->_print($id,4);
         }
         print "\n";
     }
