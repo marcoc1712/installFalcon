@@ -26,9 +26,13 @@ Please contact me if interested in porting Falcon in your distro.
 
 INSTALLATION GUIDE:
 
-Please login to your system as root and download:
+Please login to your system as root and download setup.pl
 
-https://raw.githubusercontent.com/marcoc1712/installFalcon/master/setup.pl
+from here: https://raw.githubusercontent.com/marcoc1712/installFalcon/master/setup.pl
+
+PLEASE COPY THE LINK NON THE DISPLAYED TEXT
+
+i.e. "wget https://raw.githubusercontent.com/marcoc1712/installFalcon/master/setup.pl";
 
 Remember to chmod +x setup.pl
 
