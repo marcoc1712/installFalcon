@@ -121,7 +121,7 @@ sub install {
     my $self = shift;
     
     if (!$self->prepare()){return undef;}
-    $self->getStatus()->record('prepare',3, 'environment prepared','');
+    $self->getStatus()->record('',3, 'environment prepared','');
     
     if (!$self->getFalcon()){
         
@@ -129,7 +129,7 @@ sub install {
         return undef;
     }
     if (!$self->getFalcon()->auto($self->git())){return undef;}
-    $self->getStatus()->record('install falcon code',3, 'falcon code installed','');
+    $self->getStatus()->record('',3, 'falcon code installed','');
 
     if (!$self->getSqueezelite()){
         
@@ -138,7 +138,7 @@ sub install {
     }
     
     if (!$self->getSqueezelite()->auto()){return undef;}
-    $self->getStatus()->record('install squeezelite-R2',3, 'squeezelite-R2 installed','');
+    $self->getStatus()->record('',3, 'squeezelite-R2 installed','');
     
     if (!$self->getWebServer()){
         
@@ -147,9 +147,9 @@ sub install {
     }
         
     if (!$self->getWebServer()->auto()){return undef;}; 
-    $self->getStatus()->record('install webserver',3, 'webserver installed','');
+    $self->getStatus()->record('',3, 'webserver installed','');
     
-    $self->getStatus()->record( "install",4.2, "falcon correctly installed!",'');
+    $self->getStatus()->record( "",4.2, "falcon correctly installed!",'');
     return 1;
 }
 sub remove{
@@ -162,16 +162,16 @@ sub remove{
     }
     
     if (!$self->getWebServer()->remove()){return undef;};
-    $self->getStatus()->record( "remove Webserver",3, "ok",'');
+    $self->getStatus()->record( "",3, "webserver removed",'');
    
     if (!$self->getSqueezelite()){
         
-        $self->getStatus()->record('',9, "cant load squeezelite installer",'');
+        $self->getStatus()->record('',9, "cant load squeezelite-R2 installer",'');
         return undef;
     }
     
     if (!$self->getSqueezelite()->remove()){return undef;}
-    $self->getStatus()->record( "remove Squeezelite",3, "ok",'');
+    $self->getStatus()->record( "",3, "squeezelite-R2 removed",'');
     
     if (!$self->getFalcon()){
         
@@ -180,11 +180,11 @@ sub remove{
     }
     
     if (!$self->getFalcon()->remove()){return undef;}
-    $self->getStatus()->record( "remove falcon code",3, "ok",'');
+    $self->getStatus()->record( "",3, "falcon code removed",'');
     
     if (!$self->cleanUp()){return undef;}
-    $self->getStatus()->record( "remove falcon data and backups",3, "ok",'');
-    $self->getStatus()->record( "remove",4.1, "falcon removed!",'');
+    $self->getStatus()->record( "",3, " falcon data and backups removed",'');
+    $self->getStatus()->record( "",4.1, "falcon removed!",'');
     return 1;
 }
 
