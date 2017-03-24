@@ -128,18 +128,15 @@ sub printout{
     if ($filter < 3 ){$filter = 2} # Debug and details are printed inline.
     
     $filter = $self->_gravityDescToCode($filter);
-     
-    #if (!$self->isDebug()){ #in debug prints single lines diretly.
 
-        my $in = $self->getLines($filter); 
+    my $in = $self->getLines($filter); 
 
-        for my $id (sort keys %$in){
+    for my $id (sort keys %$in){
 
-           #$self->_print($id,$self->getVerbosity());
-           $self->_print($id,5); 
-        }
-        print "\n";
-    #}
+       $self->_print($id,5); 
+    }
+    
+    print "\n";
     
     my $gravity=$self->_gravityDescToCode($self->getGravity());
     

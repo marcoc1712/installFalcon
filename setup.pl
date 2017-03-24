@@ -66,7 +66,7 @@ sub main{
     
     $userHome = getcwd;
     
-    print "\n* FALCON INSTALLER SETUP **********************************************\n";
+    print "\n* FALCON INSTALLER SETUP **********************************************\n\n";
     
     print "Options: ";
     print join ", ", @ARGV;
@@ -74,19 +74,19 @@ sub main{
     
     print "Started in: ".$userHome."\n";
        
-    print "\n** PREPARE ************************************************************\n";
+    print "\n** PREPARE ************************************************************\n\n";
 
     if (!prepare()){return undef;}
 
-    print "\n** EXECUTE ************************************************************\n";
+    print "\n** EXECUTE ************************************************************\n\n";
     
     if (!execute()){return undef;}
    
-    print "\n** CLEANUP ************************************************************\n";
+    print "\n** CLEANUP ************************************************************\n\n";
     
     if (!finalize()){return undef;}
     
-    print "\n* END *****************************************************************\n";
+    print "\n* END *****************************************************************\n\n";
     
     return 1;
 }
@@ -161,7 +161,7 @@ sub prepare{
         unlink $archive;
         unlink $targetTar;
         
-        my $command = qq(wget $url);
+        my $command = qq(wget --no-check-certificate $url);
         my @ret= `$command`;
         my $err=$?;
 
@@ -227,18 +227,18 @@ sub execute{
     
     if (REMOVE){
 
-        print "\n*** REMOVE ************************************************************\n";
+        print "\n*** REMOVE ************************************************************\n\n";
         if (!$installer->remove()){$err=1};
 
     } elsif (CLEAN){
 
-        print "\n*** CLEAN INSTALL *****************************************************\n";
+        print "\n*** CLEAN INSTALL *****************************************************\n\n";
 
         if (!$installer->remove() || !$installer->install()) {$err=1};
 
     } else {
 
-        print "\n*** INSTALL ***********************************************************\n";
+        print "\n*** INSTALL ***********************************************************\n\n";
 
         if (!$installer->install()) {$err=1};
     }
@@ -248,12 +248,12 @@ sub execute{
         loadInstallers();
         
         print "\n\n";
-        print "\n*** INSTALL REPORT ****************************************************\n";
+        print "\n*** INSTALL REPORT ****************************************************\n\n";
         $installer->getStatus()->printout($verbosity);
 
     } elsif ($err){
         
-        print "\n*** ERROR *************************************************************\n";
+        print "\n*** ERROR *************************************************************\n\n";
         print "\n something went wrong.\n";
         
         return 0; 

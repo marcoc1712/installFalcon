@@ -165,7 +165,7 @@ sub wget{
      my $self   = shift;
      my $url    = shift;
      
-    my $command = qq(wget "$url");
+    my $command = qq(wget --no-check-certificate "$url");
 
     my ($err, @answ)= $self->executeCommand($command);
     
