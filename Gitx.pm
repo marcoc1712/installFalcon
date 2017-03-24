@@ -131,7 +131,7 @@ sub gitConfigureUser{
         $self->getStatus()->record($command,7, $err,(join '\n', @answ));
         return undef;
     }
-    $self->getStatus()->record($command,3, $err ? $err : 'done',(join '\n', @answ));
+    $self->getStatus()->record($command,1, $err ? $err : 'done',(join '\n', @answ));
     
     return 1;
 
@@ -158,7 +158,7 @@ sub gitConfigureMail{
         $self->getStatus()->record($command,7, $err,(join '\n', @answ));
         return undef;
     }
-    $self->getStatus()->record($command,3, $err ? $err : 'done',(join '\n', @answ));
+    $self->getStatus()->record($command,1, $err ? $err : 'done',(join '\n', @answ));
     
     return 1;
 }

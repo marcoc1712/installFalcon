@@ -201,17 +201,25 @@ sub _saveAndRemoveSqueezelite{
     my $buDir = $self->getBeforeBackUpDirectory();
 
     if (!$self->getUtils()->mkDir($buDir.$self->getBinDirectory())){return undef;}
+    $self->getStatus()->record('mkDir',1, "bin directory created in backup",'');
+    
     if (!$self->getUtils()->mkDir($buDir. $self->getInitDirectory())){return undef;}
+    $self->getStatus()->record('mkDir',1, "init.d directory created in backup",'');
+    
     if (!$self->getUtils()->mkDir($buDir.$self->getDefconDirectory())){return undef;}
+    $self->getStatus()->record('mkDir',1, "default conf. directory created in backup",'');
     
     my $file = $self->getBinDirectory().'/'.SQUEEZELITE;
     if (!$self->getUtils()->saveBUAndRemove($file, $buDir.$file)){return undef;}
+    $self->getStatus()->record('saveBUAndRemove',1, "squeezelite saved in backup",'');
          
     $file = $self->getInitFile();
     if (!$self->getUtils()->saveBUAndRemove($file, $buDir.$file)){return undef;}
+    $self->getStatus()->record('saveBUAndRemove',1, "init.d saved in backup",'');
     
     $file = $self->getDefconFile();
     if (!$self->getUtils()->saveBUAndRemove($file, $buDir.$file)){return undef;}
+    $self->getStatus()->record('saveBUAndRemove',1, "default conf. saved in backup",'');
 
     return 1;
 }
@@ -222,19 +230,29 @@ sub _saveAndRemoveSqueezeliteR2{
     my $buDir = $self->getCurrentBackUpDirectory();
      
     if (!$self->getUtils()->mkDir($buDir)){return undef;}
+    $self->getStatus()->record('mkDir',1, "backup directory created",'');
+    
     if (!$self->getUtils()->mkDir($buDir.$self->getBinDirectory())){return undef;}
+    $self->getStatus()->record('mkDir',1, "bin directory created in backup",'');
+    
     if (!$self->getUtils()->mkDir($buDir.$self->getInitDirectory())){return undef;}
+    $self->getStatus()->record('mkDir',1, "init.d directory created in backup",'');
+    
     if (!$self->getUtils()->mkDir($buDir.$self->getDefconDirectory())){return undef;}
+    $self->getStatus()->record('mkDir',1, "default conf. directory created in backup",'');
 
     my $file =  $self->getBinDirectory().'/'.SQUEEZELITE_R2;
     if (!$self->getUtils()->saveBUAndRemove($file, $buDir.$file)){return undef;}
+    $self->getStatus()->record('saveBUAndRemove',1, "squeezelite-R2 saved in backup",'');
     
     $file = $self->getInitFile();
     if (!$self->getUtils()->saveBUAndRemove($file, $buDir.$file)){return undef;}
-     
+    $self->getStatus()->record('saveBUAndRemove',1, "init.d saved in backup",'');
+    
     $file = $self->getDefconFile();
     if (!$self->getUtils()->saveBUAndRemove($file, $buDir.$file)){return undef;}
-
+    $self->getStatus()->record('saveBUAndRemove',1, "default conf. saved in backup",'');
+    
     return 1;
 }
 sub _removeSqueezeliteR2{
@@ -242,15 +260,18 @@ sub _removeSqueezeliteR2{
 
     my $file =  $self->getBinDirectory().'/'.SQUEEZELITE_R2;
     if (!$self->getUtils()->removeFile($file)){return undef;}
+    $self->getStatus()->record('removeFile',1, "squeezelite-R2 removed",'');
     
     $file = $self->getInitFile();
     if (!$self->getUtils()->removeFile($file)){return undef;}
+    $self->getStatus()->record('removeFile',1, "init.d removed",'');
      
     $file = $self->getDefconFile();
     if (!$self->getUtils()->removeFile($file)){return undef;}
+    $self->getStatus()->record('removeFile',1, "default config removed",'');
 
     if (!$self->getUtils()->rmTree($self->getLog())){return undef;}
-    
+    $self->getStatus()->record('rmTree',1, "squeezelite log directory removed",'');
     return 1;
 }
 
@@ -259,10 +280,16 @@ sub _cleanInstall{
     
     if (!$self->_getSqueezeliteR2()){return undef;}
     symlink ($self->getBinDirectory().'/'.SQUEEZELITE_R2, $self->getBinDirectory().'/'.SQUEEZELITE);
+    $self->getStatus()->record('symlink',1, "squeezelite symlik to squeezelite-R2 created",'');
     
     if (!$self->_getSqueezeliteR2Default()){return undef;}
+    $self->getStatus()->record('',1, "squeezelite default config copied",'');
+    
     if (!$self->_getSqueezeliteR2Initd()){return undef;}
+    $self->getStatus()->record('',1, "squeezelite init.d copied",'');
+    
     if (!$self->_createLog()){return undef;}
+    $self->getStatus()->record('',1, "squeezelite log created",'');
     
     return 1;
 }
@@ -281,12 +308,14 @@ sub _getSqueezeliteR2{
              ($self->getArchName() eq "i686")){
         
         $url = $self->getWgetString_i86();
-        
+            
     } else{
         
         $self->getStatus()->record('',5, "unknown architecture: ".$self->getArchName(),'');
         return undef;
     }
+    $self->getStatus()->record('getArchName',1, "architecure is ".$self->getArchName(),'');
+    
     my $dir = $self->getBinDirectory();
     chdir $dir;
 
@@ -295,10 +324,9 @@ sub _getSqueezeliteR2{
         $self->getStatus()->record("chdir ".$dir,7, "can't move into directory",getcwd);
         return undef;
     }
-    if (!$self->getUtils()->wget($url)){
-        
-        return undef;
-    }
+    if (!$self->getUtils()->wget($url)){return undef;}
+    $self->getStatus()->record('wget',1, "squeezelit-R2 downloaded",'');
+    
     require URI;
     my $uri = URI->new($url);
     my $name = +($uri->path_segments)[-1];
@@ -309,8 +337,11 @@ sub _getSqueezeliteR2{
         return undef;
     
     }
+    $self->getStatus()->record('moveFile',1, "$name renamed to squeezelite-R2",'');
     
     my $mode = 0755; chmod $mode, SQUEEZELITE_R2; 
+    $self->getStatus()->record('chmod',1, " 0755 tosqueezelite-R2",'');
+    
     return 1;
 }
 sub _getSqueezeliteR2Default{
@@ -335,8 +366,14 @@ sub _getSqueezeliteR2Default{
         return undef;
     
     }
+    $self->getStatus()->record('',1, "squeezelite default config copied",'');
+    
     chown $uid, $gid, SQUEEZELITE;
+    $self->getStatus()->record('chown',1, " www user to default config file",'');
+    
     my $mode = 0664; chmod $mode, SQUEEZELITE; 
+    $self->getStatus()->record('chmod',1, " 0664 to default config file",'');
+    
     return 1;
 }
 sub _getSqueezeliteR2Initd{
@@ -359,8 +396,11 @@ sub _getSqueezeliteR2Initd{
         return undef;
     
     }
+    $self->getStatus()->record('',1, "squeezelite init.d copied",'');
     
     my $mode = 0755; chmod $mode, SQUEEZELITE; 
+    $self->getStatus()->record('chmod',1, " 0755 to init.d file",'');
+    
     return 1;
 }
 
@@ -370,16 +410,22 @@ sub _createLog{
     my ($usr, $psw, $uid, $gid) = getpwnam ($self->getWwwUser());
     
     if (! -d $self->getLog() && !$self->getUtils()->mkDir($self->getLog())){return undef;} 
+    $self->getStatus()->record('mkDir',1, "squeezelite-R2 log directory created",'');
     
     chown $uid, $gid, $self->getLog();
+    $self->getStatus()->record('chown',1, "www user to squeezelite-R2 log directory",'');
     
     my $logfile= $self->getLog()."/squeezelite-R2.log";
     if (! -e $logfile && !$self->getUtils()->createFile($logfile)){return undef;}
+    $self->getStatus()->record('createFile',1, "squeezelite-R2 log file created",'');
+    
     chown $uid, $gid, $logfile;
+    $self->getStatus()->record('chown',1, "www user to squeezelite-R2 log file",'');
+    
     my $mode = 0664; chmod $mode, $logfile; 
+    $self->getStatus()->record('chmod',1, " 0664 to log file",'');
+    
     ### TODO: Attivare la rotazione dei files di log.
-
-    $self->getStatus()->record('_createLog',1, 'ok','');
     return 1;
 }
 1;

@@ -54,12 +54,18 @@ sub install{
     if  (-x $self->getInitFile()){
         
         $self->getUtils()->serviceStop('apache2');
+        $self->getStatus()->record('serviceStop',2, "apache2 service stopped",'');
     }
          
     if (!$self->getUtils()->aptGetInstall('apache2')){return undef};
+    $self->getStatus()->record('aptGetInstall',2, 'apache2 installed','');
+    
     if (!$self->SUPER::_config()){return undef;}
+    $self->getStatus()->record('_config',2, 'apache2 configured','');
     
     $self->getUtils()->serviceStart('apache2');
+    $self->getStatus()->record('serviceStart',2, "apache2 service started",'');
+     
 }
 
 ################################################################################

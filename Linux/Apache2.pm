@@ -135,21 +135,28 @@ sub _config{
     if (-e $self->getConf() && 
         ! -e $before && 
         !$self->getUtils()->saveBUAndRemove($self->getConf(),$before)){return undef;}
-   
+    $self->getStatus()->record(" ",1,$self->getConf()." saved into ".$before,'');
+    
     if (-e $self->getConf() && 
         !$self->getUtils()->saveBUAndRemove($self->getConf(),$current)){return undef;}
+    $self->getStatus()->record(" ",1,$self->getConf()." saved into ".$current,'');
     
     if (!$self->getUtils()->copyFile($self->getConfSource, $self->getConf())){
         
-        $self->getStatus()->record("copy ".$self->getConfSource()." , ". $self->getConf(),7, 
-                                   "can't copy".$self->getConfSource()." into ".$self->getConf(),'');
+        $self->getStatus()->record("",7, "can't copy".$self->getConfSource()." into ".$self->getConf(),'');
         return undef;
     }
+    $self->getStatus()->record("",1,$self->getConfSource()." copied into ".$self->getConf(),'');
     
     symlink ($self->getConf(), '/etc/apache2/sites-enabled/000-default.conf');
+    $self->getStatus()->record("symlink",1,"symlink to default.conf created",'');
+    
     #abilita le CGI
     symlink ('/etc/apache2/mods-available/cgid.conf', '/etc/apache2/mods-enabled/cgid.conf');
+    $self->getStatus()->record("symlink",1,"symlink to cgid.conf created",'');
+    
     symlink ('/etc/apache2/mods-available/cgid.load', '/etc/apache2/mods-enabled/cgid.load');
+    $self->getStatus()->record("symlink",1,"symlink to cgid.load created",'');
 
     return 1;
 }
@@ -157,8 +164,13 @@ sub _cleanUp{
     my $self = shift;
     
     if (!$self->getUtils()->removeFile('/etc/apache2/mods-enabled/cgid.conf')){return undef;}
+    $self->getStatus()->record("",1,"cgid.conf removed",'');
+     
     if (!$self->getUtils()->removeFile('/etc/apache2/mods-enabled/cgid.load')){return undef;}
+    $self->getStatus()->record("",1,"cgid.load removed",'');
+     
     if (!$self->getUtils()->removeFile($self->getConf())){return undef;}
+    $self->getStatus()->record('',1,"default.conf removed",'');
 
     return 1;
 }

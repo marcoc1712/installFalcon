@@ -52,6 +52,7 @@ sub install{
     my $self = shift;
 
     return $self->getUtils()->emerge('git');
+    $self->getStatus()->record('emerge',2, 'git installed','');
 }
 
 ################################################################################

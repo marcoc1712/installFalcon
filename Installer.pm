@@ -148,6 +148,7 @@ sub install {
         
     if (!$self->getWebServer()->auto()){return undef;}; 
     $self->getStatus()->record('install webserver',3, 'ok','');
+    
     $self->getStatus()->record( "install",4.2, "falcon correctly installed!",'');
     return 1;
 }

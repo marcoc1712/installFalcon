@@ -54,13 +54,20 @@ sub install{
     if  (-x $self->getInitFile()){
         
         $self->getUtils()->serviceStop('apache2');
+         $self->getStatus()->record('serviceStop',2, "apache2 service stopped",'');
     }
          
     if (!$self->getUtils()->emerge('apache2')){return undef};
+    $self->getStatus()->record('emerge',2, 'apache2 installed','');
+    
     if (!$self->SUPER::_config()){return undef;}
-    if (!$self->getUtils()->rcUpdateAddDefaults('lighttpd')){return undef;}
+    $self->getStatus()->record('_config',2, 'apache2 configured','');
+    
+    if (!$self->getUtils()->rcUpdateAddDefaults('apache2')){return undef;}
+    $self->getStatus()->record('rcUpdateAddDefaults',2, 'apache2 autostart configured ','');
     
     $self->getUtils()->serviceStart('apache2');
+    $self->getStatus()->record('serviceStart',2, "apache2 service started",'');
 }
 
 ################################################################################

@@ -72,7 +72,8 @@ sub _setExecutable{
     if (!$self->SUPER::_setExecutable()){return undef;}
     
     if (!$self->getUtils()->chmodX($self->getFalconDefaultExit()."/standard/linux/gentoo/*.pl")){return undef;}
-
+    $self->getStatus()->record('chmod +x',1, "chmod +x falocn exit gentoo",'');
+    
     return 1;
 }
 sub _addUsers{
@@ -81,9 +82,16 @@ sub _addUsers{
     if (!$self->SUPER::_addUsers()){return undef;}
     
     if (!$self->getUtils()->userAdd($self->getSqueezeliteUser())){return undef;}
+    $self->getStatus()->record('_addUsers',1, "squeezelite user created",'');
+    
     if (!$self->getUtils()->userAdd($self->getSqueezeliteUser(),'audio')){return undef;}
+    $self->getStatus()->record('_addUsers',1, "squeezelite user added to audio group",'');
+    
     if (!$self->getUtils()->userAdd($self->getSqueezeliteUser(),'realtime')){return undef;}
+    $self->getStatus()->record('_addUsers',1, "squeezelite user added to realtime group",'');
+    
     if (!$self->getUtils()->userAdd($self->getWwwUser(), $self->getSqueezeliteGroup())){return undef;}
+    $self->getStatus()->record('_addUsers',1, "www user added to squeezelite group",'');
 
     return 1;
 }

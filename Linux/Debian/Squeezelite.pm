@@ -69,18 +69,24 @@ sub upgrade{
     if  (-e $self->getInitFile() && ! -l $self->getInitFile()){
         
         $self->getUtils()->serviceStop(SQUEEZELITE);
+        $self->getStatus()->record('serviceStop',2, "squeezelite service stopped",'');
     }
 
     if ($self->isInstalled() && !$self->isR2Installed()){
 
          if (!$self->_saveAndRemoveSqueezelite()){return undef;}
+          $self->getStatus()->record('_saveAndRemoveSqueezelite',2, "squeezelite saved in backup and removed",'');
     }
     #save current situation and install the new one
     if (!$self->_saveAndRemoveSqueezeliteR2()) {return undef;}
+    $self->getStatus()->record('_saveAndRemoveSqueezelite',2, "squeezelite-R2 saved in backup and removed",'');
+     
     if (!$self->_cleanInstall()) {return undef;}
+    $self->getStatus()->record('_saveAndRemoveSqueezelite',2, "squeezelite-R2 installed",'');
     
     if (!$self->getUtils()->systemCtlReload()) {return undef;}
     if (!$self->getUtils()->updateRcdDefaults(SQUEEZELITE)){return undef;}
+    $self->getStatus()->record('_saveAndRemoveSqueezelite',2, "squeezelite-R2 autostart configured",'');
     
     # with a null or default sound card will take 99% of resources in some systems
     # let the user fix settings then start over.
@@ -97,12 +103,15 @@ sub remove{
     if  (-e $self->getInitFile() && ! -l $self->getInitFile()){
         
         $self->getUtils()->serviceStop(SQUEEZELITE);
+        $self->getStatus()->record('serviceStop',2, "squeezelite service stopped",'');
     }
 
     if (!$self->_removeSqueezeliteR2()) {return undef;}
+    $self->getStatus()->record('_saveAndRemoveSqueezelite',2, "squeezelite-R2 removed",'');
     
     if (!$self->getUtils()->updateRcdRemove(SQUEEZELITE)){return undef;}
     if (!$self->getUtils()->systemCtlReload()) {return undef;}
+    $self->getStatus()->record('_saveAndRemoveSqueezelite',2, "squeezelite-R2 autostart removed",'');
     
     return 1;
 }

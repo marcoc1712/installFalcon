@@ -52,6 +52,7 @@ sub install{
     my $self = shift;
 
     return $self->getUtils()->aptGetInstall('git');
+    $self->getStatus()->record('aptGetInstall',2, 'git installed','');
 }
 
 ################################################################################

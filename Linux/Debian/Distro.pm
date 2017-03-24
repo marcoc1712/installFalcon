@@ -82,6 +82,7 @@ sub prepare{
     my $self    = shift;
      
     if (!$self->SUPER::prepare()){return undef;}
+    
     if (!$self->getUtils()->aptGetInstall('liburi-perl')){
         $self->getStatus()->record('prepare',7, "cant install package: liburi-perl",'');
         return undef};

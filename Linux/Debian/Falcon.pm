@@ -62,6 +62,7 @@ sub _setExecutable{
     if (!$self->SUPER::_setExecutable()){return undef;}
     
     if (!$self->getUtils()->chmodX($self->getFalconDefaultExit()."/standard/linux/debian/*.pl")){return undef;}
+    $self->getStatus()->record('chmod +x',1, "chmod +x falocn exit debian",'');
 
     return 1;
 }

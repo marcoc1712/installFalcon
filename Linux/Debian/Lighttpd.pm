@@ -54,12 +54,17 @@ sub install{
     if  (-e $self->getInitFile()){
         
         $self->getUtils()->serviceStop('lighttpd');
+        $self->getStatus()->record('serviceStop',2, "lighttpd service stopped",'');
     }
     
     if (!$self->getUtils()->aptGetInstall('lighttpd')){return undef};
+    $self->getStatus()->record('emerge',2, 'lighttpd installed','');
+    
     if (!$self->SUPER::_config()){return undef;}
+    $self->getStatus()->record('_config',2, 'lighttpd configured','');
     
     $self->getUtils()->serviceStart('lighttpd');
+    $self->getStatus()->record('serviceStart',2, "lighttpd service started",'');
 }
 ################################################################################
 # privates

@@ -135,12 +135,13 @@ sub _createLog{
     my ($usr, $psw, $uid, $gid) = getpwnam ($self->getWwwUser());
     
     if (! -d $self->getLog() && !$self->getUtils()->mkDir($self->getLog())){return undef;} 
+    $self->getStatus()->record('mkDir',1, 'lighttpd log directory created','');
     
     chown $uid, $gid, $self->getLog();
+    $self->getStatus()->record('chown',1, 'www user to lighttpd','');
     
     ### TODO: Attivare la rotazione dei files di log.
     
-    $self->getStatus()->record('_createLog',1, 'ok','');
     return 1;
 }
 
@@ -153,27 +154,30 @@ sub _config{
     if (-e $self->getConf() && 
         ! -e $before && 
         !$self->getUtils()->saveBUAndRemove($self->getConf(),$before)){return undef;}
-    $self->getStatus()->record(" ",2,$self->getConf()." saved into ".$before,'');
+    $self->getStatus()->record(" ",1,$self->getConf()." saved into ".$before,'');
     
     if (-e $self->getConf() && 
         !$self->getUtils()->saveBUAndRemove($self->getConf(),$current)){return undef;}
-    $self->getStatus()->record(" ",2,$self->getConf()." saved into ".$current,'');
+    $self->getStatus()->record(" ",1,$self->getConf()." saved into ".$current,'');
    
     if (!$self->getUtils()->copyFile($self->getConfSource, $self->getConf())){
         
-        $self->getStatus()->record("copy ".$self->getConfSource()." , ". $self->getConf(),7, 
-                                   "can't copy".$self->getConfSource()." into ".$self->getConf(),'');
+        $self->getStatus()->record("",7, "can't copy".$self->getConfSource()." into ".$self->getConf(),'');
         
         return undef;
     }
-    $self->getStatus()->record(" ",2,$self->getConfSource()." copied into ".$self->getConf(),'');
-    return $self->_createLog();
+    $self->getStatus()->record(" ",1,$self->getConfSource()." copied into ".$self->getConf(),'');
+    
+    if (!$self->_createLog()){return undef;}
+    $self->getStatus()->record('mkDir',1, 'lighttpd log created','');
+    
+    return 1;
 }
 sub _cleanUp{
     my $self = shift;
 
     if (!$self->getUtils()->removeFile($self->getConf())){return undef;}
-
+    $self->getStatus()->record('removeFile',1, 'lighttpd conf. file removed','');
     return 1;
 }
 1;
