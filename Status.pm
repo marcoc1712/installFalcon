@@ -60,8 +60,8 @@ sub new{
     
     $self->{_utils}   =  Utils->new($self);
     
-    $self->record("START",4, "Installer starte ad ".$self->getUtils()->getNiceTimeString($self->getUtils()->getTimestamp()).
-                             "in ".$self->getGravity($verbosity)." mode",'');
+    $self->record("START",4, "Installer started ad ".$self->getUtils()->getNiceTimeString($self->getUtils()->getTimestamp()).
+                             " in ".$self->_gravityCodeToDesc($verbosity)." mode",'');
     
     return $self;
 }
@@ -133,7 +133,7 @@ sub printout{
 
         for my $id (sort keys %$in){
 
-           $self->_print($id,$self->getVerbosity()+1);
+           $self->_print($id,$self->getVerbosity());
         }
         print "\n";
     }
