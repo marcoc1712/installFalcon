@@ -61,7 +61,7 @@ sub new{
     $self->{_utils}   =  Utils->new($self);
     
     $self->record("START",4, "Installer starte ad ".$self->getUtils()->getNiceTimeString($self->getUtils()->getTimestamp()).
-                             "in ".$self->getGravity($verbosity)" mode",'');
+                             "in ".$self->getGravity($verbosity)." mode",'');
     
     return $self;
 }
