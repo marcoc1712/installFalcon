@@ -30,9 +30,9 @@ Please login to your system as root and download setup.pl
 
 from here: https://raw.githubusercontent.com/marcoc1712/installFalcon/master/setup.pl
 
-PLEASE COPY THE LINK NON THE DISPLAYED TEXT
+PLEASE COPY THE LINK, NOT THE DISPLAYED TEXT
 
-i.e. "wget https://raw.githubusercontent.com/marcoc1712/installFalcon/master/setup.pl";
+i.e. 'wget https://raw.githubusercontent.com/marcoc1712/installFalcon/master/setup.pl';
 
 Remember to chmod +x setup.pl
 
