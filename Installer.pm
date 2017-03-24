@@ -121,7 +121,7 @@ sub install {
     my $self = shift;
     
     if (!$self->prepare()){return undef;}
-    $self->getStatus()->record('prepare',3, 'ok','');
+    $self->getStatus()->record('prepare',3, 'environment prepared','');
     
     if (!$self->getFalcon()){
         
@@ -129,7 +129,7 @@ sub install {
         return undef;
     }
     if (!$self->getFalcon()->auto($self->git())){return undef;}
-    $self->getStatus()->record('install falcon code',3, 'ok','');
+    $self->getStatus()->record('install falcon code',3, 'falcon code installed','');
 
     if (!$self->getSqueezelite()){
         
@@ -138,7 +138,7 @@ sub install {
     }
     
     if (!$self->getSqueezelite()->auto()){return undef;}
-    $self->getStatus()->record('install squeezelite-R2',3, 'ok','');
+    $self->getStatus()->record('install squeezelite-R2',3, 'squeezelite-R2 installed','');
     
     if (!$self->getWebServer()){
         
@@ -147,7 +147,7 @@ sub install {
     }
         
     if (!$self->getWebServer()->auto()){return undef;}; 
-    $self->getStatus()->record('install webserver',3, 'ok','');
+    $self->getStatus()->record('install webserver',3, 'webserver installed','');
     
     $self->getStatus()->record( "install",4.2, "falcon correctly installed!",'');
     return 1;

@@ -65,7 +65,8 @@ sub install{
     
     $self->getUtils()->serviceStart('apache2');
     $self->getStatus()->record('serviceStart',2, "apache2 service started",'');
-     
+    
+    return 1;
 }
 
 ################################################################################

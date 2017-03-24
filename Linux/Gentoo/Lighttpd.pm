@@ -68,6 +68,8 @@ sub install{
     
     $self->getUtils()->serviceStart('lighttpd');
     $self->getStatus()->record('serviceStart',2, "lighttpd service started",'');
+    
+    return 1;
 }
 
 ################################################################################
