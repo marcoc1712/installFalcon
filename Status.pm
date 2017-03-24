@@ -294,6 +294,7 @@ sub _printLine{
     
     print $self->{_lines}->{$id}->{'time'}." ".
           $self->{_lines}->{$id}->{'filename'}." line: ".$self->{_lines}->{$id}->{'line'}." ".
+          $self->{_lines}->{$id}->{'subroutine'}." ".
           $self->_gravityCodeToDesc($self->{_lines}->{$id}->{'gravity'}).": ".
           $self->{_lines}->{$id}->{'message'}."\n";  
 }
