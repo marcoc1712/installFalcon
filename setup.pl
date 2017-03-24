@@ -73,7 +73,6 @@ sub main{
     print "\n";
     
     print "Started in: ".$userHome."\n";
-    print "Verbosity : ".$verbosity;
        
     print "\n** PREPARE ************************************************************\n";
 

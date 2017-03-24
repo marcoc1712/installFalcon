@@ -75,7 +75,7 @@ sub getVerbosity{
 sub isDebug{
     my $self = shift;
     
-    return ($self->getVerbosity() < 3);
+    return ($self->getVerbosity() < 2);
 }
 sub getUtils{
     my $self = shift;
@@ -117,7 +117,7 @@ sub record {
     if ($self->isDebug() && $self->getVerbosity() le $gravity) { 
         
         #inline printing.
-        $self->_printDetailed($id);
+        $self->_print($id,$self->getVerbosity());
     }
 }
 
@@ -133,7 +133,7 @@ sub printout{
 
         for my $id (sort keys %$in){
 
-           $self->_printDetailed($id);
+           $self->_print($id,$self->getVerbosity()+1);
         }
         print "\n";
     }
@@ -254,6 +254,22 @@ sub _getCaller{
     
     return $out;
 }
+
+sub _print{
+    my $self = shift;
+    my $id = shift;
+    my $filter = shift || $self->getVerbosity();
+    
+    if ($self->{_lines}->{$id}->{'gravity'} > $filter){
+        
+        $self_>_printDetailed($id);
+        
+    } else {
+       
+       $self_>_printLine($id);
+    }
+}
+
 sub _printDetailed{
     my $self = shift;
     my $id = shift;
@@ -269,6 +285,15 @@ sub _printDetailed{
     print " - Details    : ".$self->{_lines}->{$id}->{'details'}."\n";
     print "\n";
     
+}
+sub _printLine{
+    my $self = shift;
+    my $id = shift;
+    
+    print $self->{_lines}->{$id}->{'time'}." ".
+          $self->{_lines}->{$id}->{'filename'}." line: ".$self->{_lines}->{$id}->{'line'}." ".
+          $self->_gravityCodeToDesc($self->{_lines}->{$id}->{'gravity'}).": ".
+          $self->{_lines}->{$id}->{'message'}."\n";  
 }
 1;
 
