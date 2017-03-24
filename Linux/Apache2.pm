@@ -76,7 +76,10 @@ sub isInstalled{
 sub remove{
     my $self = shift;
     
+    $self->getStatus()->record('',2, 'apache2 not removed','');
+    
     if (!$self->_cleanUp()) {return undef;};
+    $self->getStatus()->record('',2, 'apache2 configuration cleaned','');
     return 1;
 }
 

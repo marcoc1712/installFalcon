@@ -183,7 +183,7 @@ sub remove{
     $self->getStatus()->record( "",3, "falcon code removed",'');
     
     if (!$self->cleanUp()){return undef;}
-    $self->getStatus()->record( "",3, " falcon data and backups removed",'');
+    $self->getStatus()->record( "",3, "falcon data and backups removed",'');
     $self->getStatus()->record( "",4.1, "falcon removed!",'');
     return 1;
 }

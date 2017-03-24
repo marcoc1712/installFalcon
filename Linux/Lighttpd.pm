@@ -76,7 +76,11 @@ sub isInstalled{
 sub remove{
     my $self = shift;
     
+    $self->getStatus()->record('',2, 'lighttpd not removed','');
+    
     if (!$self->_cleanUp()) {return undef;};
+    $self->getStatus()->record('',2, 'lighttpd configuration cleaned','');
+     
     return 1;
 }
 
