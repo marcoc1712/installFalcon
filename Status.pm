@@ -262,11 +262,11 @@ sub _print{
     
     if ($self->{_lines}->{$id}->{'gravity'} > $filter){
         
-        $self_>_printDetailed($id);
+        $self->_printDetailed($id);
         
     } else {
        
-       $self_>_printLine($id);
+       $self->_printLine($id);
     }
 }
 
