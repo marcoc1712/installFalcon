@@ -90,7 +90,7 @@ sub _addUsers{
     if (!$self->getUtils()->userAdd($self->getSqueezeliteUser(),'realtime')){return undef;}
     $self->getStatus()->record('_addUsers',1, "squeezelite user added to realtime group",'');
 	
-	if (!$self->getUtils()->userAdd($self->getSqueezeliteUser(), $self->getWWWGroup())){return undef;}
+	if (!$self->getUtils()->userAdd($self->getSqueezeliteUser(), $self->getWwwGroup())){return undef;}
     $self->getStatus()->record('_addUsers',1, "squeezelite user added to www group",'');
     
     if (!$self->getUtils()->userAdd($self->getWwwUser(), $self->getSqueezeliteGroup())){return undef;}
