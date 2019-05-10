@@ -32,8 +32,8 @@ use Linux::Debian::Settings;
 
 use base qw(Linux::Squeezelite);
 
-use constant SQUEEZELITE => 'squeezelite';
-use constant SQUEEZELITE_R2 => 'squeezelite-R2';
+#use constant SQUEEZELITE => 'squeezelite';
+#use constant SQUEEZELITE_R2 => 'squeezelite-R2';
 
 sub new{
     my $class  = shift;

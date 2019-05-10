@@ -55,7 +55,6 @@ sub new{
 
     return $self;
 }
-
 sub getArchName{
     my $self = shift;
     
