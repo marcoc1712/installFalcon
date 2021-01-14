@@ -115,7 +115,7 @@ sub remove{
     #if (!$self->getUtils()->updateRcdRemove(SQUEEZELITE)){return undef;} Debian 10
 	#if (!$self->getUtils()->systemctlDisable(SQUEEZELITE)){return undef;} #Debian 10.
 	
-	$self->getUtils()->systemctlDisable(SQUEEZELITE));
+	$self->getUtils()->systemctlDisable(SQUEEZELITE);
 	
     if (!$self->getUtils()->systemCtlReload()) {return undef;}
     $self->getStatus()->record('_saveAndRemoveSqueezelite',2, "squeezelite-R2 autostart removed",'');
