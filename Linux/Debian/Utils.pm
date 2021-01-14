@@ -81,7 +81,7 @@ sub systemctlDisable(){
 	my $self       = shift;
     my $scirpt     = shift;    
 	
-	my $command = qq(systemctl disable $scirpt);
+	my $command = qq(systemctl disable $scirpt );
 	
 	my ($err, @answ)= $self->executeCommand($command);
     
