@@ -87,7 +87,7 @@ sub systemctlDisable(){
     
     if ($err){
         $self->getStatus()->record($command,7, $err,(join "/n", @answ));
-        return undef;
+        #return undef;
     }
 
     $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
