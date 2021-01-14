@@ -58,7 +58,44 @@ sub aptGetInstall{
 
     $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
     return 1;
-} 
+}
+
+sub systemctlEnable(){
+	my $self       = shift;
+    my $scirpt     = shift;    
+	
+	my $command = qq(systemctl enable $scirpt);
+	
+	my ($err, @answ)= $self->executeCommand($command);
+    
+    if ($err){
+        $self->getStatus()->record($command,7, $err,(join "/n", @answ));
+        return undef;
+    }
+
+    $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
+    return 1;
+}
+
+sub systemctlDisable(){
+	my $self       = shift;
+    my $scirpt     = shift;    
+	
+	my $command = qq(systemctl disable $scirpt);
+	
+	my ($err, @answ)= $self->executeCommand($command);
+    
+    if ($err){
+        $self->getStatus()->record($command,7, $err,(join "/n", @answ));
+        return undef;
+    }
+
+    $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
+    return 1;
+}
+
+=pod
+
 sub updateRcdDefaults{
     my $self       = shift;
     my $scirpt     = shift;    
@@ -75,6 +112,8 @@ sub updateRcdDefaults{
     $self->getStatus()->record($command,1, 'ok',(join "/n", @answ));
     return 1;
 }
+
+=cut
 sub updateRcdRemove{
     my $self       = shift;
     my $scirpt     = shift;    
