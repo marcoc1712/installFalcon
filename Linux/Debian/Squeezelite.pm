@@ -85,7 +85,7 @@ sub upgrade{
     $self->getStatus()->record('_saveAndRemoveSqueezelite',2, "squeezelite-R2 installed",'');
     
     if (!$self->getUtils()->systemCtlReload()) {return undef;}
-    if (!$self->getUtils()->updateRcdDefaults(SQUEEZELITE)){return undef;}
+    #if (!$self->getUtils()->updateRcdDefaults(SQUEEZELITE)){return undef;} Debian 10.
     $self->getStatus()->record('_saveAndRemoveSqueezelite',2, "squeezelite-R2 autostart configured",'');
     
     # with a null or default sound card will take 99% of resources in some systems
