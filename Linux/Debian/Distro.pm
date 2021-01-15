@@ -93,6 +93,12 @@ sub prepare{
         return undef
     };
     $self->getStatus()->record('aptGetInstall',2, "package: libcgi-pm-perl installed",'');
+	
+	if (!$self->getUtils()->aptGetInstall('liblog-log4perl-perl')){
+        $self->getStatus()->record('prepare',7, "cant install package: liblog-log4perl-perl",'');
+        return undef
+    };
+    $self->getStatus()->record('aptGetInstall',2, "package: liblog-log4perl-perl",'');
     
      if (!$self->getUtils()->aptGetInstall('alsa-utils')){
         $self->getStatus()->record('prepare',7, "cant install package: alsa-utils",'');
